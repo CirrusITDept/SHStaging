@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_custom_stock_move,access_custom_stock_move,csi_dev_base.model_custom_stock_move,,1,1,1,1
+stock.access_stock_inventory_user,stock.inventory user,stock.model_stock_inventory,stock.group_stock_user,1,1,0,0
+stock.access_stock_inventory_manager,stock.inventory manager,stock.model_stock_inventory,stock.group_stock_manager,1,1,0,1
+access_custom_inv_adj_1,custom_inv_adj_1 managr,stock.model_stock_inventory,csi_dev_base.group_can_adjust_inventory,1,1,1,1

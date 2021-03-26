@@ -1,0 +1,188 @@
+ <record  model='ir.ui.view' id='cli_SalesOrder_fulfil_overide'>
+           <field name='name'>sale.order.form</field>
+         <field name='model'>sale.order</field>
+          <field name='inherit_id' ref='sale.view_order_form' />
+          <field name='priority'>99</field>
+          <field name='arch' type='xml'>
+          <xpath expr="//button[@name='action_confirm']" position="replace">
+                <button name="action_confirm" groups="base_csi.group_confirm_sale_order" id="action_confirm" string="FulfillMe1" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
+                <button name="action_confirm" groups="base_csi.group_confirm_sale_order" string="FulfillMe2" type="object" attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+            </xpath>              
+          </field>
+     </record>
+
+
+attrs="{'invisible': [('state', 'not in', ['sent'])]}"
+
+
+
+
+working <code:L>/code:L>
+
+<record  model='ir.ui.view' id='cli_SalesOrder_fulfil_overide'>
+           <field name='name'>sale.order.form</field>
+         <field name='model'>sale.order</field>
+          <field name='inherit_id' ref='sale.view_order_form' />
+          <field name='priority'>99</field>
+          <field name='arch' type='xml'>
+          <xpath expr="//button[@name='button_quality_alert']" position="after">
+                <button name="transfer_return_incomming"
+                 type="object"
+                 string="Transfer Return"
+                 groups="base_csi.group_confirm_sale_order"
+                 class="btn-primary"
+                  />
+            </xpath>              
+          </field>
+     </record>
+
+
+
+hold.
+<record  model='ir.ui.view' id='cli_btn_fulfil_overide'>
+           <field name='name'>sale.order.form</field>
+         <field name='model'>sale.order</field>
+          <field name='inherit_id' ref='sale.view_order_form' />
+          <field name='priority'>99</field>
+          <field name='arch' type='xml'>
+          <xpath expr="//button[@name='action_confirm']" position="replace">
+                <button name="action_confirm"
+                 type="object"
+                 string="FulfillMe2"
+                 groups="base_csi.group_confirm_sale_order"
+                 class="btn-primary"
+                  />
+            </xpath>              
+          </field>
+     </record>     
+
+
+
+<record  model='ir.ui.view' id='cli_btn_fulfil_overide'>
+           <field name='name'>sale.order.form</field>
+         <field name='model'>sale.order</field>
+          <field name='inherit_id' ref='sale.view_order_form' />
+          <field name='priority'>99</field>
+          <field name='arch' type='xml'>
+          <xpath expr="//button[@name='action_confirm']" position="after">
+                <button name="action_confirm"
+                groups="base_csi.group_confirm_sale_order"
+                id="action_confirm"
+                string="FulfillMe"
+                class="btn-primary"
+                type="object"
+                attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
+            </xpath>     
+          </field>
+     </record>
+
+<!--                 attrs="{'invisible': [('state', 'not in', ['sent'])]}"/> -->                
+
+
+
+<!--
+<record id="clix_view_display_records_form" model="ir.ui.view">
+        <field name="name">csi_helpdesk_open_Tickts.tree</field>
+        <field name="model">helpdesk.ticket</field>
+        ##<field name='inherit_id' ref='csi_so_mods.view_helpdesk_opentickets_tree'/>
+        <field name='priority'>98</field>
+        <field name='arch' type='xml'>
+            <xpath expr="//div[@class='.o_list_view .o_optional_columns']" position="after">
+                <b>Button Here</b>
+		    </xpath>
+	    </field>
+ </record>
+-->
+
+
+<!-- <template id="report_quotation_inherit_not_billable_flag_tewo" inherit_id="sale.report_saleorder_document" -->
+
+   <!-- Finds the first table with as class table table-condensed and gives the ability to modify it 
+   This will replace everything withing tr (including tr) -->
+  <!-- <xpath expr="//table[@class='table table-sm']//tr//td[2]" position="after"->
+   <xpath expr="//table[@class='sale_tbody']//td" position="after">
+
+       <tr style="background-color:red;">
+           <th>SO22 REPROT TEST</th>
+           <th class="text-right">Price</th>
+       </tr>
+   </xpath>
+
+ </template>
+ -->
+
+
+
+<!-- <record id="clix_view_display_records_form" model="ir.ui.view">
+        <field name="name">csi_helpdesk_open_Tickts.tree</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <form string="New Display" class="o_sale_order">
+                <header>
+                    <button class="oe_highlight" string="New Helpdesk Ticket2" type="action" name="%(base_csi.act_display_2_helpdesk_ticket_form)d" context="{'default_display_id': active_id}" />
+                </header>
+             </form> 
+	</field>
+ </record>
+
+ --> 
+
+
+
+<!--########################0######  ___^^^     ##################################-->
+
+ <record model='ir.ui.view' id='cli_view_quality_kanbanview_search_mod'>
+      <field name='name'>quality.alert.view.search</field>
+      <field name='model'>quality.alert</field>
+      <field name='inherit_id' ref='quality.quality_alert_view_search'/>
+      <field name='priority'>98</field>
+      <field name='arch' type='xml'>
+                <xpath expr="//field[@name='name']" position="replace">
+                        <field name="name" string="Lots of stuff" filter_domain="[
+                                '|','|','|','|','|','|',
+                                ('name', 'ilike', self),
+                                ('team_id', 'ilike', self),
+                                ('user_id',  'ilike', self),
+                                ('display_id',  'ilike', self),
+                                ('description',  'ilike', self),
+                                ('ticket_id',  'ilike', self),
+                                ('tag_ids',  'ilike', self),
+                                ('panel_faults',  'ilike', self)
+                          
+                                
+				]"/>
+		
+		</xpath>
+	
+        </field>
+
+ </record>
+
+
+
+
+ <!--######################## Helpdesk Overview search ########################################-->
+
+ <record model='ir.ui.view' id='cli_view_helpdesk_overview_search_mod'>
+      <field name='name'>x_gfp.helpdesk.ticket.search.mod</field>
+      <field name='model'>helpdesk.ticket</field>
+      <field name='inherit_id' ref='base_csi.helpdesk_tickets_view_search_mod'/>
+      <field name='priority'>98</field>
+      <field name='arch' type='xml'>
+                <xpath expr="//field[@name='name']" position="replace">
+                        <field name="name" string="Lots of helpie-stuff" filter_domain="[
+                                '|','|','|','|','|','|',
+                                ('name', 'ilike', self),
+                                ('display_name', 'ilike', self),
+                                ('user_id',  'ilike', self),
+                                ('partner_id',  'ilike', self),
+                                ('ticket_type_id',  'ilike', self),
+                                ('stage_id',  'ilike', self),
+                                ('tag_ids',  'ilike', self)
+				]"/>
+		
+		</xpath>
+	
+        </field>
+
+ </record>

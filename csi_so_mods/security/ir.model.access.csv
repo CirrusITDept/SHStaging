@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access.display_alert_types,access.display.alert_types,model_display_alert_types,base.group_user,1,1,1,1
+access.helpdesk.apiexchange,access.helpdesk.apiexchange,model_helpdesk_apiexchange,base.group_user,1,1,1,1
+

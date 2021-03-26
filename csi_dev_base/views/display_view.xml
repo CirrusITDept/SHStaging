@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Tree view for shipped item -->
+    <record id="csi_stock_move_line_tree_view" model="ir.ui.view">
+        <field name="name">csi.stock.move.line.tree.view</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
+                <field name="product_id"/>
+                <field name="lot_id" groups="stock.group_production_lot"/>
+                <field name="qty_done" string="Qty"/>
+                <field name="date" string="Ship Date"/>
+                <field name="reference" string="Reference" invisible="context.get('no_reference', False)"/>
+                <field name="origin"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for shipped item -->
+    <record model="ir.actions.act_window" id="csi_action_stock_move_line_tree_view">
+        <field name="context">{}</field>
+        <field name="limit">10</field>
+        <field name="name">Shipped Items</field>
+        <field name="res_model">stock.move.line</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="csi_stock_move_line_tree_view" />
+        <field name="view_mode">tree,form</field>
+    </record>
+	
+	<record id="inherit_display_records_form2" model="ir.ui.view">
+        <field name="name">inherit.display.form.view2</field>
+        <field name="model">display.display</field>
+        <field name="inherit_id" ref="csi_so_mods.cli_Display_Display_Alert_Enable" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_alert_enable']" position="after">
+            	<field name="custom_lock_display" groups="csi_dev_base.group_can_lock_unlock_display"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_display_records_form" model="ir.ui.view">
+        <field name="name">inherit.display.form.view</field>
+        <field name="model">display.display</field>
+        <field name="inherit_id" ref="base_csi.view_display_records_form" />
+        <field name="arch" type="xml">
+        
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="list_shipped_items" icon="fa-pencil-square-o">
+                    <field string="Shipped Items" name="shipped_line_count" widget="statinfo" />
+                </button>
+            </xpath>
+            
+            <button name="%(base_csi.act_display_2_sale_order_form)d" position="attributes">
+            	<attribute name="attrs">{'invisible': [('custom_lock_display', '=', True)]}</attribute>
+            </button>
+            
+            <button name="%(base_csi.act_display_2_quality_alert_form)d" position="attributes">
+            	<attribute name="attrs">{'invisible': [('custom_lock_display', '=', True)]}</attribute>
+            </button>
+            
+        </field>
+    </record>
+    
+    <record id="cli_display_auto_fill_mod_ext" model="ir.ui.view">
+        <field name="name">inherit.display.form.view</field>
+        <field name="model">display.display</field>
+        <field name="inherit_id" ref="csi_so_mods.cli_display_auto_fill_mod" />
+        <field name="arch" type="xml">
+            <button name="706" position="attributes">
+            	<attribute name="attrs">{'invisible': [('custom_lock_display', '=', True)]}</attribute>
+            </button>
+        </field>
+    </record>
+</odoo>

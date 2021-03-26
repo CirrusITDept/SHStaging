@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>	
+	
+	<!-- Tree view for shipped item -->
+    <record id="marketo_activity_tree_view" model="ir.ui.view">
+        <field name="name">marketo.activity.tree.view</field>
+        <field name="model">marketo.activity</field>
+        <field name="arch" type="xml">
+            <tree string="Marketo Activity">
+                <field name="parse_error"/>
+                <field name="done"/>
+                <field name="lead_id"/>
+                <field name="body"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="marketo_activity_form_view" model="ir.ui.view">
+        <field name="name">marketo.activity.form.view</field>
+        <field name="model">marketo.activity</field>
+        <field name="arch" type="xml">
+            <form string="Marketo Activity">
+                <header></header>
+                <sheet>
+                    <group>
+                        <field name="parse_error"/>
+		                <field name="done"/>
+		                <field name="lead_id"/>
+		                <field name="body"/>
+		                <field name="user_id"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_marketo_activity" model="ir.actions.act_window">
+        <field name="name">Marketo Activity</field>
+        <field name="res_model">marketo.activity</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain"></field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Marketo Activity
+            </p>
+        </field>
+    </record>
+</odoo>	

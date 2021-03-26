@@ -1,0 +1,321 @@
+// General##########################################
+
+.orange-text {
+    color: #f29022;
+}
+.orange-background {
+    background: #f29022;
+}
+.pdl-30 {
+    padding-left: 30px;
+}
+.pdr-50 {
+    padding-right: 50px;
+}
+.pdt-200 {
+    padding-top: 200px;
+}
+.pdt-50 {
+    padding-top: 50px;
+}
+.pd-50 {
+    padding: 50px !important;
+}
+.pd-5 {
+    padding: 5px !important;
+}
+.pdl-0 {
+    padding-left: 0px !important;
+}
+.separator {
+    width: 100%;
+    height: 2px;
+    padding-left: 0px !important;
+    padding-top: 13px;
+    border-bottom: 2px solid #f2f2f2;
+}
+.information {
+    padding-left: 30px;
+    margin-top: 20px;
+    margin-right: -25px;
+    font-size: 14px !important;
+}
+.mt-100 {
+    margin-top: 100px;
+}
+.mt-60 {
+    margin-top: 60px !important;
+}
+.mt-45 {
+    margin-top: 45px !important;
+}
+.mt-13 {
+    margin-top: 13px !important;
+}
+.mt-10 {
+    margin-top: 10px !important;
+}
+.mr-20 {
+    margin-right: 20px !important;
+}
+// Page 1##########################################
+.first-page-header-div {
+    background: #384142;
+    color: #ffffff;
+    //height: 130px;
+    height: 125px;
+    border-radius: 0 0 0 100px;
+    margin-left: -25px;
+    margin-right: -25px;
+    font-size: 14px !important;
+}
+.first-page-header-inner {
+    width: 100%;
+    padding: 50px 50px;
+}
+.first-page-footer-div-2line {
+    background: #384142;
+    color: #ffffff;
+    height: 90px;
+    border-radius: 0 200px 0 0;
+    margin-left: -25px;
+    margin-right: -25px;
+    font-size: 14px !important;
+    margin-top: 24px;
+}
+.first-page-footer-div {
+    background: #384142;
+    color: #ffffff;
+    height: 90px;
+    border-radius: 0 200px 0 0;
+    margin-left: -25px;
+    margin-right: -25px;
+    font-size: 14px !important;
+    margin-top: 42px;
+}
+.third-page-footer-div {
+    height: 8px;
+}
+.third-page-space-div {
+    height: 8px;
+}
+.fifth-page-footer-div {
+    height: 33px;
+}
+.first-page-footer-inner {
+    width: 100%;
+    padding: 30px 50px;
+}
+.img-table {
+    width: 300px!important;
+    position:absolute;
+    top: 30px;
+    left: 60%;
+}
+.cell-top-left {
+    border-radius: 20px 0 0 0;
+    border-left: 1px solid #84898a;
+    border-top: 1px solid #84898a;
+}
+.cell-bottom-left {
+    border-radius: 0 0 0 20px;
+    border-left: 1px solid #84898a;
+    border-bottom: 1px solid #84898a;
+}
+.cell-top-right {
+    border-top: 1px solid #84898a;
+    border-left: 1px solid #84898a;
+}
+.cell-bottom-right {
+    border-bottom: 1px solid #84898a;
+    border-left: 1px solid #84898a;
+}
+.cell-middle-top {
+    border-left: 1px solid #84898a;
+    border-right: 1px solid #84898a;
+    border-top: 1px solid #84898a;
+}
+.tr-background {
+    background: #dddede;
+}
+.cell-table-border-left {
+    border-left: 1px solid #84898a;
+}
+.cell-table-border-top {
+    border-top: 1px solid #84898a;
+}
+.cell-table-border-bottom {
+    border-bottom: 1px solid #84898a;
+}
+.table-custom {
+    border-collapse: separate !important;
+    font-size: 14px !important;
+}
+.pd-table-left {
+    padding-left: 20px;
+}
+.pd-table-top {
+    padding-top: 5px;
+}
+.pd-table-bottom {
+    padding-bottom: 5px;
+}
+.orange-table-cell {
+    border: 1px solid #f29022;
+    border-radius: 20px 0 0 20px;
+    color: #ffffff;
+    padding: 20px 0px 5px 20px;
+    border-right: none !important;
+}
+.table-img-text {
+    position:absolute;
+    bottom: 5px;
+    left: 70%;
+    color: white !important;
+}
+// Page 2 #####################################
+.second-page-header-div {
+    color: #ffffff;
+    height: 400px;
+    border-radius: 0 0 0 100px;
+    margin-left: -25px;
+    margin-right: -25px;
+    font-size: 14px !important;
+    background-image: -webkit-linear-gradient( left, #ee4037, #f29022);
+}
+.second-page-header-inner {
+    width: 100%;
+    padding: 50px 50px;
+}
+// Page 3 ###################################
+.third-page-header-div {
+    height: 80px;
+    font-size: 14px !important;
+    margin-left: -25px;
+    margin-right: -25px;
+    margin-top: 80px;
+}
+.third-page-header-inner {
+    width: 100%;
+    padding: 50px 50px 0px;
+}
+// Page 4 ###################################
+.four-page-header-div {
+    margin-left: -25px;
+    margin-right: -25px;
+}
+.four-page-header-inner {
+    width: 100%;
+    padding: 50px 0 50px 50px;
+}
+.header-content {
+    background: #f29022;
+    border-radius: 50px 0 0 50px;
+    padding: 50px;
+    color: #ffffff;
+}
+.four-left {
+    border-radius: 20px;
+    width: 100%;
+    border: 2px solid black;
+    padding: 15px;
+}
+.four-page-footer-div {
+    background: #384142;
+    color: #ffffff;
+    height: 185px;
+    border-radius: 0 100px 0 0;
+    margin-left: -25px;
+    margin-right: -25px;
+    font-size: 14px !important;
+    margin-top: 20px;
+}
+.four-page-footer-inner {
+    width: 100%;
+    padding: 30px 50px;
+}
+.four-page-footer-inner-second {
+    width: 100%;
+    padding: 0px 50px;
+}
+.img-absolute {
+    left: 7%;
+}
+// Page 5 ###########################
+.first-td {
+    border-radius: 10px 10px 0px 0px;
+    border: 1px solid black;
+}
+.middle-td {
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+}
+.last-td {
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    border-radius: 0px 0px 0px 10px;
+}
+.td-div {
+    border: 1px solid black;
+    border-radius: 10px 10px 0px 10px;
+    width: 100%;
+    padding: 5px;
+}
+.fifths-page-footer-div {
+    background-image: -webkit-linear-gradient( left,#f29022, #ee4037);
+    color: #ffffff;
+    height: 132px;
+    border-radius: 0 100px 0 0;
+    margin-left: -25px;
+    margin-right: -25px;
+    font-size: 14px !important;
+    margin-top: 40px;
+}
+.fifths-page-footer-inner {
+    width: 100%;
+    padding: 50px 50px 0px 50px;
+}
+.checkbox-div {
+    width: 15px;
+    border: 1px solid black;
+    margin-right: 10px;
+    height: 15px;
+    display: inline-block;
+}
+.table-custom-5 {
+    border-collapse: separate !important;
+    font-size: 18px !important;
+}
+// FONT
+.font-18 {
+    font-size: 18px !important;
+}
+.font-16 {
+    font-size: 16px !important;
+}
+.font-15 {
+    font-size: 15px !important;
+}
+.font-13 {
+    font-size: 13px !important;
+}
+.font-12 {
+    font-size: 12px !important;
+}
+.font-11 {
+    font-size: 12px !important;
+}
+.font-10 {
+    font-size: 10px !important;
+}
+.small-line-height {
+    line-height: 14px !important;
+}
+.none-style {
+    list-style: none !important;
+}
+.p-absolute {
+    position: absolute;
+}

@@ -1,0 +1,7 @@
+<odoo>
+    <template id="ks_dn_date_filter_assets_backend" name="Date Filter assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/ks_dn_date_filter/static/src/js/ks_dashboard_ninja.js"/>
+        </xpath>
+    </template>
+</odoo>

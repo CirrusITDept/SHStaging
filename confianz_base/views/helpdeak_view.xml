@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="helpdesk_team_form_inherit" model="ir.ui.view">
+            <field name="name">cirrus.helpdesk_team.form</field>
+            <field name="model">helpdesk.team</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='productivity']" position="after">
+                     <h2 class="mt32">Install Date Auto Update</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-lg-6 o_setting_box" id="timesheet">
+                            <div class="o_setting_left_pane">
+                                <field name="install_date_auto_update"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="install_date_auto_update"/>
+                                <div class="text-muted">
+                                    Force update Display install date when install ticket close.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

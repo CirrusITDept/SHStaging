@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="livechat_custom_channel_form_view" model="ir.ui.view">
+            <field name="name">custom.livechat.channel.form.inherit.website_livechat</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//h1" position="after">
+                    <label for="live_chat"/>
+                    <field name="live_chat"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="livechat_custom_kanban_view" model="ir.ui.view">
+            <field name="name">custom.mail.channel.kanban.inherit</field>
+            <field name="model">mail.channel</field>
+            <field name="inherit_id" ref="im_livechat.mail_channel_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_module_desc')]/div[2]" position="replace">
+                    <div>
+                        <p>
+                            <strong>
+                                <t t-if="record.livechat_author">
+                                    <field name="livechat_author"/>
+                                </t>
+                                <t t-elif="record.author_id.raw_value and record.livechat_author == ''">
+                                    <field name="author_id"/>
+                                </t>
+                                <t t-else="not record.livechat_author and not record.author_id.raw_value">Anonymous</t>
+                            </strong>
+                        </p>
+                        <p>
+                            <t t-if="record.body.raw_value">
+                                <field name="body" widget="html"/>
+                                <br/>
+                            </t>
+                        </p>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>
