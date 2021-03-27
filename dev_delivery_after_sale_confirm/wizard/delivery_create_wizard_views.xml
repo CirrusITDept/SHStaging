@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle
+ -->
+<odoo>
+    <record id="view_deliery_create_wizard_form" model="ir.ui.view">
+        <field name="name">view.delivery.create.wizard.form</field>
+        <field name="model">delivery.create.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Customer Sale Person Assign">
+                <group>
+                    <group>
+                        <field name="name" readonly="1"/>
+                    </group>
+                </group>
+                
+                <seperator string='Sale Lines'/>
+                <field name="sale_delivery_line_ids" options="{'create': false}">
+                    <tree editable="buttom">
+                        <field name="product_id" readonly="1"/>
+                        <field name="name" readonly="1" required="1"/>
+                        <field name="quantity"/>
+                    </tree>
+                </field>
+                
+                <footer>
+                    <button name="create_delivery_order" string="Create Picking" type="object" class="btn-primary"/>
+                    or
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+     <act_window id="action_create_picking_from_sale"
+                 name="Create New Picking"
+                 res_model="delivery.create.wizard" 
+                 binding_model="sale.order"
+                 view_mode="form" 
+                 target="new" />
+
+</odoo>

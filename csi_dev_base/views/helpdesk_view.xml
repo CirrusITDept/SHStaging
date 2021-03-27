@@ -1,0 +1,290 @@
+<odoo>
+	<record id="helpdesk_ticket_action_new" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_in_progress" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'In Progress')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_cancel" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Cancelled')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_solved" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Solved')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_install" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Installed')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_waiting" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Waiting on Development')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_resolved" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Resolved')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_abandod" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Abandoned/No Response')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_sign" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Waiting on Sign Shop')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_postponed" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Postponed/Delayed')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_replace" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Waiting on Replacement Parts')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_end_user" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Waiting on End User')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_no_response" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'No Response')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_internet" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Installed - waiting for Internet')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_ship" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Ship Replacement First - Charged Customer')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_cust_return" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Customer Return First - Issued Return Label')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_refund" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Return Received - Refund Issued')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_action_ship" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="domain">[('stage_id.name', '=', 'Return Received - Ship Replacement')]</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ticket
+                </p><p>To get things done, use activities and status on tickets.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

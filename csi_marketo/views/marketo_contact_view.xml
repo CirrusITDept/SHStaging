@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>	
+	
+	<!-- Tree view for shipped item -->
+    <record id="marketo_contact_tree_view" model="ir.ui.view">
+        <field name="name">marketo.contact.tree.view</field>
+        <field name="model">marketo.contact</field>
+        <field name="arch" type="xml">
+            <tree string="Marketo Activity">
+                <field name="parse_error"/>
+                <field name="done"/>
+                <field name="odoo_id"/>
+                <field name="full_name"/>
+                <field name="email"/>
+                <field name="sale_id"/>
+                <field name="parent_id"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="marketo_contact_form_view" model="ir.ui.view">
+        <field name="name">marketo.contact.form.view</field>
+        <field name="model">marketo.contact</field>
+        <field name="arch" type="xml">
+            <form string="Marketo Contact">
+                <header></header>
+                <sheet>
+                    <group>
+                        <field name="parse_error"/>
+		                <field name="parse_msg"/>
+		                <field name="done"/>
+		                <field name="odoo_id"/>
+		                <field name="full_name"/>
+		                <field name="first_name"/>
+		                <field name="last_name"/>
+		                <field name="email"/>
+		                <field name="street1"/>
+		                <field name="street2"/>
+		                <field name="city"/>
+		                <field name="state_id"/>
+		                <field name="zip"/>
+		                <field name="phone"/>
+		                <field name="sale_id"/>
+		                <field name="parent_id"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_marketo_contact" model="ir.actions.act_window">
+        <field name="name">Marketo Contact</field>
+        <field name="res_model">marketo.contact</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain"></field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Marketo Contact
+            </p>
+        </field>
+    </record>
+    
+    <menuitem name="Marketo" id="menu_marketo_main" parent="crm.crm_menu_root" sequence="21" />
+    <menuitem name="Marketo Activity" id="menu_marketo_activity" parent="csi_marketo.menu_marketo_main" action="action_marketo_activity" sequence="1" />
+    <menuitem name="Marketo Contact" id="menu_marketo_contact" parent="csi_marketo.menu_marketo_main" action="action_marketo_contact" sequence="2" />
+</odoo>	

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="stock_barcode_settings_widget">
+        <t t-jquery="button[class='btn-lg btn btn-dark text-uppercase o_cancel']" t-operation="replace">
+            <button class="btn-lg btn btn-dark text-uppercase">Cancel</button>
+        </t>
+    </t>
+</templates>

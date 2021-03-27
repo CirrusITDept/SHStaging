@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <report
+        id="pdf_fixed_pages"
+        string="Fixed Report"
+        report_type="qweb-pdf"
+        model="res.partner"
+        name="pdf_template.pdf_template_document"
+        file="pdf_template.pdf_template_document"
+        print_report_name="'Fixed Page'"
+        attachment_use="False"
+        paperformat="pdf_template.paperformat_fixed"
+        menu="True"/>
+
+</odoo>

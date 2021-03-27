@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record model="res.groups" id="group_can_adjust_inventory">
+            <field name="name">Can Adjust Inventory</field>
+            <field name="implied_ids" eval="[(4,ref('stock.group_stock_manager'))]"/>
+        </record>
+        
+        <record model="res.groups" id="group_can_lock_unlock_display">
+            <field name="name">Can Lock/Unlock Displays</field>
+        </record>
+        
+        <record model="res.groups" id="group_can_update_cost">
+            <field name="name">Can Update Cost</field>
+        </record>
+        
+        <record model="res.groups" id="group_can_change_salesperson">
+            <field name="name">Can change salesperson on New Opportunities</field>
+        </record>
+	</data>
+</odoo>

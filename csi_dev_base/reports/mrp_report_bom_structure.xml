@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_mrp_bom_cust" inherit_id="mrp.report_mrp_bom">
+    	<xpath expr="//div/t[1]/div[2]/div[1]/div[1]/table[1]/thead/tr/th[5]" position="replace">
+    		<th t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost text-right" title="This is the cost defined on the product.">Product Cost</th>
+    		<th t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost text-right" title="This is the cost defined on the product.">Last Pur Cost</th>
+    	</xpath>
+    	<xpath expr="//div/t[1]/div[2]/div[1]/div[1]/table[1]/tbody/tr/td[5]" position="replace">
+    		<td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost text-right">
+				<span><t t-esc="data['price']" t-options='{"widget": "monetary", "display_currency": currency}'/></span>
+			</td>
+			<td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost text-right">
+				<span><t t-esc="data['cust_last_purchase_price']" t-options='{"widget": "monetary", "display_currency": currency}'/></span>
+			</td>
+    	</xpath>
+    	<xpath expr="//tfoot/tr/td[5]" position="after">
+    		<td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost text-right">
+				<span><t t-esc="data['last_purchase_total']/data['bom_qty']" t-options='{"widget": "monetary", "display_currency": currency}'/></span>
+			</td>
+    	</xpath>
+    </template>
+    
+    <template id="report_mrp_bom_line_cust" inherit_id="mrp.report_mrp_bom_line">
+    	<xpath expr="//tr/td[5]" position="after">
+			<td class="o_mrp_prod_cost text-right">
+				<span t-esc="l['cust_last_purchase_price']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+			</td>
+    	</xpath>
+    </template>
+</odoo>

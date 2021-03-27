@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem id="menu_crm_lead_report_type" action="action_window_crm_lead_report_type" parent="crm.menu_crm_config_lead" sequence="10" />
+    <!-- Displays root home menu -->
+    <menuitem name="Displays" id="displays_root_menu" web_icon="website_partner,static/description/icon.png" />
+    <!-- Displays top level menu item -->
+    <menuitem name="Displays" id="display_records_menu" parent="displays_root_menu" action="action_display_records_tree" />
+    <!-- Display Setup top level menu item -->
+    <menuitem name="Display Setup" id="display_setup_menu" parent="displays_root_menu" action="action_display_setup_tree" />
+    <!-- Display as a Service top level menu item -->
+    <menuitem name="Displays as a Service" id="display_daas_menu" parent="displays_root_menu" action="action_display_daas_tree" />
+
+    <!-- Shipstation Menu Items -->
+    <menuitem name="Shipstation Packages" id="menu_shipstation_package" parent="delivery.menu_delivery" action="action_window_shipstation_packages" sequence="15" />
+    <menuitem name="Shipstation Webhooks" id="menu_shipstation_webhook" parent="delivery.menu_delivery" action="action_window_shipstation_webhooks" sequence="20" />
+
+    <!-- Salesforce Import Menu Items-->
+    <menuitem id="menu_salesforce" name="Salesforce" parent="base.menu_custom" sequence="0" />
+    <menuitem id="menu_salesforce_file" name="Files" parent="menu_salesforce" sequence="1" action="action_window_salesforce_file" />
+    <menuitem id="menu_salesforce_line" name="File Rows" parent="menu_salesforce" sequence="2" action="action_window_salesforce_line" />
+
+    <!-- Purchase Approval Menu Items -->
+    <record model="ir.ui.menu" id="menu_purchase_information">
+        <field name="action" eval="False" />
+        <field name="active" eval="True" />
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="name">Purchase Info.</field>
+        <field name="parent_id" ref="purchase.menu_purchase_config" />
+        <field name="sequence">60</field>
+        <field name="web_icon" eval="False" />
+    </record>
+    <record model="ir.ui.menu" id="menu_purchase_information_dept">
+        <field name="action" ref="base_csi.action_purchase_department_tree" />
+        <field name="active" eval="True" />
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]" />
+        <field name="name">Departments</field>
+        <field name="parent_id" ref="base_csi.menu_purchase_information" />
+        <field name="sequence">1</field>
+        <field name="web_icon" eval="False" />
+    </record>
+    <record model="ir.ui.menu" id="menu_purchase_approval">
+        <field name="active" eval="True" />
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="name">Approval</field>
+        <field name="parent_id" ref="purchase.menu_procurement_management" />
+        <field name="sequence">5</field>
+        <field name="web_icon" eval="False" />
+    </record>
+    <record model="ir.ui.menu" id="menu_purchase_approval_to_approve">
+        <field name="action" ref="base_csi.action_purchase_order_to_approve" />
+        <field name="active" eval="True" />
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="name">To Approve</field>
+        <field name="parent_id" ref="base_csi.menu_purchase_approval" />
+        <field name="sequence">1</field>
+        <field name="web_icon" eval="False" />
+    </record>
+    <record model="ir.ui.menu" id="menu_purchase_approval_to_approved">
+        <field name="action" ref="base_csi.action_purchase_order_approved" />
+        <field name="active" eval="True" />
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="name">Approved</field>
+        <field name="parent_id" ref="base_csi.menu_purchase_approval" />
+        <field name="sequence">2</field>
+        <field name="web_icon" eval="False" />
+    </record>
+
+    <menuitem name="Incoming Outgoing Report" id="menu_incoming_outgoing_report_pivot" parent="stock.menu_stock_warehouse_mgmt" action="action_incoming_outgoing_report" sequence="2" />
+    <menuitem name="Salesforce Quotes" id="menu_salesforce_quote" parent="sale.sale_order_menu" action="action_window_salesforce_quote" sequence="2" />
+    <menuitem name="Salesforce Orders" id="menu_salesforce_order" parent="sale.sale_order_menu" action="action_window_salesforce_order" sequence="2" />
+
+</odoo>

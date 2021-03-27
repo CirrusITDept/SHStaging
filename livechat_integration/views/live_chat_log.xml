@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <record id="live_chat_log_tree" model="ir.ui.view">
+            <field name="name">live.chat.log.tree</field>
+            <field name="model">live.chat.log</field>
+            <field name="arch" type="xml">
+                <tree edit="false" create="false" string="Call Back Log">
+                    <field name="create_date"/>
+                    <field name="live_chat_log"/>
+                    <field name="livechat_channel_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="live_chat_log_action" model="ir.actions.act_window">
+            <field name="name">Live Chat Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">live.chat.log</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+
+        <menuitem
+                id="lc_root_menu"
+                name="Live Chat Log"
+                parent="base.menu_custom"
+                sequence="4"/>
+
+        <menuitem
+                id="lc_menu"
+                name="Live Chat Log"
+                parent="lc_root_menu"
+                action="live_chat_log_action"
+                sequence="10"/>
+
+    </data>
+</odoo>

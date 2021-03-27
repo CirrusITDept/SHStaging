@@ -1,0 +1,2858 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  NEW VIEWS -->
+    <record model='ir.ui.view' id='view_stock_picking_filter'>
+        <field name='name'>x_gfp.inventory.filter.view</field>
+        <field name='model'>stock.picking</field>
+        <field name='inherit_id' ref='stock.view_picking_internal_search'/>
+        <field name='arch' type='xml'>
+            <field name="partner_id" position="after">
+                <filter name="ticket_id" string="Helpdesk Ticket" domain="[('ticket_id', '!=', False)]"/>
+                <filter name="ticket" string="Helpdesk Ticket" domain="[('ticket_id', '=', False)]"/>
+            </field>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="inventory_form_view_inherit">
+        <field name="name">x_gfp.inventory.form.view</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="model">stock.picking.type</field>
+        <field name="arch" type="xml">
+            <field name="barcode" position="after">
+                <field name="picking_operation"/>
+                <field name="delivery_operation"/>
+            </field>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="inventory_kanban_view_inherit">
+        <field name="name">x_gfp.inventory.kanban.view</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="model">stock.picking.type</field>
+        <field name="arch" type="xml">
+            <xpath expr='//kanban[@class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_stock_kanban"]' position="inside">
+                <field name="count_helpdesk_value"/>
+                <field name="count_sale_order_value"/>
+                <field name="picking_operation"/>
+                <field name="delivery_operation"/>
+            </xpath>
+            <xpath expr='//kanban//templates//t//div[@class="col-6 o_kanban_primary_left"]//button[@name="get_action_picking_tree_ready"]' position="after">
+                <button class="btn btn-primary" name="action_helpdesk_picking_tree_ready" type="object" t-if="record.picking_operation.raw_value || record.delivery_operation.raw_value">
+                    <span >
+                        <t t-esc="record.count_helpdesk_value.value"/>
+ Helpdesk Orders to Process</span>
+                </button>
+                <br/>
+                <br/>
+                <button class="btn btn-primary" name="action_sale_order_picking_tree_ready" type="object" t-if="record.picking_operation.raw_value || record.delivery_operation.raw_value">
+                    <span >
+                        <t t-esc="record.count_sale_order_value.value"/>
+ Sales Orders to Process</span>
+                </button>
+            </xpath>
+            <xpath expr='//kanban//templates//t//div[@class="col-6 o_kanban_primary_left"]//button[@name="get_action_picking_tree_ready"]' position="attributes">
+                <attribute name="attrs">{'invisible': ['|',('picking_operation', '=', True), ('delivery_operation', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_cancellation_warning_wizard_form" model="ir.ui.view">
+        <field name="name">x_gfp.cancellation.warning.wizard.form</field>
+        <field name="model">cancellation.warning.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cancellation Warning">
+                <group>
+                    <p>
+                        Are you sure you want to cancel this picking? This action cannot be undone.
+                    </p>
+                </group>
+                <footer>
+                    <button name="done_cancellation" string="CANCEL PICKING" type="object" class="btn-primary"/>
+                    <button string="GO BACK WITHOUT CANCELLING" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_sale_order_rate_wizard_form">
+        <field name="name">x_gfp.sale.order.rate.wizard.form</field>
+        <field name="model">sale.order.rate.wizard</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="order_id" invisible="1" />
+                <group>
+                    <i>Please select a rate to associate to this order.</i>
+                </group>
+                <group>
+                    <field name="wizard_line_ids" nolabel="1" options="{'no_open':True,'no_create':True}" readonly="1">
+                        <tree>
+                            <button name="set_rate_on_order" string="Select" type="object" class="oe_highlight" />
+                            <field name="wizard_id" invisible="1" />
+                            <field name="valid" />
+                            <field name="carrier_code" />
+                            <field name="service_code" />
+                            <field name="service_name" />
+                            <field name="calc_method" />
+                            <field name="rate" />
+                            <field name="loaded_rate" />
+                            <field name="list_rate" />
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="sale_order_wizard_form">
+        <field name="name">x_gfp.sale.order.wizard.form</field>
+        <field name="model">sale.order.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="order_id" required="1" invisible="1" />
+                <field name="currency_id" invisible="1" />
+                <group string="Panels">
+                    <group>
+                        <field name="height_warning" invisible="1" />
+                        <field name="width_warning" invisible="1" />
+                        <field name="product_id" options="{'no_create':True,'no_open':True}" />
+                        <label for="height" string="Height x Width" />
+                        <div class="o_row" name="height">
+                            <div class="row" style="background-color:#CB4335;color:white;" align="center" attrs="{'invisible':[('height_warning','=',False)]}">
+                                <div class="col-xs-6">
+                                    <strong>Height Not Divisible</strong>
+                                </div>
+                            </div>
+                            <field name="height" />
+                            <span>ft</span>
+                            x
+                            <field name="width" />
+                            <span>ft</span>
+                            <div class="row" style="background-color:#CB4335;color:white;" align="center" attrs="{'invisible':[('width_warning','=',False)]}">
+                                <div class="col-xs-6 pull-right">
+                                    <strong>Width Not Divisible</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <field name="siding" widget="selection_badge" />
+                        <field name="controller_id" options="{'no_create':True,'no_open':True}" domain="[('controller','=',True)]" />
+                    </group>
+                    <group>
+                        <field name="product_price" readonly="1" />
+                        <field name="panel_count" readonly="1" />
+                        <field name="power_injector_id" invisible="1" />
+                        <field name="power_injector_price" readonly="1" />
+                        <field name="power_injector_count" readonly="1" />
+                        <field name="controller_price" readonly="1" />
+                    </group>
+                </group>
+
+                <group class="oe_subtotal_footer oe_right" colspan="6">
+                    <field name="panel_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                </group>
+
+                <group string="Services">
+                    <group>
+                        <label for="service_module_id" string="Service Module" />
+                        <div class="o_row">
+                            <field name="service_module_id" domain="[('type','=','service')]" options="{'no_create':True,'no_open':True}" />
+                            <field name="service_module_count" />
+                            <span>qty</span>
+                        </div>
+                        <label for="carrier_id" string="Shipping Method" />
+                        <div class="o_row">
+                            <field name="carrier_id" options="{'no_create':True,'no_open':True}" />
+                            <field name="carrier_cost" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                            <span></span>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="service_cost" readonly="1" />
+                    </group>
+                </group>
+
+                <group class="oe_subtotal_footer oe_right" colspan="2">
+                    <field name="service_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                </group>
+
+                <group string="Additional Items">
+                    <group>
+                        <field name="aluminum_frame" />
+                        <field name="wifi_unit" />
+                        <field name="optional_controller" />
+                        <field name="led_panel" />
+                        <field name="extension_cable" />
+                    </group>
+                    <group>
+                        <field name="aluminum_frame_id" invisible="1" />
+                        <field name="wifi_unit_id" invisible="1" />
+                        <field name="led_panel_id" invisible="1" />
+                        <field name="extension_cable_id" invisible="1" />
+                        <field name="aluminum_frame_price" />
+                        <field name="wifi_unit_price" />
+                        <field name="controller_price" />
+                        <field name="led_panel_price" />
+                        <field name="extension_cable_price" />
+                    </group>
+                </group>
+                <group class="oe_subtotal_footer oe_right" colspan="2">
+                    <field name="addtl_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                        <label for="grand_total" />
+                    </div>
+                    <field name="grand_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                </group>
+
+
+                <footer>
+                    <button name="create_order_lines" type="object" string="Submit" class="oe_hightlight" />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--  INHERITED VIEWS -->
+    <record model="ir.ui.view" id="sign_send_request_view_form_mod">
+        <field name="name">x_gfp.sign.send.request.form.mod</field>
+        <field name="model">sign.send.request</field>
+        <field name="inherit_id" ref="sign.sign_send_request_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='signer_id']" position="before">
+                    <field name="display_id" />
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_repair_order_form_mode">
+        <field name="name">x_gfp.repair.order.form.mod</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='operations']" position="attributes">
+                    <attribute name="context">{'default_product_id': False, 'default_lot_id': False}</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_company_form_mod">
+        <field name="name">x_gfp.res.company.form.mod</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Approval Thresholds">
+                        <group>
+                            <field name="threshold_ids" nolabel="1" widget="one2many_list">
+                                <tree editable="bottom">
+                                    <field name="company_id" invisible="1" />
+                                    <field name="min_amount" />
+                                    <field name="approver_num" />
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="res_config_settings_view_form_sale_mod">
+        <field name="name">x_gfp.sale.res.config.settings.mod</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='group_product_variant']/../../../.." position="inside">
+                <h2>Quotation Display</h2>
+                <div class="row mt16 o_settings_container">
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="sale_module_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default module employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="sale_module_id" class="o_light_label" domain="[('is_module','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="frame_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default aluminum frame employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="frame_id" class="o_light_label" domain="[('is_frame','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="controller_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default controller employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="controller_id" class="o_light_label" domain="[('is_controller','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="booster_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default power booster employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="booster_id" class="o_light_label" domain="[('is_booster','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="wifi_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default wifi unit employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="wifi_id" class="o_light_label" domain="[('is_wifi','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="sale_payment_term_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default payment term on sale orders
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="sale_payment_term_id" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="repair_location_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default repair location used in repair orders
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="repair_location_id" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="picking_approvers" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Number of required approvers on outbound pickings
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="picking_approvers" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="credit_charge_product_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default product employed for credit card fees
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="credit_charge_product_id" class="o_light_label" domain="[('type','=','service')]" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="credit_charge_fee" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                Credit card charge fee (%)
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                    <label for="credit_charge_fee" string="Fee (%)" class="col-xs-3 col-md-3 o_light_label" />
+                                    <field name="credit_charge_fee" class="oe_inline" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_so_technical_drawings" />
+                        </div>
+                        <div class="o_setting_right_pane" name="sale_enable_so_technical_drawings">
+                            <label for="enable_so_technical_drawings" />
+                            <div class="text-muted">
+                                Enable Sale order Technical Dreawings
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='multi_company']" position="after">
+                <div id="shipstation_integration">
+                    <h2>Shipstation</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="API Key" for="shipstation_key" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Please enter the API key for Shipstation
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="shipstation_key" string="Key" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="shipstation_key" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="API Secret" for="shipstation_secret" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Please enter the API secret for Shipstation
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="shipstation_secret" string="Secret" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="shipstation_secret" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Shipstation Webhooks" for="shipstation_hook_ids" />
+                                <div class="text-muted">
+                                Live Post-Back Service Webhooks
+                                </div>
+                            </div>
+                            <div class="content-group" style="margin-left:50px;">
+                                <div class="row" width="100%">
+                                    <field name="shipstation_hook_ids" nolabel="1" readonly="1" widget="one2many_list">
+                                        <tree>
+                                            <field name="company_id" invisible="1" />
+                                            <field name="web_hook_id" />
+                                            <field name="name" />
+                                            <field name="url" />
+                                            <field name="hook_type" />
+                                            <field name="active" />
+                                            <button name="delete_webhook" icon="fa-times-circle text-danger" type="object" />
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Endpoint" for="shipstation_root_endpoint" />
+                                <span class="fa fa-lg fa-building-o" groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Please enter root endpoint for Shipstation
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="shipstation_root_endpoint" string="URL" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="shipstation_root_endpoint" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Post-Back Service" for="target_postback_url" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Please enter the post-back endpoint for confirmation of order
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="target_postback_url" string="URL" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="target_postback_url" placeholder="e.g https://www.odoo.com/shipstation/shipped" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Update Shipstation Information" for="get_service" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Updating these elements will update existing records and create if not found in the Odoo database
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <button name="get_service" string="Create/Update Delivery Services" type="object" class="oe_link" />
+                                        <button name="get_packages" string="Create/Update Delivery Packages" type="object" class="oe_link" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_ss" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auto_ss" />
+                                <div class="text-muted">
+                                Automatically process shipping labels
+                                </div>
+                                <div class="content-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="hoopla_integration">
+                    <h2>Hoopla</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Client ID" for="hoopla_client_id" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Hoopla Client Id
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="hoopla_client_id" string="ID" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="hoopla_client_id" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Client Secret" for="hoopla_client_secret" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Hoopla Client Secret
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="hoopla_client_secret" string="Secret" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="hoopla_client_secret" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Client Secret" for="hoopla_team_id" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                This is the team used for the metric calculations sent to Hoopla
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="hoopla_team_id" string="Channel" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="hoopla_team_id" class="oe_inline" options="{'no_create':True,'no_open':True}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Endpoint" for="hoopla_access_token" />
+                                <span class="fa fa-lg fa-building-o" groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Hoopla Authorization Token
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="hoopla_access_token" string="Token" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="hoopla_access_token" />
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <button name="get_hoopla_access_token" string="Get Token" type="object" class="oe_link" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="crm_case_form_view_oppor">
+        <field name="name">x_gfp.crm.lead.form.opportunity.mod</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_order_count']/../.." position="after">
+                <button class="oe_stat_button" type="object" name="open_salesforce_quote" icon="fa-history" attrs="{'invisible': [('salesforce_quote_count', '=', 0)]}">
+                    <field string="Salesforce Quotations" name="salesforce_quote_count" widget="statinfo" />
+                </button>
+                <button class="oe_stat_button" type="object" name="open_salesforce_order" icon="fa-history" attrs="{'invisible': [('salesforce_order_count', '=', 0)]}">
+                    <field string="Salesforce Orders" name="salesforce_order_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="type" invisible="1" />
+                <field name="display_id" attrs="{'invisible': [('type','!=','opportunity')]}" />
+                <field name="partner_sign_id" invisible="1" />
+                <field name="partner_dist_id" invisible="1" />
+                <field name="end_user" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="after">
+                <field name="dest_state_id" domain="[('country_id','=',[%(base.us)d,%(base.ca)d])]" options="{'no_create':True,'no_open':True}" />
+            </xpath>
+            <xpath expr="//field[@name='partner_address_phone']/..//field[@name='phone']" position="after">
+                <field name="opp_channel_id" />
+                <field name="channel_type_id" />
+                <field name="partner_sign_id" readonly="1" force_save="1" />
+                <field name="end_user" />
+                <field name="partner_ent_acc_id" readonly="1" force_save="1" />
+                <field name="partner_dist_id" readonly="1" force_save="1" />
+            </xpath>
+            <xpath expr="//field[@name='email_cc']/..//field[@name='phone']" position="before">
+                <field name="opp_channel_id" />
+            </xpath>
+            <xpath expr="//group[@name='Misc']" position="inside">
+                <field name="display_id" attrs="{'invisible': [('type', '!=', 'opportunity')]}" />
+                <field name="salesforce_id" attrs="{'invisible': [('type', '!=', 'opportunity')]}" />
+                <field name="salesforce_create_date" attrs="{'invisible': [('type', '!=', 'opportunity')]}" />
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="eu_phone_id" />
+                <field name="eu_demo_id" />
+                <field name="smb_lead_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Helpdesk Ticket form view -->
+    <record id="action_picking_helpdesk_form" model="ir.actions.act_window">
+        <field name="name">Transfer</field>
+        <field name="res_model">stock.picking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="domain"></field>
+        <field name="context">{
+                'search_default_picking_type_id': [1],
+                'default_picking_type_id': 1,
+                'contact_display': 'partner_address',
+        }
+        </field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new transfer
+            </p>
+            <p>
+                Transfers allow you to move products from one location to another.
+            </p>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="helpdesk_ticket_view_form">
+        <field name="name">x_gfp.help.desk.ticket.mod</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_id']" position="attributes">
+                <attribute name="context">{'default_product_id': product_id, 'default_company_id': company_id}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="replace">
+                <button type="action" name="%(stock.act_stock_return_picking)d" groups="stock.group_stock_user" string="Return" attrs="{'invisible': [('sale_order_id', '=', False)]}" context="{'default_ticket_id': id, 'default_company_id': company_id}" />
+                <button name="%(base_csi.action_picking_helpdesk_form)d" type="action" groups="stock.group_stock_user" string="Return" attrs="{'invisible': ['|', ('sale_order_id','!=', False), ('use_product_returns', '=', False)]}" context="{'default_partner_id': partner_id, 'default_ticket_id': active_id, 'default_salesforce_order': salesforce_order, 'default_origin': name}" />
+            </xpath>
+            <xpath expr="//button[@name='assign_ticket_to_self']" position="after">
+                <button string="New Quotation" name="button_sale" type="object" class="oe_highlight" />
+                <button string="Quality Alert" name="button_quality_alert" type="object" class="oe_highlight" />
+            </xpath>
+            <xpath expr="//field[@name='sale_order_id']" position="before">
+                <field name="sale_id" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="helpdesk_team_name" invisible="1" />
+                <field name="projected_install_date" attrs="{'invisible': [('helpdesk_team_name', '!=', 'Preinstall')]}" />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="open_salesforce_order" icon="fa-history" attrs="{'invisible': [('salesforce_order_count', '=', 0)]}">
+                    <field string="Salesforce Orders" name="salesforce_order_count" widget="statinfo" />
+                </button>
+                <button name="open_sale" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('sale_count', '=', 0)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sale_count" />
+                        </span>
+                        <span class="o_stat_text">Orders</span>
+                    </div>
+                </button>
+                <button name="open_quality_alert" type="object" class="oe_stat_button" icon="fa-bell" attrs="{'invisible': [('alert_count', '=', 0)]}" context="{'default_product_tmpl_id': product_tmpl_id,'default_product_id': product_id, 'default_lot_id': lot_id, 'default_sale_id': sale_order_id, 'default_display_id':display_id, 'default_salesforce_order': salesforce_order}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="alert_count" />
+                        </span>
+                        <span class="o_stat_text">Quality Alert</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='description']" position="replace" />
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Description">
+                        <group>
+                            <field name="internal_description" placeholder="Internal description of the ticket..." />
+                            <field name="next_action" />
+                            <field name="product_tmpl_id" invisible="1" />
+                        </group>
+                    </page>
+                    <page string="Addtl. Info">
+                        <group>
+                            <field name="days_since_last_activity" />
+                            <field name="previous_days_since_last_activity" force_save="1" />
+                            <field name="description" string="Customer Facing Desc." placeholder="Customer facing description here..." />
+                            <field name="salesforce_id" />
+                            <field name="salesforce_case_number" />
+                            <field name="salesforce_create_date" />
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+            <xpath expr="//field[@name='sale_order_id']" position="after">
+                <field name="salesforce_order" />
+            </xpath>
+            <xpath expr="//field[@name='partner_name']" position="replace">
+                <field name="partner_name" />
+            </xpath>
+            <xpath expr="//field[@name='partner_email']" position="after">
+                <field name="partner_phone" />
+                <field name="partner_sign_id" />
+                <field name="partner_end_id" />
+                <field name="partner_dist_id" />
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="before">
+                <field name="display_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Helpdesk ticket search view mod  -->
+    <record id="helpdesk_tickets_view_search_mod" model="ir.ui.view">
+        <field name="name">x_gfp.helpdesk.ticket.search.mod</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='name']" position="replace">
+                    <field name="name" string="ID / Name / Customer / Display" filter_domain="['|', '|', '|', ('id', 'ilike', self), ('name', 'ilike', self), ('display_id', 'ilike', self), ('partner_id', 'child_of', self)]" />
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="display_id" />
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_partner_form_mod">
+        <field name="name">x_gfp.res.partner.form.mod</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_payment_term_id']" position="attributes">
+                <attribute name="domain">[('id','=',0)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='property_supplier_payment_term_id']" position="attributes">
+                <attribute name="domain">[('id','=',0)]</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]//button[1]" position="before">
+                <button class="oe_stat_button" name="action_partner_display" type="object" icon="fa-diamond">
+                    <field string="Displays" name="display_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="open_salesforce_quote" icon="fa-history" attrs="{'invisible': [('salesforce_quote_count', '=', 0)]}">
+                    <field string="Salesforce Quotations" name="salesforce_quote_count" widget="statinfo" />
+                </button>
+                <button class="oe_stat_button" type="object" name="open_salesforce_order" icon="fa-history" attrs="{'invisible': [('salesforce_order_count', '=', 0)]}">
+                    <field string="Salesforce Orders" name="salesforce_order_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="fax" />
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="salesforce_id" />
+                <field name="salesforce_parent_id" />
+                <field name="salesforce_type" />
+                <field name="salesforce_create_date" />
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="most_recent_order_date" attrs="{'invisible': [('sale_order_count', '&lt;=', 0)]}" />
+            </xpath>
+            <xpath expr="//field[@name='property_delivery_carrier_id']" position="after">
+                <field name="residential" />
+                <label for="shipstation_warehouse_id" />
+                <div name="ship_warehouse">
+                    <div>
+                        <field name="shipstation_warehouse_id" readonly="1" class="oe_inline" />
+                    </div>
+                    <div>
+                        <button name="create_shipstation_warehouse_id" string="Create/Update Warehouse" type="object" class="oe_inline fa fa-arrow-right oe_link" />
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Shipping Accounts" attrs="{'invisible':[('parent_id','!=',False)]}">
+                    <group>
+                        <field name="shipping_account_ids" nolabel="1" widget="one2many_list">
+                            <tree editable="bottom">
+                                <field name="partner_id" invisible="1" />
+                                <field name="carrier_id" />
+                                <field name="name" />
+                                <field name="zip" />
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="enterprise_account" />
+                <field name="sign_shop" />
+                <field name="new_sign_shop" attrs="{'invisible':[('sign_shop','=',False)]}" readonly="1" />
+                <field name="not_new_sign_shop" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_users_form_mod">
+        <field name="name">x_gfp.res.users.form.mod</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+                <group>
+                    <field name="salesforce_id" />
+                    <field name="hoopla_user" />
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="User Approval Thresholds">
+                    <group>
+                        <field name="threshold_ids" nolabel="1" widget="one2many_list">
+                            <tree editable="bottom">
+                                <field name="user_id" invisible="1" />
+                                <field name="max_amount" />
+                                <field name="account_id" />
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="crm_case_form_view_oppor_mod">
+        <field name="name">x_gfp.crm.lead.oppor.inherited.crm.mod</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='referred']" position="after">
+                <field name="salesforce_id" />
+                <field name="salesforce_create_date" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Opportunities search view mod -->
+    <record id="view_crm_case_opportunities_filter_mod" model="ir.ui.view">
+        <field name="name">x_gfp.crm.lead.search.opportunity.mod</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="display_id" />
+            </field>
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="email_from" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_form_view_mod">
+        <field name="name">x_gfp.product.template.form.mod</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                <label for="height" string="Height x Width" />
+                <div class="o_row" name="height">
+                    <field name="height" />
+                    <span>ft</span>
+                    x
+                    <field name="width" />
+                    <span>ft</span>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='group_standard_price']/div[@name='pricing']" position="after">
+                <field name="commission_type"/>
+                <field name="pm_cost" attrs="{'invisible': [('commission_type', '!=', 'commission')]}" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="country_origin" />
+                <field name="tariff_code" />
+            </xpath>
+            <xpath expr="//group[@name='sale']" position="inside">
+                <group string="Cirrus Sales Info">
+                    <field name="is_module" />
+                    <field name="is_frame" />
+                    <field name="is_controller" />
+                    <field name="cellular" />
+                    <field name="is_booster" />
+                    <field name="is_service_module" />
+                    <field name="is_wifi" />
+                </group>
+                <group string="Cirrus Module Info" attrs="{'invisible':[('is_module','!=',True)]}">
+                    <field name="service_module_id" domain="[('is_service_module','=',True)]" />
+                    <field name="module_type" />
+                    <field name="module_color" />
+                    <field name="module_pitch" />
+                    <field name="module_pixel" />
+                    <field name="warranty_module_price" />
+                </group>
+                <group string="Cirrus Controller Info" attrs="{'invisible':[('is_controller','!=',True)]}">
+                    <field name="warranty_controller_price" />
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='group_lots_and_weight']/label" position="before">
+                <label string="Dimensions (Inches)" for="delivery_length" />
+                <div class="o_address_format">
+                    <field name="delivery_length" class="o_address_zip" />
+                    x
+                    <field name="delivery_width" class="o_address_zip" />
+                    x
+                    <field name="delivery_height" class="o_address_zip" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_order_form_with_carrier_mod">
+        <field name="name">x_gfp.sale.order..delivery.form.mod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="delivery.view_order_form_with_carrier" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_delivery_wizard']/.." position="replace">
+                <div class="oe_right">
+                    <button string="Add shipping" name="get_shipstation_rates" type="object" attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}" />
+                    <button string="Update shipping cost" name="get_shipstation_rates" context="{'carrier_recompute':True}" type="object" class="text-warning btn-secondary" attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}" />
+                    <button string="Update shipping cost" name="get_shipstation_rates" context="{'carrier_recompute':True}" type="object" attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_quotation_tree_mod">
+        <field name="name">x_gfp.sale.quotation.tree.mod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="invoice_status" position="after">
+                <field name="payment_received"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_delivery_carrier_form_mod">
+        <field name="name">x_gfp.delivery.carrier.form.mod</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form" />
+        <field name="priority">98</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="service_code" />
+                    <field name="carrier_code" />
+                    <field name="domestic" />
+                    <field name="international" />
+                    <field name="non_manager_display" />
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_picking_form_mod">
+        <field name="name">x_gfp.stock.picking.form.mod</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="priority">98</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div align="center" style="background-color:#CB4335;color:white;" attrs="{'invisible':[('return_picking_id','=', False)]}">
+                    <div>
+                        <strong>CONNECTED TO A RETURN ORDER</strong>
+                    </div>
+                    <div>
+                        <strong>Include return shipping label in box and record return tracking reference.</strong>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']/../div" position="before">
+                <label for="ss_id" attrs="{'invisible':[('ss_id','=',0)]}" />
+                <div attrs="{'invisible':[('ss_id','=',0)]}">
+                    <field name="ss_id" readonly="1" attrs="{'invisible':[('ss_id','=',0)]}" />
+                    |
+                    <field name="ss_status" readonly="1" attrs="{'invisible':[('ss_id','=',0)]}" />
+                    |
+                    <field name="ss_address_status" readonly="1" attrs="{'invisible':[('ss_id','=',0)]}" />
+                    |
+                    <button name="delete_ssorder" string="Cancel" type="object" attrs="{'invisible':[('ss_status','=','cancelled')]}" invisible="1" />
+                </div>
+                <field name="ss_ship_id" attrs="{'invisible':[('ss_ship_id','=',0)]}" />
+            </xpath>
+            <xpath expr="//field[@name='carrier_id']" position="replace" />
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="carrier_id" options="{'no_create': True, 'no_open': True}" />
+                <field name="delivery_carrier_code" invisible="1" />
+                <field name="delivery_package" />
+                <label string="Dimensions" for="delivery_length" />
+                <div class="o_address_format">
+                    <field name="delivery_length" class="o_address_zip" />
+                    X
+                    <field name="delivery_width" class="o_address_zip" />
+                    X
+                    <field name="delivery_height" class="o_address_zip" />
+                </div>
+                <field name="client_account" domain="[('partner_id','=',partner_id)]" />
+                <field name="confirmation" />
+                <field name="delivery_type" attrs="{'invisible':True}" />
+                <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', '=', 'done')]}" />
+            </xpath>
+            <xpath expr="//field[@name='backorder_id']" position="after">
+                <field name="sale_id" />
+                <field name="salesforce_order" />
+                <field name="purchase_id" />
+                <field name="ticket_id" />
+                <field name="return_picking_id" attrs="{'invisible': [('ticket_id','=',False)]}" domain="[('ticket_id','=', ticket_id), ('name','!=',name)]" />
+                <field name="return_carrier_tracking_ref" attrs="{'invisible': [('return_picking_id','=',False)]}" />
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <field name="return_location" invisible="1" />
+                <button name="create_update_ssorder" string="Send to Shipstation" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('picking_type_code','!=','outgoing'),('ss_id','!=',0),('state','not in',['assigned'])]}" />
+                <button name="ship_ssorder" string="Print Label" type="object" class="oe_highlight" attrs="{'invisible':['|',('ss_status','!=','awaiting_shipment'),('state','not in',['assigned'])]}" />
+                <button name="create_update_ssorder" string="Send to Shipstation" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('picking_type_code','!=','incoming'),('ss_id','!=',0),('return_location','=',False)]}" />
+                <button name="ship_ssorder" string="Print Label" type="object" class="oe_highlight" attrs="{'invisible':['|',('ss_status','!=','awaiting_shipment'),('return_location','=',False)]}" />
+                <button name="cancel_shipstation_order" string="Cancel Shipstation Order" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('ss_id','=',0),('ss_status','=','cancelled'),('state','not in',['assigned'])]}" />
+                <button name="cancel_shipstation_order" string="Cancel Shipstation Order" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('ss_id','=',0),('ss_status','=','cancelled'),('return_location','=',False)]}" />
+            </xpath>
+            <xpath expr="//button[@name='do_unreserve']" position="after">
+                <button name="unreserve_lot_sn" string="UNRESERVE LOT/SN" type="object" groups="base.group_user" attrs="{'invisible': ['|', '|', '|', '|', ('picking_type_code', '=', 'incoming'), ('immediate_transfer', '=', True), ('is_locked', '=', False), '&amp;', ('state', 'not in', ('assigned', 'partially_available')), ('move_type', '!=', 'one'), '&amp;', ('state', 'not in', ('assigned', 'partially_available', 'confirmed')), ('move_type', '=', 'one')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='button_validate']" position="replace" />
+            <xpath expr="//button[@name='button_validate']" position="replace">
+                <button name="approve_picking" attrs="{'invisible': ['|', '|', ('approved','=',True),('state', 'in', ('waiting','confirmed')), ('show_validate', '=', False)]}" string="Approve" type="object" class="oe_highlight" groups="stock.group_stock_user" />
+                <button name="approve_picking" attrs="{'invisible': ['|', '|', ('approved','=',True),('state', 'not in', ('waiting', 'confirmed')), ('show_validate', '=', False)]}" string="Approve" type="object" groups="stock.group_stock_user" class="o_btn_validate" />
+                <button name="button_validate" attrs="{'invisible': ['|', '|', ('approved','!=',True),('state', 'in', ('waiting','confirmed')), ('show_validate', '=', False)]}" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" />
+                <button name="button_validate" attrs="{'invisible': ['|', '|', ('approved','!=',True),('state', 'not in', ('waiting', 'confirmed')), ('show_validate', '=', False)]}" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" />
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="context">{'action_button_call': True}</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Approvals">
+                    <group>
+                        <field name="approval_ids" nolabel="1" widget="one2many_list" readonly="1">
+                            <tree>
+                                <field name="name" />
+                                <field name="create_date" string="Approval Date" />
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="approved" invisible="1" />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_withcarrier_out_form_mod" model="ir.ui.view">
+        <field name="name">x_gfp.delivery.stock.picking_withcarrier.form.view.mod</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="delivery.view_picking_withcarrier_out_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='shipping_weight']" position="after">
+                <field name="ss_order_weight" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_stage_form_mod" model="ir.ui.view">
+        <field name="name">x_gfp.crm.stage.form.mod</field>
+        <field name="model">crm.stage</field>
+        <field name="inherit_id" ref="crm.crm_stage_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='fold']" position="after">
+                <field name="restrict_stage_change_into" required="1" />
+                <field name="restrict_stage_change" required="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_advance_payment_inv_mod" model="ir.ui.view">
+        <field name="name">x_gfp.sale.advanced.payment.form</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv" />
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='amount']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount']/.." position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='advance_payment_method']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="before">
+                <field name="downpayment_type" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- incoming.outgoing.report views -->
+    <record model="ir.ui.view" id="view_incoming_outgoing_report_pivot">
+        <field name="name">x_gfp.incoming.outgoing.report.pivot</field>
+        <field name="model">incoming.outgoing.report</field>
+        <field name="mode">primary</field>
+        <field name="type">pivot</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <pivot string="Rebalancing Report" disable_linking="True">
+                <field name="location_id" type="row" />
+                <field name="product_id" type="row" />
+                <field name="product_min_qty" type="measure" />
+                <field name="on_po" type="measure" />
+                <field name="incoming" type="measure" />
+                <field name="all_incoming" type="measure" />
+                <field name="quantity" type="measure" />
+                <field name="outgoing" type="measure" />
+                <field name="available" type="measure" />
+                <field name="net_available" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_invoice_form_accounting_advisor" model="ir.ui.view">
+        <field name="name">x_gfp.account.move.form.accounting.adv</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="priority">200</field>
+        <field name="groups_id" eval="[(6,0,[ref('base_csi.group_addtl_carrier')])]" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date_due']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_payment_term_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_form_accounting_adv" model="ir.ui.view">
+        <field name="name">x_gfp.res.partner.form.accounting.adv</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority">200</field>
+        <field name="groups_id" eval="[(4,ref('account.group_account_manager'))]" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_payment_term_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='property_supplier_payment_term_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_form_mod" model="ir.ui.view">
+        <field name="name">x_gfp.account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date_due']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_payment_term_id']" position="attributes">
+                <attribute name="domain">[('id','=',0)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_order_form_mod">
+        <field name="name">x_gfp.sale.order.form.mod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                <field name="pm_cost" readonly="1" invisible="1" />
+            </xpath>
+            <xpath expr="//group[@name='note_group']" position="after">
+                <group name="note_margin_group" col="6">
+                    <group colspan="4">
+                    </group>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="profit_margin">
+                        <field name="x_so_profit_margin" widget="monetary" options="{'currency_field': 'currency_id'}" groups="sales_team.group_sale_salesman,account.group_account_invoice" />
+                        <field name="x_so_new_sign_shop" string="New Customer" readonly="1" groups="sales_team.group_sale_salesman,account.group_account_invoice" />
+                    </group>
+                    <div class="oe_clear" />
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='x_so_new_sign_shop']" position="after">
+                <field name="commission_amount" groups="base_csi.group_view_commission_amounts" />
+            </xpath>
+            <xpath expr="//button[4]" position="attributes">
+                <attribute name="attrs">{'invisible': [('state', 'in', ['done','cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="replace" />
+            <xpath expr="//button[@name='action_confirm']" position="replace">
+                <button name="action_confirm" groups="base_csi.group_confirm_sale_order" id="action_confirm" string="Fulfill" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in', ['sent'])]}" />
+                <button name="action_confirm" groups="base_csi.group_confirm_sale_order" string="Fulfill" type="object" attrs="{'invisible': [('state', 'not in', ['draft'])]}" />
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="before">
+                <button string="Quality Alert" name="button_quality_alert" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['draft','sent','sale'])]}" />
+                <button string="Add CC Fee" name="add_credit_card_fee" type="object" attrs="{'invisible': [('state','in',['cancel','done','sale'])]}" />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="open_sign_request" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('request_count', '=', 0)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="request_count" />
+                        </span>
+                        <span class="o_stat_text">Sign Requests</span>
+                    </div>
+                </button>
+                <button name="open_ticket" type="object" class="oe_stat_button" icon="fa-ticket" groups="helpdesk.group_helpdesk_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="ticket_count" />
+                        </span>
+                        <span class="o_stat_text">Tickets</span>
+                    </div>
+                </button>
+                <button name="open_quality_alert" type="object" class="oe_stat_button" icon="fa-bell" attrs="{'invisible': [('alert_count', '=', 0)]}" groups="quality.group_quality_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="alert_count" />
+                        </span>
+                        <span class="o_stat_text">Quality Alert</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="before">
+                <button name="print_cirrus_quotation" string="Print Cirrus Quote" type="object" states="draft" class="btn-primary o_sale_print" />
+                <button name="send_cirrus_quotation" string="Create Sign Request" type="object" states="draft" class="btn-primary o_sale_print" />
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="before">
+                <button name="send_cirrus_quotation" string="Create Sign Request" type="object" states="sent" class="o_sale_print" />
+                <button name="print_cirrus_quotation" string="Print Cirrus Quote" type="object" states="sent" class="o_sale_print" />
+                <button name="print_cirrus_quotation" string="Print Cirrus Order" type="object" states="sale" class="o_sale_print" />
+                <button name="create_display" string="CREATE DISPLAY" class="btn-primary" type="object" attrs="{'invisible': ['|', ('state','=','cancel'), ('display_id', '!=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='client_order_ref']" position="replace" />
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="display_id" />
+                <Field name="client_order_ref" />
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="partner_sign_id" />
+                <field name="partner_end_id" />
+                <field name="partner_dist_id" />
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="domain">[('id','=',0)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="client_account" domain="[('partner_id','=',partner_id)]" string="Delivery Account" />
+                <label for="delivery_package" />
+                <div>
+                    <div>
+                        <field name="delivery_package" string="Delivery Package" options="{'no_create': True}" />
+                    </div>
+                </div>
+                <field name="confirmation" />
+                <label string="Dimensions (Inches)" for="delivery_length" />
+                <div class="o_address_format">
+                    <field name="delivery_length" class="o_address_zip" />
+                    x
+                    <field name="delivery_width" class="o_address_zip" />
+                    x
+                    <field name="delivery_height" class="o_address_zip" />
+                </div>
+                <field name="delivery_carrier_code" invisible="1" />
+                <field name="carrier_id" domain="[('id', '=', 0)]" />
+            </xpath>
+            <xpath expr="//notebook/page" position="after">
+                <page string="Display">
+                    <group string="Display">
+                        <group>
+                            <label for="discount_type" />
+                            <div class="o_row" name="discount">
+                                <field name="discount_type" widget="selection_badge" />
+                                <field name="discount" />
+                                <span> %</span>
+                            </div>
+                            <field name="module_id" domain="[('is_module','=',True)]" options="{'no_create':True}" />
+                            <label for="height" string="Height x Width" />
+                            <div class="o_row" name="dimensions">
+                                <field name="height" />
+                                <span>ft</span>
+                                x
+                                <field name="width" />
+                                <span>ft</span>
+                            </div>
+                            <label for="sidedness" string="" />
+                            <div class="o_row" name="sidedness">
+                                <field name="sidedness" widget="selection_badge" />
+                            </div>
+                            <field name="controller_id" domain="[('is_controller','=',True)]" options="{'no_create':True}" />
+                            <field name="booster_id" domain="[('is_booster','=',True)]" options="{'no_create':True}" invisible="1" />
+                            <field name="booster_count" />
+                        </group>
+                        <group>
+                            <label for="total_weight" string="" />
+                            <div class="o_row" name="total_weight">
+                                <field name="total_weight" invisible="1" />
+                                <span style="display:block;height:25px;"></span>
+                            </div>
+                            <field name="module_price" />
+                            <field name="module_price_discount" />
+                            <field name="panel_count" />
+                            <label for="frame_id" string="" />
+                            <div class="o_row" name="total_weight">
+                                <field name="frame_id" domain="[('is_frame','=',True)]" options="{'no_create':True}" invisible="1" />
+                                <span style="display:block;height:40px;"></span>
+                            </div>
+                            <field name="controller_price" />
+                            <field name="booster_price" />
+                        </group>
+                    </group>
+                    <group string="Additional Items">
+                        <group>
+                            <label for="service_module_id" />
+                            <div class="o_row" name="service_module_id">
+                                <field name="service_module_id" domain="[('is_service_module','=',True)]" options="{'no_create':True}" />
+                                <field name="service_module_count" />
+                                <span> qty</span>
+                            </div>
+                            <field name="addtl_controller_count" />
+                            <field name="wifi_count" />
+                            <field name="wifi_id" domain="[('is_wifi','=',True)]" options="{'no_create':True}" invisible="1" />
+                            <field name="cirruscomplete_selection" />
+                        </group>
+                        <group>
+                            <field name="service_module_price" />
+                            <field name="addtl_controller_price" />
+                            <field name="wifi_price" />
+                            <field name="amount_total_minus_shipping" invisible="1" />
+                            <field name="down_payment" invisible="1" />
+                            <field name="warranty_cost" />
+                            <field name="override_warranty_cost" />
+                        </group>
+                    </group>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="display_total">
+                        <field name="display_subtotal" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                        <field name="display_subtotal_discount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                        <field name="delivery_price" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" />
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="display_grand_total" />
+                        </div>
+                        <field name="display_grand_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                    </group>
+                    <button name="create_order_lines" type="object" string="Generate Lines" class="oe_hightlight btn btn-primary o_form_button_edit" attrs="{'invisible': [('state','in',['sale','done','cancel'])]}" />
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="before">
+                <field name="credit_card_fee" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|',('is_delivery','=',True),('credit_card_fee','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|','|',('is_delivery','=',True),('credit_card_fee','=',True),('state', 'in', ('sale','done', 'cancel'))], 'required': [('display_type', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|','|',('is_delivery','=',True),('credit_card_fee','=',True),('qty_invoiced', '&gt;', 0)]}</attribute>
+            </xpath>
+            <field name="sale_order_template_id" position="after">
+                <field name="projected_install_date" />
+            </field>
+            <xpath expr="//group[@name='sales_person']//field[@name='require_payment']" position="after">
+                <field name="is_single_display_sale" />
+            </xpath>
+            <xpath expr="//group[@name='sales_person']//field[@name='require_signature']" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_single_display_sale', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_order_form_accounting_advisor" model="ir.ui.view">
+        <field name="name">x_gfp.sale.order.form.accounting.adv</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="priority">200</field>
+        <field name="groups_id" eval="[(6,0,[ref('account.group_account_manager'),ref('base_csi.group_addtl_carrier')])]" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='projected_install_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='carrier_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='delivery_price']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('qty_invoiced', '&gt;', 0)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Sales Order search view mod -->
+    <record model="ir.ui.view" id="view_sales_order_filter_mod">
+        <field name="name">x_gfp.sale.order.list.select.mod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="display_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Manufacturing Order search view mod -->
+    <record model="ir.ui.view" id="view_mrp_production_filter_mod">
+        <field name="name">x_gfp.mrp.production.select.mod</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="display_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Quality Alert form view -->
+    <record model="ir.ui.view" id="view_quality_form_mod">
+        <field name="name">x_gfp.quality.alert.form.mod</field>
+        <field name="model">quality.alert</field>
+        <field name="inherit_id" ref="quality_control.quality_alert_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='title']" position="before">
+                <field name="display_id" />
+            </xpath>
+            <xpath expr="//field[@name='title']" position="after">
+                <field name="ticket_id" />
+                <field name="sale_id" />
+                <field name="salesforce_order" />
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="car_type" />
+                <field name="car_completed" />
+                <field name="panel_faults" attrs="{'invisible': [('car_type','!=','Panel(s)')]}" />
+                <field name="known_problems_for_panels" attrs="{'invisible': [('car_type','!=','Panel(s)')]}" />
+                <field name="module_serial_number" attrs="{'invisible': [('car_type','!=','Panel(s)')]}" />
+                <field name="component_faults" attrs="{'invisible': [('car_type','!=','Component(s)')]}" />
+                <field name="controller_faults" attrs="{'invisible': [('car_type','!=','Controller(s)')]}" />
+                <field name="known_problems_for_controllers" attrs="{'invisible': [('car_type','!=','Controller(s)')]}" />
+                <field name="controller_id_number" attrs="{'invisible': [('car_type','!=','Controller(s)')]}" />
+            </xpath>
+            <xpath expr="//field[@name='description']" position="replace">
+                <group>
+                    <field name="description" nolabel="1" placeholder="Description of the issue..." />
+                </group>
+                <group>
+                    <group>
+                        <field name="nonconformity_affirmed" />
+                        <field name="salesforce_id" />
+                    </group>
+                    <group>
+                        <field name="nonconformity_not_affirmed" />
+                        <field name="salesforce_create_date" />
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//notebook/page" position="after">
+                <page string="Root Cause Analysis">
+                    <group>
+                        <field name="root_cause_analysis" nolabel="1" />
+                    </group>
+                </page>
+                <page string="Disposition">
+                    <group>
+                        <group>
+                            <field name="disposition_options" widget="many2many_tags" />
+                        </group>
+                        <group>
+                            <field name="disposition_instructions_if_applicable" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Quality Alert search view mod -->
+    <record model="ir.ui.view" id="quality_alert_view_search_mode">
+        <field name="name">x_gfp.quality.alert.view.search.mod</field>
+        <field name="model">quality.alert</field>
+        <field name="inherit_id" ref="quality.quality_alert_view_search" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="display_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Manufacturing Order form view -->
+    <record model="ir.ui.view" id="mrp_production_form_view_mod">
+        <field name="name">x_gfp.mrp.production.form.mod</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='open_produce_product']" position="after">
+                <button name="open_quick_produce_wizard" attrs="{'invisible': ['|', '|', '|', ('state', '=', 'to_close'), ('is_locked', '=', False), ('reservation_state', '!=', 'assigned'), ('routing_id', '!=', False)]}" string="Quick Produce" type="object" class="oe_highlight" />
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="before">
+                <field name="display_id" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='finished_move_line_ids']//tree//field[@name='state']" position="after">
+                <button name="unlink_line_assoc_lines" type="object" icon="fa-times-circle text-danger" attrs="{'invisible':['|',('lot_id','=',False),('state','in',['done','cancel','draft'])]}" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- display.display tree/select view -->
+    <record model="ir.ui.view" id="view_display_display_tree">
+        <field name="name">display.display.tree</field>
+        <field name="model">display.display</field>
+        <field name="arch" type="xml">
+            <tree string="Display Records">
+                <field name="name" />
+                <field name="distributor" />
+                <field name="sign_shop" />
+                <field name="account" />
+                <field name="height" />
+                <field name="width" />
+                <field name="number_of_faces" />
+                <field name="status" />
+                <field name="install_date" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_display_filter" model="ir.ui.view">
+        <field name="name">x_gfp.display.display.list.select</field>
+        <field name="model">display.display</field>
+        <field name="priority" eval="15" />
+        <field name="arch" type="xml">
+            <search string="Search Display">
+                <field name="name" string="Display" filter_domain="[('name', 'ilike', self)]" />
+                <field name="distributor" operator="child_of" />
+                <field name="sign_shop" operator="child_of" />
+                <field name="sign_shop_contact" operator="child_of" />
+                <field name="account" operator="child_of" />
+                <field name="end_user_contact" operator="child_of" />
+                <field name="opportunity" operator="child_of" />
+            </search>
+        </field>
+    </record>
+
+    <!-- salesforce.order tree view -->
+    <record model="ir.ui.view" id="view_salesforce_order_tree">
+        <field name="name">salesforce.order.tree</field>
+        <field name="model">salesforce.order</field>
+        <field name="arch" type="xml">
+            <tree string="Salesforce Orders">
+                <field name="name" />
+                <field name="salesforce_create_date" />
+                <field name="order_start_date" />
+                <field name="ship_date" />
+                <field name="account_name" />
+                <field name="end_user_account" />
+                <field name="bill_to_name" />
+                <field name="ship_to_contact" />
+                <field name="contact_name" />
+                <field name="order_record_type" />
+                <field name="service_type" />
+                <field name="order_type" />
+                <field name="shipment_number" />
+                <field name="status" />
+                <field name="order_amount" />
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_salesforce_order_form" model="ir.ui.view">
+        <field name="name">salesforce.order.form</field>
+        <field name="model">salesforce.order</field>
+        <field name="arch" type="xml">
+            <form string="Sales Order" class="o_sale_order">
+                <header></header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"></div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1" />
+                            <field name="linked_opp_close_date" />
+                            <field name="account_name" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="ship_to_contact" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="end_user_account" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="contact_name" />
+                            <field name="contact_email" />
+                            <field name="additional_emails" />
+                            <field name="do_not_send_email_to_customer" />
+                            <field name="paid_amount" />
+                        </group>
+                        <group>
+                            <field name="status" />
+                            <field name="order_type" />
+                            <field name="salesforce_create_date" />
+                            <field name="order_start_date" />
+                            <field name="ship_by_date" />
+                            <field name="ship_date" />
+                            <field name="display" />
+                            <field name="controller_id" />
+                            <field name="opportunity_id" />
+                            <field name="salesforce_quote_id" />
+                            <field name="ticket_id" />
+                            <field name="order_owner" />
+                            <field name="shipment_number" />
+                            <field name="shipping_service_type" />
+                            <field name="shipping_speed" />
+                            <field name="tracking_number" />
+                            <field name="tracking_number2" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="" name="address_name">
+                                <b>Bill To:</b>
+                            </label>
+                            <div class="o_address_format">
+                                <field name="bill_to_name" placeholder="Street..." class="o_address_street" />
+                                <field name="billing_street" placeholder="Street 2..." class="o_address_street" />
+                                <field name="billing_city" placeholder="City" class="o_address_city" />
+                                <field name="billing_state" class="o_address_state" placeholder="State" />
+                                <field name="billing_postal_code" placeholder="ZIP" class="o_address_zip" />
+                                <field name="billing_country" placeholder="Country" class="o_address_country" />
+                            </div>
+                        </group>
+                        <group>
+                            <label for="" name="address_name2">
+                                <b>Ship To:</b>
+                            </label>
+                            <div class="o_address_format">
+                                <field name="ship_to_name" placeholder="Street..." class="o_address_street" />
+                                <field name="shipping_street" placeholder="Street 2..." class="o_address_street" />
+                                <field name="shipment_instructions" placeholder="Street 2..." class="o_address_street" />
+                                <field name="shipping_city" placeholder="City" class="o_address_city" />
+                                <field name="shipping_state" class="o_address_state" placeholder="State" />
+                                <field name="shipping_postal_code" placeholder="ZIP" class="o_address_zip" />
+                                <field name="shipping_country" placeholder="Country" class="o_address_country" />
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Lines" name="order_lines">
+                            <field name="order_line">
+                                <tree string="Sales Order Lines">
+                                    <field name="controller_id__c" />
+                                    <field name="order_item_number" />
+                                    <field name="order_product__c" />
+                                    <field name="name" />
+                                    <field name="po_reference__c" />
+                                    <field name="quantity" />
+                                    <field name="quantity_remaining__c" />
+                                    <field name="qty_owed_partial_orders__c" />
+                                    <field name="shipment_status__c" />
+                                    <field name="list_price" />
+                                    <field name="unit_price" />
+                                    <field name="item_cost__c" />
+                                    <field name="total_price" />
+                                    <field name="total_cost__c" />
+                                    <field name="tracking_number__c" />
+                                    <field name="zk_weight__c" />
+                                </tree>
+                            </field>
+                            <group name="note_group" col="6">
+                                <group colspan="4">
+                                    <field name="description" nolabel="1" placeholder="Terms and conditions..." />
+                                    <field name="notes" nolabel="1" placeholder="Terms and conditions..." />
+                                </group>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="shipping_cost" />
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="order_amount" />
+                                    </div>
+                                    <field name="order_amount" nolabel="1" class="oe_subtotal_footer_separator" />
+                                </group>
+                                <div class="oe_clear" />
+                            </group>
+                        </page>
+                        <page string="Addtl. Info">
+                            <group>
+                                <group>
+                                    <field name="full_sign_replacement" />
+                                    <field name="get_opportunity_name" />
+                                    <field name="salesforce_id" />
+                                    <field name="item_quantity" />
+                                    <field name="new_old_order" />
+                                    <field name="opportunity_close_date" />
+                                    <field name="opportunity" />
+                                    <field name="warrantied" />
+                                    <field name="panel_serial_number" />
+                                    <field name="recipient_company_name" />
+                                    <field name="recipient_name" />
+                                </group>
+                                <group>
+                                    <field name="order_record_type" />
+                                    <field name="return_aging" />
+                                    <field name="return_completed_date" />
+                                    <field name="return_department" />
+                                    <field name="return_label_tracking" />
+                                    <field name="return_test" />
+                                    <field name="return_due_date" />
+                                    <field name="replacement_shipped_date" />
+                                    <field name="service_type" />
+                                </group>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_salesforce_quote_form" model="ir.ui.view">
+        <field name="name">salesforce.quote.form</field>
+        <field name="model">salesforce.quote</field>
+        <field name="arch" type="xml">
+            <form string="Sales Order" class="o_sale_order" create="0" edit="0" delete="0">
+                <header></header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"></div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1" />
+                            <field name="account_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="account__c" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="contactid" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="balance_due__c" />
+                            <field name="discount" />
+                        </group>
+                        <group>
+                            <field name="status" />
+                            <field name="salesforce_create_date" />
+                            <field name="expirationdate" />
+                            <field name="opportunityid" />
+                            <field name="ownerid" />
+                            <field name="p_o_number__c" />
+                            <field name="purchase_order_number__c" />
+                            <field name="quotenumber" />
+                            <field name="recordtypeid" />
+                            <field name="reference__c" />
+                            <field name="sales_type__c" />
+                            <field name="sales_order_number__c" />
+                            <field name="terms__c" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="" name="address_name">
+                                <b>Bill To:</b>
+                            </label>
+                            <div class="o_address_format">
+                                <field name="billingname" placeholder="Street..." class="o_address_street" />
+                                <field name="billingstreet" placeholder="Street 2..." class="o_address_street" />
+                                <field name="billingcity" placeholder="City" class="o_address_city" />
+                                <field name="billingstate" class="o_address_state" placeholder="State" />
+                                <field name="billingpostalcode" placeholder="ZIP" class="o_address_zip" />
+                                <field name="billingcountry" placeholder="Country" class="o_address_country" />
+                            </div>
+                        </group>
+                        <group>
+                            <label for="" name="address_name2">
+                                <b>Ship To:</b>
+                            </label>
+                            <div class="o_address_format">
+                                <field name="shippingname" placeholder="Street..." class="o_address_street" />
+                                <field name="shippingstreet" placeholder="Street 2..." class="o_address_street" />
+                                <field name="shippinghandling" placeholder="Street 2..." class="o_address_street" />
+                                <field name="shippingcity" placeholder="City" class="o_address_city" />
+                                <field name="shippingstate" class="o_address_state" placeholder="State" />
+                                <field name="shippingpostalcode" placeholder="ZIP" class="o_address_zip" />
+                                <field name="shippingcountry" placeholder="Country" class="o_address_country" />
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Lines" name="order_lines">
+                            <field name="order_line">
+                                <tree string="Sales Order Lines">
+                                    <field name="linenumber" />
+                                    <field name="product__c" />
+                                    <field name="product_description__c" />
+                                    <field name="shipping_product_code__c" />
+                                    <field name="quantity" />
+                                    <field name="quantity_backordered__c" />
+                                    <field name="quantity_shipped__c" />
+                                    <field name="listprice" />
+                                    <field name="unitprice" />
+                                    <field name="line_item_cost__c" />
+                                    <field name="discount" />
+                                    <field name="subtotal" />
+                                    <field name="total_price_distributor__c" />
+                                    <field name="totalprice" />
+                                </tree>
+                            </field>
+                            <group name="note_group" col="6">
+                                <group colspan="4">
+                                    <field name="description" nolabel="1" placeholder="Terms and conditions..." />
+                                    <field name="notes__c" nolabel="1" placeholder="Terms and conditions..." />
+                                </group>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="subtotal" />
+                                    <field name="tax" />
+                                    <field name="finalshippingcost__c" />
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="grandtotal" />
+                                    </div>
+                                    <field name="grandtotal" nolabel="1" class="oe_subtotal_footer_separator" />
+                                </group>
+                                <div class="oe_clear" />
+                            </group>
+                        </page>
+                        <page string="Addtl. Info">
+                            <group>
+                                <group>
+                                    <field name="account_opportunity_new_account__c" />
+                                    <field name="estimated_shipping_and_handling__c" />
+                                    <field name="email" />
+                                    <field name="fax" />
+                                    <field name="invoice_number__c" />
+                                    <field name="is_sales_shipping__c" />
+                                    <field name="lineitemcount" />
+                                    <field name="lineitemshippingcost__c" />
+                                    <field name="margin_accounting__c" />
+                                    <field name="markup__c" />
+                                    <field name="max_discount__c" />
+                                    <field name="new_commission_plan__c" />
+                                    <field name="order_generated__c" />
+                                    <field name="totalprice" />
+                                    <field name="total_cost__c" />
+                                    <field name="total_price_comm__c" />
+                                    <field name="total_price_distributor__c" />
+                                    <field name="total_shipping_cost__c" />
+                                </group>
+                                <group>
+                                    <field name="cellular__c" />
+                                    <field name="commission_amount__c" />
+                                    <field name="commission_new_account__c" />
+                                    <field name="commission_rate__c" />
+                                    <field name="credit_card_fees__c" />
+                                    <field name="paid__c" />
+                                    <field name="paid_in_full__c" />
+                                    <field name="partial_payment_amount__c" />
+                                    <field name="payment_method__c" />
+                                    <field name="phone" />
+                                    <field name="pre_order__c" />
+                                    <field name="product_cost_accounting__c" />
+                                    <field name="profit_margin__c" />
+                                    <field name="total_weight_in_lbs__c" />
+                                    <field name="zone_code__c" />
+                                    <field name="zip_value2__c" />
+                                    <field name="zip_value3__c" />
+                                    <field name="zip_value__c" />
+                                </group>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- salesforce.quote tree view -->
+    <record model="ir.ui.view" id="view_salesforce_quote_tree">
+        <field name="name">salesforce.quote.tree</field>
+        <field name="model">salesforce.quote</field>
+        <field name="arch" type="xml">
+            <tree string="Salesforce Quotes" create="0" edit="0" delete="0">
+                <field name="name" />
+                <field name="quotenumber" />
+                <field name="invoice_number__c" />
+                <field name="reference__c" />
+                <field name="sales_order_number__c" />
+                <field name="salesforce_create_date" />
+                <field name="expirationdate" />
+                <field name="account_id" />
+                <field name="contactid" />
+                <field name="ownerid" />
+                <field name="recordtypeid" />
+                <field name="grandtotal" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to display sale orders -->
+    <record id="act_display_2_sale_order" model="ir.actions.act_window">
+        <field name="name">Quotations and Sales</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="context">{'search_default_display_id': active_id}</field>
+    </record>
+
+    <!-- Action to display manufacturing orders -->
+    <record id="act_display_2_mrp_production" model="ir.actions.act_window">
+        <field name="name">Manufacturing Orders</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="context">{'search_default_display_id': active_id}</field>
+    </record>
+
+    <!-- action to open a sale.order form view with display_id context -->
+    <record id="act_display_2_sale_order_form" model="ir.actions.act_window">
+        <field name="name">Create new Sales Order with Display context</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_display_id': active_id}</field>
+    </record>
+
+    <!-- action to open helpdesk.ticket form view with display_id context -->
+    <record id="act_display_2_helpdesk_ticket_form" model="ir.actions.act_window">
+        <field name="name">Create new Helpdisk Ticket with Display context</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_display_id': active_id}</field>
+    </record>
+
+    <!-- action to open quality.alert form view with display_id context -->
+    <record id="act_display_2_quality_alert_form" model="ir.actions.act_window">
+        <field name="name">Create new Quality Alert with Display context</field>
+        <field name="res_model">quality.alert</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_display_id': active_id}</field>
+    </record>
+
+    <!-- Display Records form view -->
+    <record id="view_display_records_form" model="ir.ui.view">
+        <field name="name">display.display.form</field>
+        <field name="model">display.display</field>
+        <field name="arch" type="xml">
+            <form string="New Display" class="o_sale_order">
+                <header>
+                    <!-- new sales order button -->
+                    <button class="oe_highlight" string="New Quotation" type="action" name="%(base_csi.act_display_2_sale_order_form)d" context="{'default_display_id': active_id}" />
+                    <!-- new helpdesk ticket button -->
+                    <button class="oe_highlight" string="New Helpdesk Ticket" type="action" name="%(base_csi.act_display_2_helpdesk_ticket_form)d" context="{'default_display_id': active_id}" />
+                    <!-- new quality alert button -->
+                    <button class="oe_highlight" string="New Quality Alert" type="action" name="%(base_csi.act_display_2_quality_alert_form)d" context="{'default_display_id': active_id}" />
+                    <!-- create install ticket button -->
+                    <button name="create_install_ticket" string="New PreInstall Ticket" class="btn-primary" type="object" attrs="{'invisible': [('helpdesk_id', '!=', False)]}"/>
+                </header>
+                <sheet>
+                    <!-- buttons / stat widgets -->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button o_res_partner_tip_opp" type="action" name="%(crm.crm_lead_opportunities)d" icon="fa-star" context="{'search_default_display_id': active_id}">
+                            <field string="Opportunities" name="opportunity_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="action" name="%(base_csi.act_display_2_sale_order)d" icon="fa-usd">
+                            <field string="Sales" name="sale_order_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="object" name="open_salesforce_order" icon="fa-history" attrs="{'invisible': [('salesforce_order_count', '=', 0)]}">
+                            <field string="Salesforce Orders" name="salesforce_order_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="action" name="%(quality_control.quality_alert_action_check)d" context="{'search_default_display_id': active_id}" icon="fa-check-square-o">
+                            <field string="Quality Alerts" name="quality_alert_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="action" name="%(base_csi.act_display_2_mrp_production)d" context="{'search_default_display_id': active_id}" icon="fa-cogs">
+                            <field string="Manufacturing Orders" name="manufacturing_order_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="action" name="%(helpdesk.helpdesk_ticket_action_main_tree)d" context="{'search_default_display_id': active_id}" icon="fa-life-ring">
+                            <field string="Tickets" name="helpdesk_ticket_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="object" name="open_sign_request" icon="fa-pencil-square-o">
+                            <field string="Sign Requests" name="request_count" widget="statinfo" />
+                        </button>
+                    </div>
+                    <field name="helpdesk_id" invisible="1"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <!-- Information section -->
+                    <group col="4" colspan="2" string="Information">
+                        <field name="name" required="1" />
+                        <field name="won_sale_id" />
+                        <field name="opportunity" placeholder="Search Opportunities..." />
+                        <field name="distributor" placeholder="Search Accounts..." />
+                        <field name="display_setup" placeholder="Search Display Setups..." />
+                        <field name="sign_shop" placeholder="Search Accounts..." />
+                        <field name="display_as_a_service" placeholder="Search Displays as a Service..." />
+                        <field name="sign_shop_contact" placeholder="Search Contacts..." />
+                        <field name="labor_warranty" />
+                        <field name="account" placeholder="Search Contacts..." />
+                        <field name="purchase_date" />
+                        <field name="projected_install_date" />
+                        <field name="end_user_contact" placeholder="Search Contacts..." />
+                        <field name="install_date" />
+                        <field name="account_manager_id" />
+                        <field name="details" />
+                        <field name="status" />
+                    </group>
+                    <!-- Digital Attributes section -->
+                    <group col="4" colspan="2" string="Digital Attributes">
+                        <field name="screenhub_version" />
+                        <field name="panel_control_software" />
+                        <field name="screenhub_display_id" />
+                        <field name="firmware_version" />
+                        <field name="screenhub_2_0_display_id" />
+                        <field name="additional_digital_details" />
+                    </group>
+                    <!-- Physical Attributes section -->
+                    <group col="4" colspan="2" string="Physical Attributes">
+                        <field name="model" />
+                        <field name="height_from_ground" />
+                        <field name="pitch" />
+                        <field name="mounting_type" />
+                        <field name="hardware_type" />
+                        <field name="controller_mounting_location" />
+                        <field name="physical_notes" />
+                        <field name="application" />
+                        <field name="height" />
+                        <field name="distance_from_building" />
+                        <field name="width" />
+                        <field name="number_of_faces" />
+                        <field name="display_matrix" />
+                    </group>
+                    <!-- Network Connection section -->
+                    <group col="4" colspan="2" string="Network Connection">
+                        <field name="cellular_paid" />
+                        <field name="sign_shop_responsible_for_internet" />
+                        <field name="cellular_enabled" />
+                        <field name="end_user_responsible_for_internet" />
+                        <field name="cellular_enabled_until" />
+                        <field name="network_settings_restrictions" />
+                        <field name="internet_connection_type" />
+                        <field name="it_contact_name" />
+                        <field name="internet_speed_class" />
+                        <field name="it_contact_phone" />
+                        <field name="download_speed" />
+                        <field name="it_contact_email" />
+                        <field name="upload_speed" />
+                    </group>
+                    <!-- Electrical Information section -->
+                    <group col="4" colspan="2" string="Electrical Information">
+                        <field name="electical_setup_voltage" />
+                        <field name="sign_shop_responsible_for_electric" />
+                        <field name="breaker_rating" />
+                        <field name="number_of_power_injectors" />
+                        <field name="end_user_responsible_for_electrical" />
+                        <field name="electrical_details" />
+                        <field name="own_dedicated_circuit" />
+                        <field name="new_electrical_line" />
+                    </group>
+                </sheet>
+                <!-- chatter section -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Display Setup tree view -->
+    <record id="view_display_setup_tree" model="ir.ui.view">
+        <field name="name">display.setup.tree</field>
+        <field name="model">display.setup</field>
+        <field name="arch" type="xml">
+            <tree string="Display Setup">
+                <field name="name" />
+                <field name="contact_name" />
+                <field name="contact_email" />
+                <field name="controller_id" />
+                <field name="install_checklist_stage" />
+                <field name="display_info_stage" />
+                <field name="end_s_user_info" />
+                <field name="estimated_install_date" />
+                <field name="it_support" />
+                <field name="installed_date" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Display Setup form view -->
+    <record id="view_display_setup_form" model="ir.ui.view">
+        <field name="name">display.setup.form</field>
+        <field name="model">display.setup</field>
+        <field name="arch" type="xml">
+            <form string="New Display Setup" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <!-- Details section -->
+                    <group col="4" colspan="2">
+                        <field name="create_uid" />
+                        <field name="write_uid" />
+                        <field name="name" required="1" />
+                        <field name="project_owner" placeholder="Search People..." />
+                        <field name="opportunity" />
+                        <field name="sign_shop_name" />
+                        <field name="order_type" />
+                        <field name="contact_name" />
+                        <field name="order" placeholder="Search Orders..." />
+                        <field name="salesforce_order" />
+                        <field name="contact_phone_number" />
+                        <field name="contact_email" />
+                        <field name="estimated_install_date" />
+                        <field name="reconfirmed" />
+                    </group>
+                    <!-- Completed Dates section -->
+                    <group col="4" colspan="2" string="Completed Dates">
+                        <field name="installed_date" />
+                        <field name="completed" />
+                        <field name="cloud_completed_date" />
+                        <field name="internet_connection_info_completed_date" />
+                        <field name="it_support_completed_date" />
+                        <field name="installer_information_completed_date" />
+                    </group>
+                    <!-- Pre-install check list section-->
+                    <group col="4" colspan="2" string="Pre-install check list">
+                        <field name="install_checklist_stage" />
+                        <field name="installerinfo" />
+                        <field name="X00019226" />
+                        <field name="responsible_for_led_cloud_account" />
+                        <field name="new_retrofit" />
+                        <field name="completed_date" />
+                        <field name="test_in_shop" />
+                        <field name="sign_shop_needs_an_led_cloud_training" />
+                        <field name="to_run_new_electric" />
+                        <field name="length_of_ethernet_cable" />
+                        <field name="n2_has_an_outlet_been_installed" />
+                        <field name="they_have_ethernet_cables" />
+                        <field name="direct_line_of_site_from_antenna_to_sign" />
+                        <field name="notes" />
+                        <field name="how_will_it_be_mounted" />
+                    </group>
+                    <!-- Internet Connection section -->
+                    <group col="4" colspan="2" string="Internet Connection">
+                        <field name="internet_connection_stage" />
+                        <field name="internet_connection_info_completed" />
+                        <field name="it_contact_if_they_are_responsible" />
+                        <field name="internet_call_time" />
+                        <field name="has_a_survey_site_been_completed" />
+                        <field name="internet" />
+                        <field name="responsible_for_internet_connectivity" />
+                    </group>
+                    <!-- IT support section -->
+                    <group col="4" colspan="2" string="IT support">
+                        <field name="it_support" />
+                        <field name="it_support_completed" />
+                        <field name="it_contact_name" />
+                        <field name="it_support_call" />
+                        <field name="it_contact_email" />
+                        <field name="network_restrictions" />
+                        <field name="it_contact_phone" />
+                        <field name="internet_connection_notes" />
+                    </group>
+                    <!-- End User/ Cloud Account section -->
+                    <group col="4" colspan="2" string="End User/ Cloud Account">
+                        <field name="end_s_user_info" />
+                        <field name="eu_completed" />
+                        <field name="end_user_name" />
+                        <field name="cloud_walk_scheduled_for" />
+                        <field name="end_user_email" />
+                        <field name="cloud_training_completed" />
+                        <field name="username" />
+                        <field name="cloud_account_created" />
+                        <field name="password" />
+                        <field name="cloud_account_linked_to_controller" />
+                        <field name="end_user_phone" />
+                        <field name="got_it_contact_info" />
+                        <field name="can_they_do_video" />
+                        <field name="website" />
+                        <field name="any_ideas_for_content" />
+                        <field name="free_content_status" />
+                    </group>
+                    <!-- Display Info -->
+                    <group col="4" colspan="2" string="Display Info">
+                        <field name="display_info_stage" />
+                        <field name="install_completed" />
+                        <field name="cirrus_system_model" />
+                        <field name="loaded_to_the_install_map" />
+                        <field name="single_double_sided" />
+                        <field name="controller_id" />
+                        <field name="display_height" />
+                        <field name="purchase_order" />
+                        <field name="display_width" />
+                        <field name="display_id" />
+                        <field name="pixel_matrix" />
+                        <field name="account_email" />
+                        <field name="tracking_nu" />
+                        <field name="other_email" />
+                        <field name="display_address" />
+                        <field name="display_notes" />
+                        <field name="city" />
+                        <field name="sales_notes" />
+                        <field name="zip_c" />
+                        <field name="state" />
+                        <field name="country" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Display daas tree view -->
+    <record id="view_display_daas_tree" model="ir.ui.view">
+        <field name="name">display.daas.tree</field>
+        <field name="model">display.daas</field>
+        <field name="arch" type="xml">
+            <tree string="Displays as a Service">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Display daas form view -->
+    <record id="view_display_daas_form" model="ir.ui.view">
+        <field name="name">display.daas.form</field>
+        <field name="model">display.daas</field>
+        <field name="arch" type="xml">
+            <form string="New Displays as a Service" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <!-- Details section -->
+                    <group col="4" colspan="2">
+                        <field name="name" required="1" />
+                        <field name="contract_number" />
+                        <field name="client_name" />
+                        <field name="account_name_del" />
+                        <field name="client_street" />
+                        <field name="account_contact" />
+                        <field name="client_city" />
+                        <field name="effective_date" />
+                        <field name="client_state" />
+                        <field name="owner" />
+                        <field name="client_zip" />
+                        <field name="client_country" />
+                        <field name="create_uid" />
+                        <field name="write_uid" />
+                    </group>
+                    <!-- Principal Contact section -->
+                    <group col="4" colspan="2" string="Principal Contact">
+                        <field name="principal_contact_name" />
+                        <field name="principal_contact_title" />
+                        <field name="principal_contact_phone" />
+                        <field name="principal_contact_email" />
+                    </group>
+                    <!-- Billing Contact section -->
+                    <group col="4" colspan="2" string="Billing Contact">
+                        <field name="billing_contact_name" />
+                        <field name="billing_contact_title" />
+                        <field name="billing_contact_phone" />
+                        <field name="billing_contact_email" />
+                    </group>
+                    <!-- ACH Payment information section -->
+                    <group col="4" colspan="2" string="ACH Payment Information">
+                        <field name="bank_account_name" />
+                        <field name="business_saving" />
+                        <field name="account_number" />
+                        <field name="business_checking" />
+                        <field name="routing_number" />
+                        <field name="personal_saving" />
+                        <field name="personal_checking" />
+                    </group>
+                    <!-- Cirrus product package section -->
+                    <group col="4" colspan="2" string="Cirrus Product Package">
+                        <field name="height_feet" />
+                        <field name="daas_package_quantity" />
+                        <field name="width_feet" />
+                        <field name="addtional_screen_quantity" />
+                        <field name="double_sided" />
+                        <field name="total_cost" />
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Saleforce Importer Views-->
+    <record model="ir.ui.view" id="view_salesforce_import_file_tree">
+        <field name="name">x_gfp.salesforce.import.file.tree</field>
+        <field name="model">salesforce.import.file</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="upload" />
+                <field name="upload_date" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_salesforce_import_line_tree">
+        <field name="name">x_gfp.salesforce.import.line.tree</field>
+        <field name="model">salesforce.import.line</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0">
+                <field name="sequence" widget="handle" />
+                <field name="file_id" />
+                <field name="skip" />
+                <field name="upload" />
+                <field name="upload_date" />
+                <field name="update_date" />
+                <field name="last_attempt_date" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_salesforce_import_file_form">
+        <field name="name">x_gfp.salesforce.import.file.form</field>
+        <field name="model">salesforce.import.file</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_lines" type="object" class="oe_stat_button" icon="fa-list" attrs="{'invisible': [('line_count', '=', 0)]}">
+                            <field name="line_count" widget="statinfo" string="Rows" />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="file_id" />
+                            <field name="upload" readonly="1" />
+                            <field name="upload_date" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="record_skip" />
+                            <field name="sequence" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_salesforce_import_line_form">
+        <field name="name">x_gfp.salesforce.import.line.form</field>
+        <field name="model">salesforce.import.line</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="file_id" />
+                            <field name="skip" />
+                            <field name="upload" />
+                            <field name="upload_date" />
+                        </group>
+                        <group>
+                            <field name="sequence" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="name" nolabel="1" />
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Shipstation Views-->
+    <record model="ir.ui.view" id="view_shipstation_postback_tree">
+        <field name="name">x_gfp.shipstation.postback.tree</field>
+        <field name="model">shipstation.postback</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree string="Posts">
+                <field name="create_date" />
+                <field name="name" />
+                <field name="success" />
+                <button name="post_shipstation" type="object" string="POST" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_shipstation_postback_form">
+        <field name="name">x_gfp.shipstation.postback.form</field>
+        <field name="model">shipstation.postback</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="success" />
+                        </group>
+                        <group>
+                            <field name="tracking" />
+                            <field name="cost" />
+                            <field name="order_num" />
+                            <field name="order_id" />
+                            <field name="order_key" />
+                            <field name="service_code" />
+                            <field name="ship_to" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="returned_dictionary" />
+                    </group>
+                    <group>
+                        <field name="exception" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_shipstation_package_tree">
+        <field name="name">x_gfp.delivery.shipstation.package.tree</field>
+        <field name="model">delivery.shipstation.package</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree string="Posts">
+                <field name="name" />
+                <field name="code" />
+                <field name="carrier_code" />
+                <field name="price" />
+                <field name="delivery_length" />
+                <field name="delivery_width" />
+                <field name="delivery_height" />
+                <field name="package_weight" />
+                <field name="inner_delivery_length" />
+                <field name="inner_delivery_width" />
+                <field name="inner_delivery_height" />
+                <field name="max_package_weight" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_shipstation_package_form">
+        <field name="name">x_gfp.delivery.shipstation.package.form</field>
+        <field name="model">delivery.shipstation.package</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="carrier_code" />
+                            <field name="domestic" />
+                            <field name="international" />
+                            <field name="created_by_shipstation" />
+                            <field name="price" />
+                        </group>
+                        <group>
+                            <field name="delivery_length" />
+                            <field name="delivery_width" />
+                            <field name="delivery_height" />
+                            <field name="package_weight" />
+                            <field name="inner_delivery_length" />
+                            <field name="inner_delivery_width" />
+                            <field name="inner_delivery_height" />
+                            <field name="max_package_weight" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="purchase_order_form_mod">
+        <field name="name">x_gfp.purchase.order.form.mod</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//button[@name='action_rfq_send']" position="attributes">
+                    <attribute name="states">approved</attribute>
+                    <attribute name="context">{'send_rfq':False}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='print_quotation']" position="attributes">
+                    <attribute name="states">approved</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_rfq_send'][2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="statusbar_visible">draft,approved,purchase</attribute>
+                </xpath>
+                <xpath expr="//page[@name='purchase_delivery_invoice']//field[@name='date_planned']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="attrs">{}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='name']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='product_qty']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='taxes_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_confirm']" position="before">
+                    <button name="submit_for_approval" string="Submit for Approval" states="draft" type="object" groups="purchase.group_purchase_manager" />
+                    <button name="submit_for_approval" string="Submit for Approval" states="sent" type="object" class="oe_highlight" groups="purchase.group_purchase_manager" />
+                </xpath>
+                <xpath expr="//button[@name='button_confirm']" position="replace" />
+                <xpath expr="//button[@name='button_confirm']" position="replace">
+                    <button name="button_confirm" type="object" states="approved" string="Confirm Order" id="draft_confirm" invisible="1" />
+                    <button name="button_confirm" type="object" states="approved,approved_sent" string="Confirm Order" class="oe_highlight" id="bid_confirm" />
+                </xpath>
+                <xpath expr="//button[@name='button_approve']" position="replace">
+                    <button name="button_approve" type="object" states="to approve" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" invisible="1" />
+                    <button name="approve_order" type="object" states="to approve,1approved,2approved" string="Approve Order" class="oe_highlight" />
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="attributes">
+                    <attribute name="states">draft,approved,approved_sent,to approve,1approved,2approved,sent,purchase</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="date_approved" readonly="1" attrs="{'invisible':[('date_approved','=',False)]}" />
+                    <field name="date_confirmed" readonly="1" attrs="{'invisible':[('date_confirmed','=',False)]}" />
+                </xpath>
+                <xpath expr="//field[@name='date_order']/.." position="inside">
+                    <field name="department_id" options="{'no_open':True,'no_create':True}" attrs="{'readonly':[('state','not in',['draft','sent'])],'required':[('state','not in',['cancel'])]}" />
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Approvers" attrs="{'invisible':[('approver_ids','=',False)]}">
+                        <group>
+                            <field name="approver_ids" nolabel="1" widget="one2many_list" readonly="1">
+                                <tree>
+                                    <field name="purchase_id" invisible="1" />
+                                    <field name="approver_id" />
+                                    <field name="stage" />
+                                    <field name="approved" />
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="purchase_department_form">
+        <field name="name">x_gfp.purchase.department.form</field>
+        <field name="model">purchase.department</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <!-- SAVING FOR LATER ADDITTIONS -->
+                        </group>
+                        <group></group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="purchase_department_tree">
+        <field name="name">x_gfp.purchase.department.tree</field>
+        <field name="model">purchase.department</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_purchase_order_approval_form">
+        <field name="name">x_gfp.purchase.approval.wizard.form</field>
+        <field name="model">purchase.approval.wizard</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <strong>
+                    <i>
+                        <p>You are not authorized to confirm this purchase order due to order amount or department selected.</p>
+                        <p>Please select the approvers and the mail template to notify them to get the po validated.</p>
+                    </i>
+                </strong>
+                <group>
+                    <field name="purchase_id" invisible="1" />
+                    <field name="approver_one_id" invisible="not context.get('threshold1')" required="context.get('threshold1')" options="{'no_open':True,'no_create':True}" domain="[('id', 'in', context.get('authorized', []))]" />
+                    <field name="approver_two_id" invisible="not context.get('threshold2')" required="context.get('threshold2')" options="{'no_open':True,'no_create':True}" domain="[('id', 'in', context.get('authorized', []))]" />
+                    <field name="approver_three_id" invisible="not context.get('threshold3')" required="context.get('threshold3')" options="{'no_open': True, 'no_create': True}" domain="[('id', 'in', context.get('authorized', []))]" />
+                    <field name="template_id" required="1" domain="[('model_id.model', '=', 'purchase.order')]" options="{'no_open':True,'no_create':True}" />
+                </group>
+                <footer>
+                    <button string="Submit" type="object" name="submit_approval" class="oe_highlight" />
+                    or
+                    <button string="Cancel" special="cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_quick_produce_form">
+        <field name="name">x_gfp.quick.produce.form</field>
+        <field name="model">quick.produce</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <strong>
+                    <i>
+                        <p>Please scan or type in the serial numbers that you would like to produce</p>
+                    </i>
+                </strong>
+                <group>
+                    <field name="production_id" invisible="1" />
+                    <field name="scan_ids" widget="many2many_tags" domain="[]" />
+                </group>
+                <footer>
+                    <button string="Produce" type="object" name="produce" class="oe_highlight" />
+                    <button string="Cancel" special="cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_purchase_order_approval_behalf_form">
+        <field name="name">x_gfp.purchase.approval.behalf.wizard.form</field>
+        <field name="model">purchase.approval.behalf.wizard</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <strong>
+                    <i>
+                        <p>Select person that you will be approving for:</p>
+                    </i>
+                </strong>
+                <group>
+                    <field name="purchase_id" invisible="1" />
+                    <field name="approver_id" domain="[('id', 'in', context.get('personnel', []))]" options="{'no_open':True,'no_create':True}" />
+                </group>
+                <footer>
+                    <button string="Submit" type="object" name="approve_on_behalf" class="oe_highlight" />
+                    or
+                    <button string="Cancel" special="cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_lead_lost_view_form_gfp">
+        <field name="name">x_gfp.crm.lead.lost.form.mod</field>
+        <field name="model">crm.lead.lost</field>
+        <field name="inherit_id" ref="crm.crm_lead_lost_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_lost_reason_apply']" position="attributes">
+                <attribute name="attrs">{'invisible': [('lost_reason_id', '=', False)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="res_config_settings_view_form_crm_mod">
+        <field name="name">x_gfp.crm.res.config.settings.mod</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='crm_lead']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="lost_stage">
+                    <div class="o_setting_right_pane">
+                        <label for="lost_stage_id" />
+                        <field name="lost_stage_id" options="{'no_create': True, 'no_create_edit':True}" />
+                        <div class="text-muted">
+                            Select Lost stage to move opportunity in this stage when user mark opportunity as Lost
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

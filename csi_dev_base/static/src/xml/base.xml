@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-extend="stock_barcode_lines_widget">
+        <t t-jquery="button.o_add_line" t-operation="after">
+            <input type="file" class="o_input_file d-none o_gemi_input_file" name="ufile" multiple="multiple"/>
+            <button class="btn btn-secondary text-uppercase o_add_attachment"><i class="fa fa-paperclip mr-1"/> Add Attachments</button>
+        </t>
+    </t>
+</templates>

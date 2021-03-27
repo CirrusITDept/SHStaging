@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <template id="assets_backend_id" name="base_csi assets" inherit_id="stock_barcode.assets_backend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/base_csi/static/src/js/abstract_client_action.js"></script>
+            </xpath>
+        </template>
+        <template id="assets_backend" inherit_id="mail.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/base_csi/static/src/js/thread_widget.js"></script>
+            </xpath>
+        </template>
+        <template id="sale_order_portal_content" inherit_id="sale.sale_order_portal_content">
+            <xpath expr="//section[@id='details']" position="attributes">
+                <attribute name="t-if">not sale_order.is_single_display_sale</attribute>
+            </xpath>
+            <xpath expr="//section[@t-if='sale_order.payment_term_id']" position="attributes">
+                <attribute name="t-if">sale_order.payment_term_id and not sale_order.is_single_display_sale</attribute>
+            </xpath>
+            <xpath expr="//section[@id='terms']" position="attributes">
+                <attribute name="t-if">sale_order.note and not sale_order.is_single_display_sale</attribute>
+            </xpath>
+        </template>
+        <template id="assets_common_sign" inherit_id="sign.assets_common">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/base_csi/static/src/js/sign_common.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

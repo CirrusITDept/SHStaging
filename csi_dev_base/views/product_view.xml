@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>	
+	<record model="ir.ui.view" id="product_template_form_view_mod_ext">
+        <field name="name">x_gfp.product.template.form.mod_ext</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="base_csi.product_template_form_view_mod" />
+        <field name="arch" type="xml">
+        	<xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+        		<field name="custom_box_qty" />
+        	</xpath>
+        </field>
+	</record>
+	
+	<record id="view_template_property_form2_prd_cost_extend" model="ir.ui.view">
+		<field name="name">product.template.product.form.extend</field>
+		<field name="model">product.template</field>
+		<field name="inherit_id" ref="stock_account.view_template_property_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//span[@name='update_cost_price']" position="attributes">
+				 <attribute name="groups">csi_dev_base.group_can_update_cost</attribute>
+			</xpath>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="show_cost_price_form_product_product_easy_3">
+        <field name="name">show_cost_price_form_product_product</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock_account.product_variant_easy_edit_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='update_cost_price']" position="attributes">
+				<attribute name="groups">csi_dev_base.group_can_update_cost</attribute>
+			</xpath>
+        </field>
+    </record>
+</odoo>	

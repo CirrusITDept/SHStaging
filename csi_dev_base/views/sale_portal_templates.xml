@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="sale_order_portal_template_ext" name="Sales Order Portal Template" inherit_id="payment.payment_tokens_list">
+		<xpath expr="//div[hasclass('card')]" position="after">
+            <div class="form_wire_trasfer" style="border: 1px solid #e2e2e2;padding: 3%;border-radius: 10px;margin-top: 1%">
+
+    			<h3 class="mb24">E-Check Transfer</h3>
+    			<div class="form-group row form-field">
+                    <div class="col-lg-3 col-md-4 text-right">
+                        <label class="col-form-label" for="partner_name">Bank Name <b style="color:red">*</b></label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="text" class="form-control o_website_form_input" name="cust_bank_name"/>
+                    </div>
+                </div>
+                <div class="form-group row form-field">
+                    <div class="col-lg-3 col-md-4 text-right">
+                        <label class="col-form-label" for="partner_name">Account Number <b style="color:red">*</b></label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="text" class="form-control o_website_form_input" name="cust_acc_number"/>
+                    </div>
+                </div>
+                <div class="form-group row form-field">
+                    <div class="col-lg-3 col-md-4 text-right">
+                        <label class="col-form-label" for="partner_name">Routing Number <b style="color:red">*</b></label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="text" class="form-control o_website_form_input" name="cust_rout_number"/>
+                    </div>
+                </div>
+                <div class="form-group row form-field">
+                    <div class="col-lg-3 col-md-4 text-right">
+                        <label class="col-form-label" for="partner_name">Account Holder <b style="color:red">*</b></label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="text" class="form-control o_website_form_input" name="cust_acc_holder"/>
+                    </div>
+                </div>
+            </div>
+		</xpath>
+	</template>
+
+    <template id="sale_order_portal_template_inherit" name="Pay Now" inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//div[@t-if='sale_order.has_to_be_signed(True) or sale_order.has_to_be_paid(True)']" position="replace">
+            <div t-if="sale_order.has_to_be_signed(True) or sale_order.has_to_be_paid(True)" class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                <t t-if="sale_order.has_to_be_signed(True)">
+                    <div class="col-sm-auto mt8">
+                        <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t></a>
+                    </div>
+                    <div class="col-sm-auto mt8">
+                        <a role="button" class="btn btn-secondary" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
+                    </div>
+                    <div class="col-sm-auto mt8">
+                        <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline" href="#"> <i class="fa fa-times"/> Reject</a>
+                    </div>
+                </t>
+                <div t-elif="sale_order.has_to_be_paid(True)" class="col-sm-auto mt8">
+                    <a role="button" data-toggle="modal" data-target="#modalaccept" href="#" t-att-class="'%s' % ('custom_pay_now btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')">
+                        <i class="fa fa-check"/><t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
+                    </a>
+                </div>
+            </div>
+
+        </xpath>
+    </template>
+</odoo>
