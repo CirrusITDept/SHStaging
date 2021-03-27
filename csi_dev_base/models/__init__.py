@@ -34,6 +34,6 @@ from . import product
 from . import crm_lead
 from . import rating
 from . import mrp
-from . import mrp_workorder
 from . import res_company
 from . import helpdesk_ticket
+from . import account_report
