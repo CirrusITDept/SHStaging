@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Purchase Approvals -->
+   <record model="ir.actions.act_window" id="action_helpdesk_picking_tree_ready" >
+        <field name="name">Helpdesk Picking</field>
+        <field name="res_model">stock.picking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="context">{
+                'search_default_ticket_id': 1,
+                'search_default_available': 1,
+            }</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+   </record>
+   <record model="ir.actions.act_window" id="action_sale_order_picking_tree_ready" >
+        <field name="name">Sale Order Picking</field>
+        <field name="res_model">stock.picking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="context">{
+                'search_default_ticket': 1,
+                'search_default_available': 1,
+            }</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+   </record>
+    <record model="ir.actions.act_window" id="action_purchase_department_tree">
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="limit">80</field>
+        <field name="name">Purchase Departments</field>
+        <field name="res_model">purchase.department</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="base_csi.purchase_department_tree" />
+        <field name="view_ids" eval="[(6, 0, [])]" />
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_purchase_order_approval">
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="limit">80</field>
+        <field name="name">Send Purchase Order for Approval</field>
+        <field name="res_model">purchase.approval.wizard</field>
+        <field name="target">new</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="view_purchase_order_approval_form" />
+        <field name="view_ids" eval="[(6, 0, [])]" />
+        <field name="view_mode">form</field>
+    </record>
+    <record model="ir.actions.act_window" id="open_quick_produce_action">
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="limit">80</field>
+        <field name="name">Quick Produce</field>
+        <field name="res_model">quick.produce</field>
+        <field name="target">new</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_ids" eval="[(6, 0, [])]" />
+        <field name="view_mode">form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_purchase_order_approval_behalf">
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="limit">80</field>
+        <field name="name">Approve on Others Behalf</field>
+        <field name="res_model">purchase.approval.behalf.wizard</field>
+        <field name="target">new</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="view_purchase_order_approval_behalf_form" />
+        <field name="view_ids" eval="[(6, 0, [])]" />
+        <field name="view_mode">form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_purchase_order_to_approve">
+        <field name="domain">[('state','in',['to approve','1approved','2approved'])]</field>
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="limit">80</field>
+        <field name="name">Purchase to Approve</field>
+        <field name="res_model">purchase.order</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_ids" eval="[(6, 0, [])]" />
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_purchase_order_approved">
+        <field name="domain">[('state','=','approved')]</field>
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="limit">80</field>
+        <field name="name">Approved</field>
+        <field name="res_model">purchase.order</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_ids" eval="[(6, 0, [])]" />
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_window_sale_order_wizard" model="ir.actions.act_window">
+        <field name="name">Sale Order Wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_window_crm_lead_report_type" model="ir.actions.act_window">
+        <field name="name">Record Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.lead.report.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_mode">form</field>
+    </record>
+    <!-- Display Records tree view action -->
+    <record id="action_display_records_tree" model="ir.actions.act_window">
+        <field name="name">Displays</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">display.display</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">tree,kanban,form,pivot</field>
+        <field name="view_id" ref="view_display_display_tree" />
+        <field name="help">Enter display records and accompanying details.</field>
+    </record>
+    <!-- Display Setup tree view action -->
+    <record id="action_display_setup_tree" model="ir.actions.act_window">
+        <field name="name">Display Setup</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">display.setup</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">tree,kanban,form,pivot</field>
+        <field name="view_id" ref="view_display_setup_tree" />
+        <field name="help">Enter display setup details.</field>
+    </record>
+    <!-- Display Daas tree view action -->
+    <record id="action_display_daas_tree" model="ir.actions.act_window">
+        <field name="name">Display Daas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">display.daas</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">tree,kanban,form,pivot</field>
+        <field name="view_id" ref="view_display_daas_tree" />
+        <field name="help">Enter displays as a service details.</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_window_shipstation_webhooks">
+        <field name="name">Shipstation Webhook</field>
+        <field name="res_model">shipstation.postback</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="context">{}</field>
+        <field name="limit">80</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_window_shipstation_packages">
+        <field name="name">Shipstation Packages</field>
+        <field name="res_model">delivery.shipstation.package</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="context">{}</field>
+        <field name="limit">80</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_sale_order_rate_wizard">
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="limit">80</field>
+        <field name="name">Delivery Rates</field>
+        <field name="res_model">sale.order.rate.wizard</field>
+        <field name="target">new</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" eval="False" />
+        <field name="view_ids" eval="[(6, 0, [])]" />
+        <field name="view_mode">form</field>
+    </record>
+
+    <!-- Saleforce Importer Window Actions-->
+    <record model="ir.actions.act_window" id="action_window_salesforce_file">
+        <field name="name">Salesforce Files</field>
+        <field name="res_model">salesforce.import.file</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="context">{}</field>
+        <field name="limit">80</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_window_salesforce_line">
+        <field name="name">Salesforce File Rows</field>
+        <field name="res_model">salesforce.import.line</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="context">{}</field>
+        <field name="limit">80</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_window_salesforce_quote">
+        <field name="name">Salesforce Quotes</field>
+        <field name="res_model">salesforce.quote</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="context">{}</field>
+        <field name="limit">80</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_window_salesforce_order">
+        <field name="name">Salesforce Orders</field>
+        <field name="res_model">salesforce.order</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="context">{}</field>
+        <field name="limit">80</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Incoming Outgoing Report-->
+    <record model="ir.actions.act_window" id="action_incoming_outgoing_report">
+        <field name="name">Incoming Outgoing Report</field>
+        <field name="res_model">incoming.outgoing.report</field>
+        <field name="context">{}</field>
+        <field name="limit">80</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="view_incoming_outgoing_report_pivot" />
+        <field name="view_ids" eval="[(6, 0, [])]" />
+        <field name="view_mode">pivot</field>
+    </record>
+
+    <record id="action_update_crm_leads" model="ir.actions.server">
+        <field name="name">Update Leads</field>
+        <field name="model_id" ref="crm.model_crm_lead" />
+        <field name="binding_model_id" ref="crm.model_crm_lead" />
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+        if records:
+            records.action_update_leads()
+        </field>
+    </record>
+
+    <record id="action_most_recent_order_date" model="ir.actions.server">
+        <field name="name">Most Recent Order Date</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="binding_model_id" ref="base.model_res_partner" />
+        <field name="code">
+            if records:
+                records.comoute_most_recent_order_date()
+        </field>
+    </record>
+
+</odoo>

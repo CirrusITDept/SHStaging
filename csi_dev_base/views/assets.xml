@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend_attachment_on_stock_barcode" name="attachment_on_stock_barcode assets" inherit_id="stock_barcode.assets_backend">
+            <xpath expr="." position="inside">
+            	 <script type="text/javascript" src="/csi_dev_base/static/src/js/attachment_on_stock_barcode.js"></script>
+            </xpath>
+        </template>
+        
+        <template id="assets_frontend_payment_sci" inherit_id="web.assets_frontend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/csi_dev_base/static/src/js/payment_check.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

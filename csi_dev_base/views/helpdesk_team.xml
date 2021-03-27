@@ -1,0 +1,25 @@
+<odoo>
+	<record id="inherited_helpdesk_kanban_view" model="ir.ui.view">
+        <field name="name">inherited helpdesk kanban view</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position='after'>
+                <field name="stage_counts_ids"/>
+            </xpath>
+            <xpath expr="//div[@class='container o_kanban_card_content']/div[@class='row']/div[@class='col-6 o_kanban_primary_right']/div[2]" position='after'>
+                <t t-value="JSON.parse(record.stage_counts_ids.raw_value)" t-set="stage_count_list"/>
+                <t t-foreach="stage_count_list" t-as="item">
+                    <div class="mb4">
+
+                        <a name="%(csi_dev_base.helpdesk_ticket_action_new)d"
+                           type="action">
+                            <t t-esc="item.counter"/> -
+                            <t t-esc="item.stage_name"/>
+                        </a>
+                    </div>
+                </t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

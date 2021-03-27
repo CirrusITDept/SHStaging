@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="report_assets_common" name="maintenance assets" inherit_id="web.report_assets_common">
+        <xpath expr="." position="inside">
+            <link
+                rel="stylesheet"
+                type="text/scss"
+                href="/pdf_template/static/src/scss/report.scss"
+            />
+        </xpath>
+    </template>
+
+
+    <template id="pdf_template_document_xml">
+        <t t-call="web.basic_layout">
+            <div class="page">
+
+                <!-- First Page Header -->
+                <div class="first-page-header-div">
+                    <div class="first-page-header-inner row">
+                        <div class="col-7 text-left">
+                            <div class="row">
+                                <div class="col-2 mr-0">
+                                    <img src="/pdf_template/static/src/img/Asset10.png" class="img img-fluid img-position"/>
+                                </div>
+                                <div class="col-10 ml-0">
+                                    <p>
+                                        <b>
+                                        200 West Rd. Portsmouth NH 03801<br/>
+                                        P 877 636 2331 | E info@cirrusled.com | W cirrusled.com</b>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5 text-right">
+                            <img src="/pdf_template/static/src/img/Asset12.png" class="img img-fluid img-position" style="width: 80%;"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proposal Information -->
+                <div class="information mt-10">
+                    <div class="row">
+                        <div class="col-3 orange-text">
+                            <h5>Proposal information</h5>
+                        </div>
+                        <div class="col-9">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table-custom">
+                                <colgroup>
+                                    <col style="width: 15%"/>
+                                    <col style="width: 45%"/>
+                                    <col style="width: 15%"/>
+                                    <col style="width: 25%"/>
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <td class="pd-table-left pd-table-top cell-top-left">
+                                            Attention
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            Scott Fields
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            Proposal #
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            <b>00231485</b>
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Company
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Signs and Designs
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Date
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            April 2, 2019
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 40px;">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Address
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            209 South 1st Street, Union City, TN 38261, 209 South 1st Street, Union City, TN 38261, 209 South 1st Street
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Quote valid
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            90 days
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Phone
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            (731) 885-2963
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Terms
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            100% Pre-Paid
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Email
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            signs.designs@lanzerinc.com
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            FOB
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Portsmouth, NH
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Reference
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            4x8 DS for School
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Lead time
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            <b>Ships within 24-72 hours</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pd-table-left pd-table-bottom cell-bottom-left">
+                                            Cirrus rep
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+                                            Bob Leavitt
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Display system -->
+                <div class="information mt-3">
+                    <div class="row">
+                        <div class="col-3 orange-text">
+                            <h5>BladeM display system</h5>
+                        </div>
+                        <div class="col-9">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table-custom">
+                                <colgroup>
+                                    <col style="width: 60%"/>
+                                    <col style="width: 40%"/>
+                                </colgroup>
+                                <tbody>
+                                    <tr class="orange-background">
+                                        <td class="orange-table-cell">
+                                            <span><b>BladeM 9mm, full color configurable outdoor LED display</b></span>
+                                            <ul>
+                                                <li>0x20 Double sided display</li>
+                                                <li>Consists of 200 LED panels and 200 1’x2’ aluminum frames</li>
+                                                <li>1 M1 Controller with auto-mapping</li>
+                                                <li>1 ScreenHub cloud software with lifetime training &amp; support</li>
+                                                <li>5 Year LTE Cellular and WiFi TP link kit and hardwire internet connectivity</li>
+                                                <li>1 Service Module</li>
+                                                <li><b>204,800 pixels</b> (vs 64,800 for 16mm display) / <b>Price per pixel = $0.32</b></li>
+                                            </ul>
+                                        </td>
+                                        <td style="border: none !important;">
+                                            <img src="/pdf_template/static/src/img/first.png" class="img img-fluid img-table"/>
+                                            <span class="table-img-text"><b>Single LED panel with aluminum frame</b></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Display specs -->
+                <div class="information mt-3">
+                    <div class="row">
+                        <div class="col-4 orange-text">
+                            <h5>Display specs &amp; electrical info</h5>
+                        </div>
+                        <div class="col-8">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table-custom">
+                                <colgroup>
+                                    <col style="width: 17%"/>
+                                    <col style="width: 25%"/>
+                                    <col style="width: 23%"/>
+                                    <col style="width: 35%"/>
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <td class="pd-table-left pd-table-top cell-top-left">
+                                            Module
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            BladeM (SMD)
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            Operating temp
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            158oF to -40oF
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            LED color
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Full color RGB
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Max continuous power
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            7010.00 watts
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Pixel pitch
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            9mm
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Max current @ 240V
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            95.91 amps
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Configuration
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Double sided
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Input voltage
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            208V-240V
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Square feet
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            200 (per face)
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Additional power inputs
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            5 Power boosters
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Display dimensions
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            H 10 ft x W 20 ft
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Dimming
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Scheduled or manual
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Viewing angle
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            160o Horizontal / 90o Vertical
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Estimated LED lifetime
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            100,000 hours
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Frames per second
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            60 fps
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Servicing
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Front and rear serviceable
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Viewing area
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            H 10 ft x W 20 ft
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Software
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Free updates / Lifetime training &amp; support
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Display matrix
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            320x640
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Warranty
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            5 Years hardware
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pd-table-left pd-table-bottom cell-bottom-left">
+                                            Total weight
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+                                            1540.40 lbs
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+                                            Cirrus Complete
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+                                            Service, connectivity, and monitoring for $72.50/month (see pg. 2)
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 font-12 pdl-30">
+                            <p>
+                                <b>Required power setup based on display size and voltage:</b><br/>
+                                <b>240V:</b> 4 Lines of Power at 20 Amps / 1 line of power into the controller and 4 into the boosters<br/>
+                                <b>208V:</b> 6 Lines of Power at 20 Amps / 1 line of power into the controller and 5 into the boosters
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Additional Items -->
+                <div class="information mt-3">
+                    <div class="row">
+                        <div class="col-3 orange-text">
+                            <h5>Additional items</h5>
+                        </div>
+                        <div class="col-9">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table-custom">
+                                <colgroup>
+                                    <col style="width: 17%"/>
+                                    <col style="width: 63%"/>
+                                    <col style="width: 5%"/>
+                                    <col style="width: 15%"/>
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <td class="pd-table-left pd-table-top cell-top-left">
+                                            2nd controller
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            Additional controller to run content on the second side independently, with cellular
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            0
+                                        </td>
+                                        <td class="pd-table-left pd-table-top cell-table-border-left cell-table-border-top">
+                                            $0
+                                        </td>
+                                    </tr>
+                                    <tr class="tr-background">
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Wifi kit
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            Additional wifi kit to act as a receiving unit for extended distance
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            0
+                                        </td>
+                                        <td class="pd-table-left cell-table-border-left">
+                                            $0
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pd-table-left pd-table-bottom cell-bottom-left">
+                                            Power injector
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+                                            Additional lines of power for larger displays
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+                                            4
+                                        </td>
+                                        <td class="pd-table-left pd-table-bottom cell-table-border-left cell-table-border-bottom">
+                                            $300
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 font-11 pdl-30">
+                            <p>
+                                <b>If power boosters are required, this quote assumes 240V on 20 amp service. If different, please let the sales rep know to add the proper amount of power boosters.</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- First Page Footer -->
+                <div class="first-page-footer-div">
+                    <div class="first-page-footer-inner row">
+                        <div class="col-6 text-left">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>Display: $121,650.00</h5>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Shipping: $490.00</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 text-right">
+                            <h5><span class="orange-text">Total price:</span> $122,140.00 USD</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="second-page-header-div">
+                    <div class="second-page-header-inner row">
+                        <div class="col-12 text-left" style="position:relative;">
+                            <div class="row">
+                                <div class="col-7 mr-0">
+                                    <img src="/pdf_template/static/src/img/Asset10.png" class="img img-fluid img-position"/>
+                                </div>
+                                <div class="col-5 mr-0">
+                                    <h3>
+                                        <strong>
+                                            Cirrus Complete.<br/>
+                                            Ultimate peace of mind.
+                                        </strong>
+                                    </h3>
+                                </div>
+                            </div>
+                            <img src="/pdf_template/static/src/img/seXZjT.png" class="img img-fluid img-position" style="position:absolute;width: 80%;top: 50%;left:-5%;"/>
+                        </div>
+                    </div>
+                </div>
+                <!-- screen service warranty -->
+                <div class="information mt-100">
+                    <div class="row">
+                        <div class="col-6 orange-text">
+                            <h5>The market’s first digital screen service warranty</h5>
+                        </div>
+                        <div class="col-6">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-2">
+                            <img src="/pdf_template/static/src/img/Asset8.png" class="img img-fluid img-position"/>
+                        </div>
+                        <div class="col-10 pdr-50">
+                            <p>
+                                Introducing Cirrus Complete, an optional service warranty. When you sign up to be a Cirrus Complete service
+                                provider, we can dispatch your shop to service our displays. Service rates can be found in the provider contract.
+                                Ask your rep for details.
+                            </p>
+                            <p>
+                                The 5 year service warranty cost can be monthly (for end-user) or upfront, based on the number of modules.
+                            </p>
+                            <p>
+                                The service cost for this display is:<br/>
+                                <span class="orange-text"><b>$45 Monthly</b></span> end-user cost<br/>
+                                <span class="orange-text"><b>$2,350 Upfront</b></span> with display cost
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- included in Cirrus Complete -->
+                <div class="information mt-4">
+                    <div class="row">
+                        <div class="col-7 orange-text">
+                            <h5>What’s included in Cirrus Complete for the end-user?</h5>
+                        </div>
+                        <div class="col-5">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12 pdr-50">
+                            <p>
+                                With our new hardware integration, Cirrus monitors every single module's health in real-time, 24/7. Suppose there appears to be an issue
+                                with a module or controller for this display. In that case, Cirrus can take proactive measures to troubleshoot and either resolve the issue
+                                remotely or dispatch a service technician to fix the problem.
+                            </p>
+                            <p>
+                                Through ScreenHub, the end-user will also have access to a dashboard that displays every single module's health, electrical information,
+                                and other data points. BladeM displays purchased in 2019 and beyond will have access to this functionality.*
+                            </p>
+                            <p>
+                                For the next 5 years under the Cirrus Complete subscription, the end-user will never have to worry about servicing any part of the hardware
+                                or software. Cirrus will take care of it for you. <b>Sign shops are eligible and encouraged to be part of the Cirrus Complete servicing network.</b>
+                                Please contact your sales rep to learn more.
+                            </p>
+                            <p class="font-11">*Electrical data visualizations will only be available with the new M1 Pro Controller.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- How it works -->
+                <div class="information mt-4">
+                    <div class="row">
+                        <div class="col-5 orange-text">
+                            <h5>How it works, framework, and other items</h5>
+                        </div>
+                        <div class="col-7">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12 pdr-50">
+                            <p>
+                                If Cirrus Complete is chosen as a part of the display purchase and your sign shop has signed the Cirrus Complete Service Contract, Cirrus
+                                can dispatch your company to service the display at the agreed contract rates.
+                            </p>
+                            <p>
+                                Please note, <b>Cirrus will only remit payment to shops with a signed Cirrus Complete Servicing Contact</b> and have been authorized by tech
+                                support to service the identified display. If a Cirrus Complete Service Contract is NOT signed, you cannot send invoices to Cirrus as they will
+                                not be paid.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Third Page Header -->
+                <div class="third-page-header-div">
+                    <div class="third-page-header-inner row">
+                        <div class="col-12 text-left">
+                            <div class="row">
+                                <div class="col-1 mr-0">
+                                    <img src="/pdf_template/static/src/img/Asset7.png" class="img img-fluid img-position"/>
+                                </div>
+                                <div class="col-11 ml-0">
+                                    <p>
+                                        <b>
+                                        200 West Rd. Portsmouth NH 03801<br/>
+                                        P 877 636 2331 | E info@cirrusled.com | W cirrusled.com</b>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Third Page content -->
+                <div class="information mt-3">
+                    <div class="row">
+                        <div class="col-12 pdr-50">
+                            <p class="font-11">
+                                Terms of sale
+                            </p>
+                            <p class="font-11 small-line-height">
+                                <b>1. ACCEPTANCE:</b> This Terms of Sale (the "Agreement") sets forth the terms and conditions governing the sale of equipment and related fixtures and attachments (collectively the “Goods”) by
+Cirrus to Purchaser. The purchase offer and sale shall be governed only by the terms and conditions stated in this Agreement and no modification or supplement shall be valid or binding on
+Cirrus and any attempted addition to this Agreement are hereby rejected by Cirrus. Purchaser agrees that in connection with the resale of the Goods to an end-user owner of the Goods (the
+“Owner”) [alternatively: shall promptly provide Cirrus with copies of all Owner contact and purchase information at the time of end-user contract execution; or Purchaser shall obtain each
+Owner’s written agreement to the License and Terms of Service referred hereto as Exhibit 1 a copy of which is available at www.cirrusled.com/documents.
+                                <br/>
+                                <b>2. PRICES:</b> Prices for the Goods and the Services covered by the License and Terms of Service shall be those set forth in Cirrus's price lists or in written quotations in effect at the time of
+shipment. Prices are subject to change without notice. Written quotations shall expire within sixty (60) days from the date of their issuance unless terminated earlier by Cirrus upon notice to
+Purchaser. Prices do not include any taxes imposed by any governmental authority whatsoever, which taxes shall be paid by Purchaser.
+                                <br/>
+                                <b>3. TAXES:</b> The amount of all present and future sales, revenue, excise, or other taxes applicable to the Goods shall be added to the purchase price and shall be paid by Purchaser, or in lieu
+thereof, Purchaser shall provide Cirrus with a tax exemption certificate acceptable to the taxing authorities. Notwithstanding the above, if Cirrus is required to pay such taxes, Purchaser shall
+reimburse Cirrus for such amounts.
+                                <br/>
+                                <b>4. ADDITIONAL COSTS/EXPENSES:</b> Purchaser shall pay all added costs and expenses incurred by Cirrus as a result of delays in receiving receipt of details, specifications, and other pertinent
+information from Purchaser or because of changes requested by Purchaser.
+                                <br/>
+                                <b>5. PAYMENT:</b> Purchaser shall pay to Cirrus the full purchase price of the Goods and Services, as applicable, in accordance with the terms noted on the invoice document, as evidenced by
+Cirrus's invoice to Purchaser. All invoices paid after the due date will be assessed a late payment fee of two (2) percent per month, or such lesser charge as required by applicable law.
+Notwithstanding the due date above, Cirrus reserves the right to require Purchaser, prior to shipment, to pay the purchase price in full or make other adequate assurances of payment
+satisfactory to Cirrus when, in Cirrus's sole opinion, Purchaser's financial condition or other grounds warrant such action. Purchaser hereby agrees to pay all of Cirrus's costs of collecting any
+amounts not paid when due, including without limitation reasonable attorney fees. If the subscription option is utilized, Purchaser is only responsible for down payment and shipping. Subscriber
+is responsible for payments outlined in terms of subscription contract.
+                                <br/>
+                                <b>6. DELIVERY:</b> Cirrus will use reasonable diligence to meet scheduled shipment dates and times for Goods purchased by Purchaser. Such dates and times are the best possible estimates, and
+not guarantees, of when the Goods will actually be shipped. In no event shall Cirrus be liable for any losses or damages of any kind due to delays in shipment, nor may Purchaser cancel its
+contract because of any such delay.
+                                <br/>
+                                <b>7. CANCELLATION:</b> Cancellations of orders, once placed, are not permitted.
+                                <br/>
+                                <b>8. RETURN OF GOODS:</b> The Goods are not returnable or exchangeable.
+                                <br/>
+                                <b>9. FORCE MAJEURE:</b> Cirrus shall not be liable for any delay in shipment, failure to deliver, or any other nonperformance of the Agreement directly or indirectly resulting from or contributed to
+by any cause or circumstance beyond Cirrus's reasonable control, including, without limitation, force majeure, accident to Cirrus's plant or equipment, riots, wars or national emergencies, labor
+disputes of every kind however caused, embargoes, non-delivery by suppliers, inability to obtain supplies through normal sources of supplies, delays of carriers or
+postal authorities, governmental restrictions, prohibitions, or diversions. In such event, Cirrus's time for performance under this Agreement shall be extended for a period of time not less than
+the period of such delay, or at Cirrus's option, Cirrus may rescind this Agreement upon ten (10) days' written notice to Purchaser. Furthermore, Cirrus may allocate its production and deliveries
+among its customers.
+                                <br/>
+                                <b>10. UNAVAILIBILITY OF PARTS/MATERIALS:</b> Cirrus shall not be liable for any loss or damage caused by the unavailability of parts or materials for the Goods.
+                                <br/>
+                                <b>11. CONNECTION:</b> Purchaser and the original Customer shall be fully and solely responsible for installing the Goods in accordance with the Cirrus Installation Manual and for providing
+appropriate electrical and internet connections (DHCP with the ability to connect to Cirrus servers) to the Goods, including the screen, at the time of installation and on an ongoing basis order
+for full screen and software functionality. Maintenance of this connection and associated costs are solely the responsibility of the Owner.
+                                <br/>
+                                <b>12. LTE CELLULAR CONNECTIVITY:</b> LTE services provided by Cirrus are operated on the T-Mobile network and subject to signal availability at Purchaser’s or Owner’s installation location. In
+the event of the location not having service sufficient to operate the screen after the time of installation, it will be solely the Purchaser’s or Owner’s responsibility to arrange for alternative
+connectivity and Cirrus shall have no liability for direct or indirect costs of related to alternative connectivity installation or configuration. Full details of the LTE Cellular Connectivity policy can be
+found at www.cirrusled.com/documents.
+                                <br/>
+                                <b>13. THIRD PARTY SOFTWARE:</b> Cirrus displays may only be operated with Screen Hub or other Cirrus distributed software. The license terms for such software are set forth in the
+License and Terms of Service. Use of or installation of any additional software not licensed by Cirrus will void the warranty for the Goods.
+                                <br/>
+                                <b>14. IMAGES:</b> Purchaser agrees that Cirrus may use any photographs or images of the system for any purpose at any time and without consent from Purchaser.
+                                <br/>
+                                <b>15. INDEMNIFICATION:</b> Purchaser shall defend, indemnify and hold Cirrus harmless from and against any claims, demands, liabilities, damages, or judgments, damages and costs (including
+attorneys’ fees) which may arise from Purchaser’s use of the Goods, Services, or software. This indemnification obligation includes but is not limited to copyright infringement, violating sign
+ordinances and laws, failure to attain a permit, mismanagement of brightness controls, and/or installation that does not comply with the installation requirements and specifications set forth in
+the Cirrus Installation Manual.
+                                <br/>
+                                <b>16. SHIPPING:</b> Cirrus retains title and risk until system is received by Purchaser or original end user. Upon accepting shipment, title and risk shall be transferred to Purchaser. Any damage
+during unloading shall be the sole responsibility of Purchaser. Purchaser shall have the responsibility to inspect system upon arrival for any damage or loss during shipping and to note this
+damage on the shipping delivery receipt. A copy of the delivery receipt must be provided to Cirrus within ten (10) working days. Any damaged or non-conforming Goods shall be reported to
+Cirrus in writing within ten (10) business days of delivery to Purchaser. If no such notification is made to Purchaser in writing, Cirrus shall not be liable for any non-conforming Goods or damage
+or loss of Goods during shipping.
+                                <br/>
+                                <b>17. LIMITATIONS:</b> Purchaser's exclusive recourse for Cirrus’s breach of this Agreement and Cirrus’s only liability for any such breach shall be replacement or repair of the Goods. In no
+circumstance or event shall Cirrus be responsible for any direct, indirect or consequential damages, injury, or loss of any kind associated with this transaction in excess of the price of the Goods.
+                                <br/>
+                                <b>18. ELECTRICAL SURGE:</b> Surge protection is built into every Cirrus system. This protection however, can only protect the system to a certain degree. Surges in excess of the thresholds set
+forth in the Cirrus Installation Manual can damage or destroy the Goods and/or related components. Cirrus shall have no liability for any damages resulting or related to electrical surges.
+                                <br/>
+                                <b>19. EXCLUSIONS:</b> The Cirrus limited warranty will be deemed to have been violated, and will not apply, if the Goods or software systems are damaged due to Purchaser’s or Owner’s (including
+their respective representatives and agents), improper or unreasonable use, modification, service, or installation of the Goods. Whether the Purchaser or its representatives have violated the
+warranty will be determined in Cirrus’s sole discretion.
+                                <br/>
+                                <b>20. MISCELLANEOUS:</b> This Agreement shall be governed by the laws of the State of New Hampshire. Any dispute shall be litigated exclusively in Rockland County, New Hampshire. Purchaser
+hereby acknowledges and agrees to the terms in this Agreement and the Cirrus's limited warranty and disclaimer of warranties set forth in the Cirrus Installation Manual, a copy of which can be
+found at www.cirrusled.com/documents. This offer is conditioned upon the Purchaser’s acceptance of all terms listed in this Agreement.
+                            </p>
+                            <p class="orange-text mt-10 font-11">
+                                <b>Required power setup based on display size and voltage:</b><br/>
+                                <b>240V:</b> 4 Lines of Power at 20 Amps / 1 line of power into the controller and 4 into the boosters<br/>
+                                <b>208V:</b> 6 Lines of Power at 20 Amps / 1 line of power into the controller and 5 into the boosters
+                            </p>
+                            <p class="orange-text mt-10 font-11">
+                                <b>LTE Cellular connectivity IS INCLUDED for this quote.</b>
+                            </p>
+                            <p class="font-15">
+                                <b>Signature: __________________________ Date:__________________________ Proposal #: 00231</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Third Page Footer -->
+                <div class="first-page-footer-div mt-13">
+                    <div class="first-page-footer-inner row">
+                        <div class="col-6 text-left">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>Display: $121,650.00</h5>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Shipping: $490.00</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 text-right">
+                            <h5><span class="orange-text">Total price:</span> $122,140.00 USD</h5>
+                        </div>
+                    </div>
+                </div>
+                <!-- Four Page Header -->
+                <div class="four-page-header-div">
+                    <div class="four-page-header-inner">
+                        <div class="col-12 text-left pd-50 header-content">
+                            <h1>
+                                More business.<br/>
+                                The market’s first digital screen subscription.
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+                <!-- Monthly Payment -->
+                <div class="information mt-3">
+                    <div class="row">
+                        <div class="col-7 orange-text">
+                            <h5>Monthly payment option for the end-user, and much more</h5>
+                        </div>
+                        <div class="col-5">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-1">
+                            <img src="/pdf_template/static/src/img/Asset6.png" class="img img-fluid img-position"/>
+                        </div>
+                        <div class="col-11 pdr-50">
+                            <p>
+                                Cirrus now offers <b>Screen Subscription</b>, a bundle of hardware, software, and Cirrus Complete, our comprehensive service,
+connectivity, and monitoring warranty.
+                            </p>
+                            <p>
+                                The best part? This subscription offers everything Cirrus has to offer, while making you more competitive and increasing your
+customers’ ROI.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- subscriptions? -->
+                <div class="information mt-3">
+                    <div class="row">
+                        <div class="col-6 orange-text">
+                            <h5>What’s included in the 5 and 10 year subscriptions?</h5>
+                        </div>
+                        <div class="col-6">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12 pdr-50">
+                            <ul>
+                                <li>
+                                    <b class="orange-text">4’x8’ Double-sided display</b> with all of the items listed with the proposal #
+                                </li>
+                                <li>
+                                    <b class="orange-text">Cirrus Complete</b>, a $XXXX value over 5 years of service, connectivity, and 24/7 <br/>
+                                    performnace monitoring
+                                </li>
+                                <li>
+                                    <b class="orange-text">ScreenHub content management software</b> with unlimted free upgrades
+                                </li>
+                                <li>
+                                    <b class="orange-text">Free display upgrade</b> to our newest technology every 5 years if the EU remains in the subscription
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- How it work? -->
+                <div class="information mt-4">
+                    <div class="row">
+                        <div class="col-5 orange-text">
+                            <h5>How it works, framework, and other items</h5>
+                        </div>
+                        <div class="col-7">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12 pdr-50">
+                            <p>Increase your LED revenue with this program that will make digital displays more approachable for every type of business. You’ll never have
+                                to service the display as along as the customer is in the subscription, which gives them hardware and labor warranty.</p>
+                            <p>
+                                You’re in control. Simply provide your usual quote to the end-user with your install, fab, and markup costs (your markup costs can go in the
+down payment that the EU would absorb), then add an additional line item for the monthly Cirrus subscription cost, which we would execute
+with the end-user.
+                            </p>
+                            <div class="row mt-4" style="height: 207px;">
+                                <div class="col-5">
+                                </div>
+                                <div class="col-7">
+                                    <img src="/pdf_template/static/src/img/four.png" class="img img-fluid img-position p-absolute img-absolute"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Four Page Footer -->
+                <div class="four-page-footer-div">
+                    <div class="four-page-footer-inner row">
+                        <div class="col-9 text-left">
+                            <h5>
+                                <b class="orange-text">Customer monthly subscription:</b> $2,875.00
+                            </h5>
+                            <p class="font-13">
+                                The only money distributed to Cirrus from your shop is the down payment and shipping
+                                amounts shown below. You can simply add that to your quote cost for the end-user.
+                            </p>
+                        </div>
+                        <div class="col-3"></div>
+                    </div>
+                    <div class="four-page-footer-inner-second row">
+                        <div class="col-8 text-left">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h5><b>Down payment: $18,248.00</b></h5>
+                                </div>
+                                <div class="col-5">
+                                    <h5><b>Shipping: $490.00</b></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 text-right">
+                            <h5><b><span class="orange-text">Total price:</span> $2,240.00 USD</b></h5>
+                        </div>
+                    </div>
+                </div>
+                <!-- Required Information -->
+                <div class="information mt-3 font-18">
+                    <div class="row pdt-50">
+                        <div class="col-3 orange-text">
+                            <h5>Required information</h5>
+                        </div>
+                        <div class="col-9">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 pdr-50">
+                            <p><b class="font-16">Please fill out the required information below to complete payment, order activation, shipping, and warranty activation.</b></p>
+                            <p class="orange-text mt-4">
+                                <b>Required power setup based on display size and voltage:</b>
+                            </p>
+                            <p>
+                                <div class="checkbox-div"/><b>240V:</b> 4 Lines of Power at 20 Amps / 1 line of power into the controller and 4 into the boosters
+                            </p>
+                            <p>
+                                <div class="checkbox-div"/><b>208V:</b> 6 Lines of Power at 20 Amps / 1 line of power into the controller and 5 into the boosters
+                            </p>
+                            <p class="orange-text mt-3">
+                                <b>LTE Cellular connectivity IS INCLUDED for this quote.</b>
+                            </p>
+                            <p class="orange-text mt-3">
+                                <b>ScreenHub account creation (key contact who will be using ScreenHub at install location):</b>
+                            </p>
+                            <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table-custom-5">
+                                <colgroup>
+                                    <col style="width: 100%"/>
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <td class="first-td pd-5">
+                                            <b>Location Name:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>First Name:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>Last Name:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="last-td pd-5">
+                                            <b>Email:</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="orange-text mt-3">
+                                <div class="checkbox-div"/><b class="orange-text">Current order shipment address, check box if correct</b>
+                            </p>
+                            <div class="td-div mt-3">
+                                <b>Woodside Baptist Church</b><br/>
+                                8500 E. Alameda Ave<br/>
+                                Denver CO 80247<br/>
+                                United States
+                            </div>
+                            <p class="orange-text mt-3">
+                                <div class="checkbox-div"/><b class="orange-text">Check this box if shipping address is different from the above and enter correct address below:</b>
+                            </p>
+                            <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table-custom-5 mt-4">
+                                <colgroup>
+                                    <col style="width: 100%"/>
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <td class="first-td pd-5">
+                                            <b>Ship to business name:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>Contact name:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>Contact phone:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>Contact email:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>Address:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>City:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>State:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="middle-td pd-5">
+                                            <b>Zip:</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="last-td pd-5">
+                                            <b>Country:</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fifths Page Footer -->
+                <div class="fifths-page-footer-div">
+                    <div class="fifths-page-footer-inner row">
+                        <div class="col-11 text-right">
+                            <p>
+                                <b>
+                                200 West Rd. Portsmouth NH 03801<br/>
+                                P 877 636 2331 | E info@cirrusled.com | W cirrusled.com</b>
+                            </p>
+                        </div>
+                        <div class="col-1 text-right">
+                            <img src="/pdf_template/static/src/img/Asset10.png" class="img img-fluid img-position"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="pdf_template_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="pdf_template.pdf_template_document_xml"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

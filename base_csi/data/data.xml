@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Purchase Approval -->
+        <record model="res.groups" id="group_view_commission_amounts">
+            <field name="name">Can See Commission Amounts</field>
+        </record>    
+        <record model="res.groups" id="group_confirm_sale_order">
+            <field name="name">Can Confirm Sale Orders</field>
+        </record>
+        <record model="res.groups" id="group_exec_mgmt">
+            <field name="name">Executive Management</field>
+        </record>
+        <record model="res.groups" id="group_addtl_carrier">
+            <field name="name">Access to Addtl Carriers</field>
+        </record>
+        <record model="res.groups" id="group_delivery_order_approval">
+            <field name="name">Delivery Order Approval</field>
+        </record>
+        <record model="ir.actions.server" id="action_rewrite_salesforce_lines">
+            <field name="name">Rewrite Displays to Cases</field>
+            <field name="model_id" ref="base_csi.model_salesforce_import_line" />
+            <field name="binding_model_id" ref="base_csi.model_salesforce_import_line" />
+            <field name="state">code</field>
+            <field name="code">
+records.rewrite_records()
+            </field>
+        </record>
+        <record model="ir.actions.server" id="action_batch_submit_approval">
+            <field name="name">Batch Submit Approval</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field name="binding_model_id" ref="purchase.model_purchase_order" />
+            <field name="state">code</field>
+            <field name="code">
+action = records.batch_submit_approval()
+            </field>
+        </record>
+        <record model="ir.actions.server" id="action_batch_approval">
+            <field name="name">Batch Approve Orders</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field name="binding_model_id" ref="purchase.model_purchase_order" />
+            <field name="state">code</field>
+            <field name="code">
+action = records.batch_approve_order()
+            </field>
+        </record>
+        <record model="mail.template" id="mail_template_purchase_approval">
+            <field name="name">Approve Purchase Order Template</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field name="email_from">
+                <![CDATA[${user.email}]]>
+            </field>
+            <field name="partner_to">
+                <![CDATA[${object.approver_emails}]]>
+            </field>
+            <field name="subject">
+                <![CDATA[Approve Purchase - ${object.name} (${object.amount_total})]]>
+            </field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Please approve order below by responding to this email or by approving it directly in Odoo.</p>
+                    % if object.name:
+                    <div>
+<strong>PO #</strong>
+<p>${object.name}</p>
+</div>
+                    %endif
+                    % if object.partner_id:
+                    <div>
+<strong>Vendor</strong>
+<p>${object.partner_id.name}</p>
+</div>
+                    %endif
+                    % if object.partner_ref:
+                    <div>
+<strong>Vendor Reference</strong>
+<p>${object.partner_ref}</p>
+</div>
+                    %endif
+                    % if object.date_order:
+                    <div>
+<strong>Date</strong>
+<p>${object.date_order}</p>
+</div>
+                    %endif
+                    % if object.amount_total:
+                    <div>
+<strong>Amount</strong>
+<p>${object.amount_total}</p>
+</div>
+                    %endif
+                    % if object.department_id:
+                    <div>
+<strong>Department</strong>
+<p>${object.department_id.name}</p>
+</div>
+                    %endif
+            ]]>
+            </field>
+        </record>
+        <!-- Saleforce Importer -->
+        <record forcecreate="True" id="ir_cron_saleforce_import_file_action" model="ir.cron">
+            <field name="name">Salesforce Importer: Import Files</field>
+            <field name="model_id" ref="model_salesforce_import_file" />
+            <field name="state">code</field>
+            <field name="code">
+model.run_scheduler(True)
+            </field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+        <record forcecreate="True" id="ir_cron_saleforce_import_line_action" model="ir.cron">
+            <field name="name">Salesforce Importer: Parse &amp; Ingest File Rows</field>
+            <field name="model_id" ref="model_salesforce_import_line" />
+            <field name="state">code</field>
+            <field name="code">
+model.run_scheduler(True)
+            </field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+        <record forcecreate="True" id="ir_cron_hoopla_metric_value_action" model="ir.cron">
+            <field name="name">Hoopla Integration: Update user metric values</field>
+            <field name="model_id" ref="model_res_company" />
+            <field name="state">code</field>
+            <field name="code">
+model.run_hoopla_scheduler(True)
+            </field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+        <record forcecreate="True" id="ir_cron_new_sign_shop_cron" model="ir.cron">
+            <field name="name">Compute New Sign Shops</field>
+            <field name="model_id" ref="model_res_partner" />
+            <field name="state">code</field>
+            <field name="code">
+model._run_new_sign_shop_cron()
+            </field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+
+        <record id="paperformat_csi" model="report.paperformat">
+            <field name="name">CSI Custom Report</field>
+            <field name="default" eval="False" />
+            <field name="format">Letter</field>
+            <field name="orientation">Portrait</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+        <record id="shipstation_package_default" model="delivery.shipstation.package">
+            <field name="code">package</field>
+            <field name="name">Default Package</field>
+            <field name="domestic" eval="True" />
+            <field name="international" eval="True" />
+        </record>
+        <record model="ir.actions.server" id="action_print_ss_label">
+            <field name="name">Print Shipstation Labels</field>
+            <field name="model_id" ref="stock.model_stock_picking" />
+            <field name="binding_model_id" ref="stock.model_stock_picking" />
+            <field name="state">code</field>
+            <field name="code">
+action = records.sudo().ship_ssorder()
+            </field>
+        </record>
+        <record model="ir.actions.server" id="action_send_ss_label">
+            <field name="name">Send to Shipstation</field>
+            <field name="model_id" ref="stock.model_stock_picking" />
+            <field name="binding_model_id" ref="stock.model_stock_picking" />
+            <field name="state">code</field>
+            <field name="code">
+action = records.sudo().create_update_ssorder()
+            </field>
+        </record>
+    </data>
+    <data>
+        <record model="sign.item.type" id="sign.sign_item_type_name">
+            <field name="auto_field"></field>
+        </record>
+        <record model="sign.item.type" id="sign.sign_item_type_email">
+            <field name="auto_field"></field>
+        </record>
+        <record model="sign.item.type" id="sign.sign_item_type_phone">
+            <field name="auto_field"></field>
+        </record>
+    </data>
+</odoo>

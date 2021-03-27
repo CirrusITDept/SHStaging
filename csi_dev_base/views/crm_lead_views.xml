@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>	
+	<record model="ir.ui.view" id="crm_case_form_view_oppor_ext">
+        <field name="name">crm.lead.oppor.inherited.crm.ext</field>
+		<field name="model">crm.lead</field>
+        <field name="inherit_id" ref="base_csi.crm_case_form_view_oppor" />
+        <field name="arch" type="xml">
+        	<field name="smb_lead_id" position="after">
+        		<field name="custom_assigned_sign_shop"/>
+        		<field name="custom_calc_reve"/>
+        		<field name="custom_pro_reve"/>
+        	</field>
+        	<button name="action_sale_quotations_new" position="after">
+        		<button string="Sign Shop Quotation" name="action_sale_quotations_sign_shop" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', '|', ('type', '=', 'lead'), ('custom_assigned_sign_shop', '=', False), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
+        	</button>
+        </field>
+	</record>
+	
+	<record model="ir.ui.view" id="crm_case_form_view_oppor_ext2">
+        <field name="name">crm.lead.oppor.inherited.crm.ext2</field>
+		<field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="arch" type="xml">
+        	<field name="user_id" position="replace">
+        		<field name="user_id" attrs="{'readonly': [('custom_salesperson_change', '=', False)]}" />
+        		<field name="custom_salesperson_change" invisible="1" />
+        	</field>
+        </field>
+	</record>
+	
+	<record model="ir.ui.view" id="crm_case_kanban_view_leads_ext">
+        <field name="name">crm.lead.kanban.lead.ext</field>
+		<field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads" />
+        <field name="arch" type="xml">
+        	<field name="planned_revenue" position="after">
+        		<field name="custom_calc_reve"/>
+        	</field>
+        	<progressbar field="activity_state" position="replace">
+        		<progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="custom_calc_reve" help="This bar allows to filter the opportunities based on scheduled activities."/>
+        	</progressbar>
+        </field>
+	</record>
+	
+	<record model="ir.ui.view" id="crm_case_tree_view_oppor_ext">
+        <field name="name">crm.lead.tree.opportunity.ext</field>
+		<field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
+        <field name="arch" type="xml">
+        	<xpath expr="//field[@name='create_date']" position="after">
+        		<field name="custom_last_modified"/>
+        		<field name="custom_last_updated_by"/>
+        	</xpath>
+        </field>
+	</record>
+	
+</odoo>	

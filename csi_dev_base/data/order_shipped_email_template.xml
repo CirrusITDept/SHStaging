@@ -1,0 +1,375 @@
+<odoo>
+    <data >
+        
+        <record id="custom_order_shipped_email" model="mail.template">
+            <field name="name">Custom - Order Shipped Email</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+            <field name="subject">Order Shipped</field>
+            <field name="body_html"><![CDATA[
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+<![endif]-->
+<!--[if !mso]><!-->
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<!--<![endif]-->
+
+<title>Cirrus</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0 " />
+<meta name="format-detection" content="telephone=no" >
+
+<!--[if mso]>
+    <style>
+      body,table,td {
+       font-family:  Arial, sans-serif !important;
+      }
+    </style>
+<![endif]-->
+
+<style type="text/css">
+table {
+	border-collapse: collapse;
+	mso-table-lspace: 0px;
+	mso-table-rspace: 0px;
+}
+td, a, span {
+	border-collapse: collapse;
+	mso-line-height-rule: exactly;
+}
+p {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+h1, h2, h3, h4, h5, h6 {
+	display: block;
+	margin: 0;
+}
+img {
+	border: 0;
+	outline: none;
+	text-decoration: none;
+}
+p, a, li, td, blockquote {
+	mso-line-height-rule: exactly;
+}
+p, a, li, td, body, table, blockquote {
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+a {
+	color: inherit;
+	text-decoration: none;
+}
+.white_text a {
+	color: #ffffff;
+	text-decoration: none;
+}
+.grey_text a {
+	color: #384142;
+	text-decoration: none;
+}
+.black_text a {
+	color: #384142;
+	text-decoration: none;
+}
+.blue_text a {
+	color: #5ac4bd;
+	text-decoration: none;
+}
+
+
+/*assets css start end*/
+body {
+	margin: 0 !important;
+	padding: 0 !important;
+	-webkit-text-size-adjust: 100% !important;
+	-ms-text-size-adjust: 100% !important;
+	-webkit-font-smoothing: antialiased !important;
+}
+img + div {
+	display: none;
+}
+ @media only screen and (max-width: 599px) {
+.wrapper {
+	max-width: 100% !important;
+	width: 100% !important;
+	float: none !important;
+}
+.full_img {
+	width: 100% !important;
+	height: auto !important;
+	max-width: 100% !important;
+}
+.side10 {
+	width: 10px !important;
+}
+.side15 {
+	width: 15px !important;
+}
+.side30 {
+	width: 30px !important;
+}
+.side48 {
+	width: 48px !important;
+}
+.side130 {
+	width: 130px !important;
+}
+.side20 {
+	width: 20px !important;
+}
+.aside10 {
+	padding: 0 10px !important;
+}
+.aside15 {
+	padding: 0 15px !important;
+}
+.aside20 {
+	padding: 0 20px !important;
+}
+.text_center {
+	text-align: center !important;
+}
+.text_left {
+	text-align: left !important;
+}
+.text_right {
+	text-align: right !important;
+}
+.spc10 {
+	height: 10px !important;
+}
+.spc110 {
+	height: 110px !important;
+}
+.spc15 {
+	height: 15px !important;
+}
+.spc20 {
+	height: 20px !important;
+}
+.spc_25 {
+	height: 25px !important;
+}
+.spc30 {
+	height: 30px !important;
+}
+
+.hide {
+	display: none !important;
+}
+.hauto {
+	height: auto !important;
+}
+
+.logo_im {
+	width: 140px !important;
+	height: auto !important;
+}
+}
+ @media only screen and (max-width: 480px) {
+u + .body .full-wrap {
+	width: 100% !important;
+	width: 100vw !important;
+}
+}
+</style>
+</head>
+<body class="body" style="padding:0; margin:0 auto !important; display:block !important; min-width:100% !important; width:100% !important; background:#ffffff; -webkit-text-size-adjust:none">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff"  class="full-wrap">
+  <tr>
+    <td align="center" valign="top"><table align="center" style="width:650px; max-width:650px; table-layout:fixed;" class="wrapper"  width="650" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+        <tr>
+          <td><table align="center" style="width:650px; max-width:650px; table-layout:fixed;" class="wrapper"  width="650" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+              <tr>
+                <td><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                    <tr>
+                      <td align="center" valign="top"><!-- Header Section Start -->
+                        
+                        <table width="650" border="0" cellspacing="0" cellpadding="0" align="center" class="wrapper" >
+                          <tr>
+                            <td><table width="650" border="0" cellspacing="0" class="wrapper" cellpadding="0"  align="center" style="width:650px;" 
+    bgcolor="#384142">
+                                <tr>
+                                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                      <tr>
+                                        <td width="48" class="side30" >&nbsp;</td>
+                                        <td width="168" align="left" class="logo_im"  style="padding:20px 0px;" valign="middle" ><a href="https://cirrusled.com/" target="_blank"><img src="/csi_dev_base/static/src/images/logo.png" alt="Cirrus" width="168" class="logo_im" height="60" border="0" style="display:block;max-width:168px;height:auto;font:12px/19px Arial, sans-serif; color:#ffffff;text-decoration:none;" /></a></td>
+                                        <td width="343" class="side30" >&nbsp;</td>
+                                        <td width="91"  valign="top" align="right"><img src="/csi_dev_base/static/src/images/img_1.jpg" alt="" width="91" height="101" border="0" style="display:block;max-width:91px;height:auto;font:12px/19px Arial, sans-serif; color:#000000;text-decoration:none;" /></td>
+                                      </tr>
+                                    </table></td>
+                                </tr>
+                              </table></td>
+                          </tr>
+                          <tr>
+                            <td><table width="650" border="0" cellspacing="0" class="wrapper" cellpadding="0"  align="center" style="width:650px;">
+                                <tr>
+                                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                      <tr>
+                                        <td width="49" class="side20" >&nbsp;</td>
+                                        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                              <td height="50" class="spc_25">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                              <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                  <tr>
+                                                    <td><table width="392" border="0" cellspacing="0" align="left" cellpadding="0" class="wrapper">
+                                                        <tr>
+                                                          <td align="left" class="text_center black_text" valign="top" style="color:#384142;text-decoration:none;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:18px;letter-spacing: -1px;line-height:20px;font-weight:600;">LED it be known, your order has been shipped!</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td height="40" class="spc20">&nbsp;</td>
+                                                        </tr>
+                                                      </table>
+                                                      <table width="160" border="0" cellspacing="0" cellpadding="0" align="right" class="wrapper">
+                                                        <tr>
+                                                          %if object.sale_id:
+                                                            <td align="right" class="text_center blue_text"  valign="top" style="color:#5ac4bd;text-decoration:none;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:18px;line-height:20px;font-weight:600;">ORDER #${object.sale_id.name or 'n/a' }</td>
+                                                          %endif
+                                                        </tr>
+                                                        <tr>
+                                                          <td height="40" class="spc30">&nbsp;</td>
+                                                        </tr>
+                                                      </table></td>
+                                                  </tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                              <td  align="center" ><img src="/csi_dev_base/static/src/images/status-shipped.png" alt="order shipped" width="552" height="114" border="0" class="full_img" style="display:block;max-width:552px;height:auto;font:12px/19px Arial, sans-serif; color:#5ac4bd;text-decoration:none;" /></td>
+                                            </tr>
+                                            <tr>
+                                              <td height="31" class="spc30">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                              <td align="left" valign="top" style="color:#384142;text-decoration:none;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:14px;line-height:20px;" class="grey_text">Can I get a watt watt!? Your display is on the way! </td>
+                                            </tr>
+                                            <tr>
+                                              <td height="25" class="spc30">&nbsp;</td>
+                                            </tr>
+                                          <tr>
+                                              <td align="left" valign="top" style="color:#384142;text-decoration:none;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:14px;line-height:20px;" class="grey_text"> %if object.carrier_id: Shipping Method: ${object.carrier_id.name} %endif <br> %if object.carrier_tracking_ref: Tracking #${object.carrier_tracking_ref} %endif </td>
+                                            </tr>
+                                            <tr>
+                                              <td height="45" class="spc30">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                              %if object.sale_id:
+                                                <td align="left"><a href="${object.sale_id.get_base_url()}/my/orders/${object.sale_id.id}?access_token=${object.sale_id.access_token}" target="_blank"><img src="/csi_dev_base/static/src/images/button-track-order.png" width="155" height="39" alt="Track order" style="display:block;max-width:155px;height:auto;font:12px/19px Arial, sans-serif; color:#5ac4bd;text-decoration:none;" /></a></td>
+                                              %endif
+                                            </tr>
+                                            <tr>
+                                              <td height="45" class="spc30">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                              <td height="25">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                              <td  align="left" valign="top" class="grey_text" style="color:#384142;text-decoration:none;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:14px;line-height:20px;">Please do not reply to this message. Unfortunately replies to this message are routed to an unmonitored mailbox. Please contact your Sales Development Coordinator or Sales Representative with any questions or feedback regarding your order. <br />
+                                                <br />
+                                                (Robots aren’t great with human interaction) <br />
+                                                <br />
+                                                As always, we appreciate your business, and hope your future is bright! <br />
+                                                <br />
+                                                Thank you,<br />
+                                                Cirrus Systems, Inc. </td>
+                                            </tr>
+                                            <tr>
+                                              <td height="45" class="spc30">&nbsp;</td>
+                                            </tr>
+                                          </table></td>
+                                        <td width="49" class="side20" >&nbsp;</td>
+                                      </tr>
+                                    </table></td>
+                                </tr>
+                              </table></td>
+                          </tr>
+                        </table>
+                        
+                        <!-- Header section End --> 
+                        
+                        <!-- TEXT Section Start -->
+                        
+                        <table width="650" border="0" cellspacing="0" class="wrapper" cellpadding="0"  align="center" bgcolor="#5ac4bd" style="background-color:#5ac4bd;width:650px;">
+                          <tr>
+                            <td><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                <tr>
+                                  <td width="49" class="side20" >&nbsp;</td>
+                                  <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                      <tr>
+                                        <td height="40" class="spc30">&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <td align="left" class="white_text" valign="top" style="color:#ffffff;text-decoration:none;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:12px;line-height:18px;"><strong>Cirrus Systems, Inc.</strong><br />
+                                          &copy; 2021 Cirrus System, Inc. | 200 West Rd. Portsmouth NH 03801 | <strong>P</strong> <a href="tel:8776362331" target="_blank" style="color:#ffffff;text-decoration:none;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:12px;line-height:18px;">877 636 2331</a> | <strong>W</strong> <a href="https://cirrusled.com/" target="_blank" style="color:#ffffff;text-decoration:underline;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:12px;line-height:18px;">cirrusled.com</a></td>
+                                      </tr>
+                                      <tr>
+                                        <td height="25" >&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <td align="left" class="white_text"  valign="top" style="color:#ffffff;text-decoration:none;font-family:'ProximaNova Regular', Helvetica,Arial, sans-serif;font-size:12px;line-height:18px;">This is a notification email only. Please do not reply.</td>
+                                      </tr>
+                                      <tr>
+                                        <td height="30" >&nbsp;</td>
+                                      </tr>
+                                      <tr>
+                                        <td><table width="172" border="0" cellspacing="0" cellpadding="0" align="left" class="wrapper">
+                                            <tr>
+                                              <td><table width="172" border="0" cellspacing="0" cellpadding="0" align="left">
+                                                  <tr>
+                                                    <td height="22" valign="middle" width="13" align="left"><a href="https://www.facebook.com/cirrusled" target="_blank"><img src="/csi_dev_base/static/src/images/icon_1.png" alt="FB" width="13" height="22"  style="display:block;max-width:13px;height:auto;font:12px/19px Arial, sans-serif; color:#000000;text-decoration:none;" border="0" /></a></td>
+                                                    <td width="20">&nbsp;</td>
+                                                    <td height="22" valign="middle" width="24" align="left"><a href="https://twitter.com/cirrusled" target="_blank"><img src="/csi_dev_base/static/src/images/icon_2.png" alt="TW" width="24" height="20"  style="display:block;max-width:24px;height:auto;font:12px/19px Arial, sans-serif; color:#000000;text-decoration:none;" border="0" /></a></td>
+                                                    <td width="16">&nbsp;</td>
+                                                    <td height="22" valign="middle" width="22" align="left"><a href="https://www.linkedin.com/company/cirrusled/" target="_blank"><img src="/csi_dev_base/static/src/images/icon_3.png" alt="in" width="22" height="21"  style="display:block;max-width:22px;height:auto;font:12px/19px Arial, sans-serif; color:#000000;text-decoration:none;" border="0" /></a></td>
+                                                    <td width="16">&nbsp;</td>
+                                                    <td height="22" valign="middle" width="23" align="left"><a href="https://www.youtube.com/channel/UCBwW516yi69jLDMEVlvl9Fg" target="_blank"><img src="/csi_dev_base/static/src/images/icon_4.png" alt="yt" width="23" height="17"  style="display:block;max-width:23px;height:auto;font:12px/19px Arial, sans-serif; color:#000000;text-decoration:none;" border="0" /></a></td>
+                                                    <td width="16">&nbsp;</td>
+                                                    <td height="22" valign="middle" width="22" align="left"><a href="https://www.instagram.com/cirrusled/" target="_blank"><img src="/csi_dev_base/static/src/images/icon_5.png" alt="insta" width="22" height="22"  style="display:block;max-width:22px;height:auto;font:12px/19px Arial, sans-serif; color:#000000;text-decoration:none;" border="0" /></a></td>
+                                                  </tr>
+                                                </table></td>
+                                            </tr>
+                                          </table></td>
+                                      </tr>
+                                      <tr>
+                                        <td height="35" >&nbsp;</td>
+                                      </tr>
+                                    </table></td>
+                                  <td width="40" class="side20" >&nbsp;</td>
+                                </tr>
+                              </table></td>
+                          </tr>
+                        </table>
+                        
+                        <!-- TEXT section End --></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr>
+                <td valign="top" height="1" class="hide" style="height:1px; line-height:0px; font-size:0px;"><img src="/csi_dev_base/static/src/images/spacer.gif" width="650" height="1" alt="" border="0" style="display:block; max-width:650px;" /></td>
+              </tr>
+            </table></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+<div style="display:none !important; white-space:nowrap; font:20px courier; color:#ffffff;">- - - - - - - - - - - - - - - - - - - - - -</div>
+</body>
+</html>
+              ]]></field>
+        </record>
+    </data>
+</odoo>
