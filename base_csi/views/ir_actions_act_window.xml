@@ -246,7 +246,7 @@
         <field name="limit">80</field>
         <field name="target">current</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_id" ref="view_incoming_outgoing_report_pivot" />
+        <field name="view_id" ref="base_csi.view_incoming_outgoing_report_pivot" />
         <field name="view_ids" eval="[(6, 0, [])]" />
         <field name="view_mode">pivot</field>
     </record>

@@ -24,7 +24,7 @@
     "category": "Hidden",
     "author": "GFP Solutions LLC",
     "summary": "Custom",
-    "version": "13.3.24",
+    "version": "13.3.25",
     "description": """
 THIS MODULE IS PROVIDED AS IS - INSTALLATION AT USERS' OWN RISK -
 AUTHOR OF MODULE DOES NOT CLAIM ANY
@@ -55,11 +55,11 @@ RESPONSIBILITY FOR ANY BEHAVIOR ONCE INSTALLED.
         ,"views/quality_alert_view.xml"
         ,"views/mrp_view.xml"
         ,"views/display_view.xml"
+        ,"views/ir_ui_views.xml"
         ,"views/ir_actions_act_window.xml"
         ,"views/repair_view.xml"
         ,"views/sign_view.xml"
         ,"views/delivery_view.xml"
-        ,"views/ir_ui_views.xml"
         ,"views/res_company_view.xml"
         ,"views/res_users_view.xml"
         ,"views/res_config_view.xml"
