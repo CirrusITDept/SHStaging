@@ -12,10 +12,10 @@ HelpdeskTeam()
 class HelpdeskTicket(models.Model):
     _inherit = "helpdesk.ticket"
 
-    partner_id = fields.Many2one(required=True)
-    partner_name = fields.Char(required=True)
-    partner_email = fields.Char(required=True)
-    partner_phone = fields.Char(required=True)
+    #partner_id = fields.Many2one(required=True)
+    #partner_name = fields.Char(required=True)
+    #partner_email = fields.Char(required=True)
+    #partner_phone = fields.Char(required=True)
 
     @api.onchange('stage_id')
     def _onchange_stage_id(self):
