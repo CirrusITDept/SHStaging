@@ -15,7 +15,9 @@ class PickingType(models.Model):
     _inherit = "stock.picking.type"
 
     count_helpdesk_value = fields.Integer(compute="_compute_helpdesk_value")
+    count_helpdesk_receipt_value = fields.Integer(compute="_compute_helpdesk_receipt_value")
     count_sale_order_value = fields.Integer(compute="_compute_sale_order_value")
+    count_purchase_order_value = fields.Integer(compute="_compute_purchase_order_value")
     picking_operation = fields.Boolean(string="Use as Picking Operation")
     delivery_operation = fields.Boolean(string="Use as Delivery Operation")
 
@@ -49,12 +51,41 @@ class PickingType(models.Model):
             )
             rec.count_sale_order_value = len(sale_picking_id)
 
+    def _compute_helpdesk_receipt_value(self):
+        for rec in self:
+            rec.count_helpdesk_receipt_value = False
+            helpdesk_picking_id = rec.env["stock.picking"].search(
+                [
+                    ("state", "=", "assigned"),
+                    ("ticket_id", "!=", False),
+                    ("picking_type_id", "=", rec.id),
+                ]
+            )
+            rec.count_helpdesk_receipt_value = len(helpdesk_picking_id)
+
+    def _compute_purchase_order_value(self):
+        for rec in self:
+            rec.count_purchase_order_value = False
+            sale_picking_id = rec.env["stock.picking"].search(
+                [
+                    ("state", "=", "assigned"),
+                    ("ticket_id", "=", False),
+                    ("picking_type_id", "=", rec.id),
+                ]
+            )
+            rec.count_purchase_order_value = len(sale_picking_id)
+
     def action_helpdesk_picking_tree_ready(self):
         return self._get_action("base_csi.action_helpdesk_picking_tree_ready")
+    
+    def action_helpdesk_receipt_tree_ready(self):
+        return self._get_action("base_csi.action_helpdesk_receipt_tree_ready")
 
     def action_sale_order_picking_tree_ready(self):
         return self._get_action("base_csi.action_sale_order_picking_tree_ready")
-
+    
+    def action_purchase_order_picking_tree_ready(self):
+        return self._get_action("base_csi.action_purchase_order_picking_tree_ready")
 
 class StockMove(models.Model):
     _inherit = "stock.move"

@@ -3,9 +3,9 @@
         
         <record id="custom_signed_quote_email_email" model="mail.template">
             <field name="name">Custom - Signed Quote Email</field>
-            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="model_id" ref="sign.model_sign_request"/>
             <field name="auto_delete" eval="True"/>
-            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+            <field name="email_from">${(object.activity_user_id.email_formatted or user.email_formatted) | safe}</field>
             <field name="subject">Signed Quote Email</field>
             <field name="body_html"><![CDATA[
                 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -237,7 +237,7 @@ u + .body .full-wrap {
                                                       </table>
                                                       <table width="160" border="0" cellspacing="0" cellpadding="0" align="right" class="wrapper">
                                                         <tr>
-                                                          <td align="right" class="text_center blue_text"  valign="top" style="color:#5ac4bd;text-decoration:none;font-family:'ProximaNova Regular',Helvetica,Arial, sans-serif;font-size:18px;line-height:20px;font-weight:600;">ORDER #${object.name or 'n/a' }</td>
+                                                          <td align="right" class="text_center blue_text"  valign="top" style="color:#5ac4bd;text-decoration:none;font-family:'ProximaNova Regular',Helvetica,Arial, sans-serif;font-size:18px;line-height:20px;font-weight:600;">ORDER #${object.sale_id.name or 'n/a' }</td>
                                                         </tr>
                                                         <tr>
                                                           <td height="40" class="spc30">&nbsp;</td>
@@ -256,7 +256,9 @@ u + .body .full-wrap {
                                               <td height="45" class="spc30">&nbsp;</td>
                                             </tr>
                                             <tr>
-                                              <td align="left"><a href="${object.get_base_url()}/my/orders/${object.id}?access_token=${object.access_token}" target="_blank"><img src="/csi_dev_base/static/src/images/button-pay-now.png" width="155" height="39" alt="Pay Now" style="display:inline-block;max-width:155px;height:auto;font:12px/19px Arial, sans-serif; color:#5ac4bd;text-decoration:none;" /></a></td>
+                                            	%if object.sale_id:
+													<td align="left"><a href="${object.sale_id.get_base_url()}/my/orders/${object.sale_id.id}?access_token=${object.sale_id.access_token}" target="_blank"><img src="/csi_dev_base/static/src/images/button-pay-now.png" width="155" height="39" alt="Pay Now" style="display:inline-block;max-width:155px;height:auto;font:12px/19px Arial, sans-serif; color:#5ac4bd;text-decoration:none;" /></a></td>
+                                              	%endif
                                             </tr>
                                             <tr>
                                               <td height="45" class="spc30">&nbsp;</td>

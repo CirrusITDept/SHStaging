@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--  INHERITED VIEWS -->
+    <!-- display.display tree/select view -->
+    <record model="ir.ui.view" id="view_display_display_tree">
+        <field name="name">display.display.tree</field>
+        <field name="model">display.display</field>
+        <field name="arch" type="xml">
+            <tree string="Display Records">
+                <field name="name" />
+                <field name="distributor" />
+                <field name="sign_shop" />
+                <field name="account" />
+                <field name="height" />
+                <field name="width" />
+                <field name="number_of_faces" />
+                <field name="status" />
+                <field name="install_date" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_display_filter" model="ir.ui.view">
+        <field name="name">x_gfp.display.display.list.select</field>
+        <field name="model">display.display</field>
+        <field name="priority" eval="15" />
+        <field name="arch" type="xml">
+            <search string="Search Display">
+                <field name="name" string="Display" filter_domain="[('name', 'ilike', self)]" />
+                <field name="distributor" operator="child_of" />
+                <field name="sign_shop" operator="child_of" />
+                <field name="sign_shop_contact" operator="child_of" />
+                <field name="account" operator="child_of" />
+                <field name="end_user_contact" operator="child_of" />
+                <field name="opportunity" operator="child_of" />
+            </search>
+        </field>
+    </record>
+
+    <!-- Display Records form view -->
+    <record id="view_display_records_form" model="ir.ui.view">
+        <field name="name">display.display.form</field>
+        <field name="model">display.display</field>
+        <field name="arch" type="xml">
+            <form string="New Display" class="o_sale_order">
+                <header>
+                    <!-- new sales order button -->
+                    <button class="oe_highlight" string="New Quotation" type="action" name="%(base_csi.act_display_2_sale_order_form)d" context="{'default_display_id': active_id}" />
+                    <!-- new helpdesk ticket button -->
+                    <button class="oe_highlight" string="New Helpdesk Ticket" type="action" name="%(base_csi.act_display_2_helpdesk_ticket_form)d" context="{'default_display_id': active_id}" />
+                    <!-- new quality alert button -->
+                    <button class="oe_highlight" string="New Quality Alert" type="action" name="%(base_csi.act_display_2_quality_alert_form)d" context="{'default_display_id': active_id}" />
+                    <!-- create install ticket button -->
+                    <button name="create_install_ticket" string="New PreInstall Ticket" class="btn-primary" type="object" attrs="{'invisible': [('helpdesk_id', '!=', False)]}"/>
+                </header>
+                <sheet>
+                    <!-- buttons / stat widgets -->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button o_res_partner_tip_opp" type="action" name="%(crm.crm_lead_opportunities)d" icon="fa-star" context="{'search_default_display_id': active_id}">
+                            <field string="Opportunities" name="opportunity_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="action" name="%(base_csi.act_display_2_sale_order)d" icon="fa-usd">
+                            <field string="Sales" name="sale_order_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="object" name="open_salesforce_order" icon="fa-history" attrs="{'invisible': [('salesforce_order_count', '=', 0)]}">
+                            <field string="Salesforce Orders" name="salesforce_order_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="action" name="%(quality_control.quality_alert_action_check)d" context="{'search_default_display_id': active_id}" icon="fa-check-square-o">
+                            <field string="Quality Alerts" name="quality_alert_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="action" name="%(base_csi.act_display_2_mrp_production)d" context="{'search_default_display_id': active_id}" icon="fa-cogs">
+                            <field string="Manufacturing Orders" name="manufacturing_order_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="action" name="%(helpdesk.helpdesk_ticket_action_main_tree)d" context="{'search_default_display_id': active_id}" icon="fa-life-ring">
+                            <field string="Tickets" name="helpdesk_ticket_count" widget="statinfo" />
+                        </button>
+                        <button class="oe_stat_button" type="object" name="open_sign_request" icon="fa-pencil-square-o">
+                            <field string="Sign Requests" name="request_count" widget="statinfo" />
+                        </button>
+                    </div>
+                    <field name="helpdesk_id" invisible="1"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <!-- Information section -->
+                    <group col="4" colspan="2" string="Information">
+                        <field name="name" required="1" />
+                        <field name="won_sale_id" />
+                        <field name="opportunity" placeholder="Search Opportunities..." />
+                        <field name="distributor" placeholder="Search Accounts..." />
+                        <field name="display_setup" placeholder="Search Display Setups..." />
+                        <field name="sign_shop" placeholder="Search Accounts..." />
+                        <field name="display_as_a_service" placeholder="Search Displays as a Service..." />
+                        <field name="sign_shop_contact" placeholder="Search Contacts..." />
+                        <field name="labor_warranty" />
+                        <field name="account" placeholder="Search Contacts..." />
+                        <field name="purchase_date" />
+                        <field name="projected_install_date" />
+                        <field name="end_user_contact" placeholder="Search Contacts..." />
+                        <field name="install_date" />
+                        <field name="account_manager_id" />
+                        <field name="details" />
+                        <field name="status" />
+                    </group>
+                    <!-- Digital Attributes section -->
+                    <group col="4" colspan="2" string="Digital Attributes">
+                        <field name="screenhub_version" />
+                        <field name="panel_control_software" />
+                        <field name="screenhub_display_id" />
+                        <field name="firmware_version" />
+                        <field name="screenhub_2_0_display_id" />
+                        <field name="additional_digital_details" />
+                    </group>
+                    <!-- Physical Attributes section -->
+                    <group col="4" colspan="2" string="Physical Attributes">
+                        <field name="model" />
+                        <field name="height_from_ground" />
+                        <field name="pitch" />
+                        <field name="mounting_type" />
+                        <field name="hardware_type" />
+                        <field name="controller_mounting_location" />
+                        <field name="physical_notes" />
+                        <field name="application" />
+                        <field name="height" />
+                        <field name="distance_from_building" />
+                        <field name="width" />
+                        <field name="number_of_faces" />
+                        <field name="display_matrix" />
+                    </group>
+                    <!-- Network Connection section -->
+                    <group col="4" colspan="2" string="Network Connection">
+                        <field name="cellular_paid" />
+                        <field name="sign_shop_responsible_for_internet" />
+                        <field name="cellular_enabled" />
+                        <field name="end_user_responsible_for_internet" />
+                        <field name="cellular_enabled_until" />
+                        <field name="network_settings_restrictions" />
+                        <field name="internet_connection_type" />
+                        <field name="it_contact_name" />
+                        <field name="internet_speed_class" />
+                        <field name="it_contact_phone" />
+                        <field name="download_speed" />
+                        <field name="it_contact_email" />
+                        <field name="upload_speed" />
+                    </group>
+                    <!-- Electrical Information section -->
+                    <group col="4" colspan="2" string="Electrical Information">
+                        <field name="electical_setup_voltage" />
+                        <field name="sign_shop_responsible_for_electric" />
+                        <field name="breaker_rating" />
+                        <field name="number_of_power_injectors" />
+                        <field name="end_user_responsible_for_electrical" />
+                        <field name="electrical_details" />
+                        <field name="own_dedicated_circuit" />
+                        <field name="new_electrical_line" />
+                    </group>
+                </sheet>
+                <!-- chatter section -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Display Setup tree view -->
+    <record id="view_display_setup_tree" model="ir.ui.view">
+        <field name="name">display.setup.tree</field>
+        <field name="model">display.setup</field>
+        <field name="arch" type="xml">
+            <tree string="Display Setup">
+                <field name="name" />
+                <field name="contact_name" />
+                <field name="contact_email" />
+                <field name="controller_id" />
+                <field name="install_checklist_stage" />
+                <field name="display_info_stage" />
+                <field name="end_s_user_info" />
+                <field name="estimated_install_date" />
+                <field name="it_support" />
+                <field name="installed_date" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Display Setup form view -->
+    <record id="view_display_setup_form" model="ir.ui.view">
+        <field name="name">display.setup.form</field>
+        <field name="model">display.setup</field>
+        <field name="arch" type="xml">
+            <form string="New Display Setup" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <!-- Details section -->
+                    <group col="4" colspan="2">
+                        <field name="create_uid" />
+                        <field name="write_uid" />
+                        <field name="name" required="1" />
+                        <field name="project_owner" placeholder="Search People..." />
+                        <field name="opportunity" />
+                        <field name="sign_shop_name" />
+                        <field name="order_type" />
+                        <field name="contact_name" />
+                        <field name="order" placeholder="Search Orders..." />
+                        <field name="salesforce_order" />
+                        <field name="contact_phone_number" />
+                        <field name="contact_email" />
+                        <field name="estimated_install_date" />
+                        <field name="reconfirmed" />
+                    </group>
+                    <!-- Completed Dates section -->
+                    <group col="4" colspan="2" string="Completed Dates">
+                        <field name="installed_date" />
+                        <field name="completed" />
+                        <field name="cloud_completed_date" />
+                        <field name="internet_connection_info_completed_date" />
+                        <field name="it_support_completed_date" />
+                        <field name="installer_information_completed_date" />
+                    </group>
+                    <!-- Pre-install check list section-->
+                    <group col="4" colspan="2" string="Pre-install check list">
+                        <field name="install_checklist_stage" />
+                        <field name="installerinfo" />
+                        <field name="X00019226" />
+                        <field name="responsible_for_led_cloud_account" />
+                        <field name="new_retrofit" />
+                        <field name="completed_date" />
+                        <field name="test_in_shop" />
+                        <field name="sign_shop_needs_an_led_cloud_training" />
+                        <field name="to_run_new_electric" />
+                        <field name="length_of_ethernet_cable" />
+                        <field name="n2_has_an_outlet_been_installed" />
+                        <field name="they_have_ethernet_cables" />
+                        <field name="direct_line_of_site_from_antenna_to_sign" />
+                        <field name="notes" />
+                        <field name="how_will_it_be_mounted" />
+                    </group>
+                    <!-- Internet Connection section -->
+                    <group col="4" colspan="2" string="Internet Connection">
+                        <field name="internet_connection_stage" />
+                        <field name="internet_connection_info_completed" />
+                        <field name="it_contact_if_they_are_responsible" />
+                        <field name="internet_call_time" />
+                        <field name="has_a_survey_site_been_completed" />
+                        <field name="internet" />
+                        <field name="responsible_for_internet_connectivity" />
+                    </group>
+                    <!-- IT support section -->
+                    <group col="4" colspan="2" string="IT support">
+                        <field name="it_support" />
+                        <field name="it_support_completed" />
+                        <field name="it_contact_name" />
+                        <field name="it_support_call" />
+                        <field name="it_contact_email" />
+                        <field name="network_restrictions" />
+                        <field name="it_contact_phone" />
+                        <field name="internet_connection_notes" />
+                    </group>
+                    <!-- End User/ Cloud Account section -->
+                    <group col="4" colspan="2" string="End User/ Cloud Account">
+                        <field name="end_s_user_info" />
+                        <field name="eu_completed" />
+                        <field name="end_user_name" />
+                        <field name="cloud_walk_scheduled_for" />
+                        <field name="end_user_email" />
+                        <field name="cloud_training_completed" />
+                        <field name="username" />
+                        <field name="cloud_account_created" />
+                        <field name="password" />
+                        <field name="cloud_account_linked_to_controller" />
+                        <field name="end_user_phone" />
+                        <field name="got_it_contact_info" />
+                        <field name="can_they_do_video" />
+                        <field name="website" />
+                        <field name="any_ideas_for_content" />
+                        <field name="free_content_status" />
+                    </group>
+                    <!-- Display Info -->
+                    <group col="4" colspan="2" string="Display Info">
+                        <field name="display_info_stage" />
+                        <field name="install_completed" />
+                        <field name="cirrus_system_model" />
+                        <field name="loaded_to_the_install_map" />
+                        <field name="single_double_sided" />
+                        <field name="controller_id" />
+                        <field name="display_height" />
+                        <field name="purchase_order" />
+                        <field name="display_width" />
+                        <field name="display_id" />
+                        <field name="pixel_matrix" />
+                        <field name="account_email" />
+                        <field name="tracking_nu" />
+                        <field name="other_email" />
+                        <field name="display_address" />
+                        <field name="display_notes" />
+                        <field name="city" />
+                        <field name="sales_notes" />
+                        <field name="zip_c" />
+                        <field name="state" />
+                        <field name="country" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Display daas tree view -->
+    <record id="view_display_daas_tree" model="ir.ui.view">
+        <field name="name">display.daas.tree</field>
+        <field name="model">display.daas</field>
+        <field name="arch" type="xml">
+            <tree string="Displays as a Service">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Display daas form view -->
+    <record id="view_display_daas_form" model="ir.ui.view">
+        <field name="name">display.daas.form</field>
+        <field name="model">display.daas</field>
+        <field name="arch" type="xml">
+            <form string="New Displays as a Service" class="o_sale_order">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <!-- Details section -->
+                    <group col="4" colspan="2">
+                        <field name="name" required="1" />
+                        <field name="contract_number" />
+                        <field name="client_name" />
+                        <field name="account_name_del" />
+                        <field name="client_street" />
+                        <field name="account_contact" />
+                        <field name="client_city" />
+                        <field name="effective_date" />
+                        <field name="client_state" />
+                        <field name="owner" />
+                        <field name="client_zip" />
+                        <field name="client_country" />
+                        <field name="create_uid" />
+                        <field name="write_uid" />
+                    </group>
+                    <!-- Principal Contact section -->
+                    <group col="4" colspan="2" string="Principal Contact">
+                        <field name="principal_contact_name" />
+                        <field name="principal_contact_title" />
+                        <field name="principal_contact_phone" />
+                        <field name="principal_contact_email" />
+                    </group>
+                    <!-- Billing Contact section -->
+                    <group col="4" colspan="2" string="Billing Contact">
+                        <field name="billing_contact_name" />
+                        <field name="billing_contact_title" />
+                        <field name="billing_contact_phone" />
+                        <field name="billing_contact_email" />
+                    </group>
+                    <!-- ACH Payment information section -->
+                    <group col="4" colspan="2" string="ACH Payment Information">
+                        <field name="bank_account_name" />
+                        <field name="business_saving" />
+                        <field name="account_number" />
+                        <field name="business_checking" />
+                        <field name="routing_number" />
+                        <field name="personal_saving" />
+                        <field name="personal_checking" />
+                    </group>
+                    <!-- Cirrus product package section -->
+                    <group col="4" colspan="2" string="Cirrus Product Package">
+                        <field name="height_feet" />
+                        <field name="daas_package_quantity" />
+                        <field name="width_feet" />
+                        <field name="addtional_screen_quantity" />
+                        <field name="double_sided" />
+                        <field name="total_cost" />
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

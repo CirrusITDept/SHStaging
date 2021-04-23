@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_company_form_mod">
+        <field name="name">x_gfp.res.company.form.mod</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Approval Thresholds">
+                        <group>
+                            <field name="threshold_ids" nolabel="1" widget="one2many_list">
+                                <tree editable="bottom">
+                                    <field name="company_id" invisible="1" />
+                                    <field name="min_amount" />
+                                    <field name="approver_num" />
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

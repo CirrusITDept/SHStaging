@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_quick_produce_form">
+        <field name="name">x_gfp.quick.produce.form</field>
+        <field name="model">quick.produce</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <strong>
+                    <i>
+                        <p>Please scan or type in the serial numbers that you would like to produce</p>
+                    </i>
+                </strong>
+                <group>
+                    <field name="production_id" invisible="1" />
+                    <field name="scan_ids" widget="many2many_tags" domain="[]" />
+                </group>
+                <footer>
+                    <button string="Produce" type="object" name="produce" class="oe_highlight" />
+                    <button string="Cancel" special="cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

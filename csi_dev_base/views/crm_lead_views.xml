@@ -14,6 +14,15 @@
         		<button string="Sign Shop Quotation" name="action_sale_quotations_sign_shop" type="object" class="oe_highlight"
                         attrs="{'invisible': ['|', '|', ('type', '=', 'lead'), ('custom_assigned_sign_shop', '=', False), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
         	</button>
+        	<group name="lead_priority" position="inside">
+        		<field name="smb_lead_id" />
+        	</group>
+        	<xpath expr="//sheet/group[1]/group[1]/field[@name='lang_id']" position="before">
+        		<field name="opp_channel_id"/>
+        		<field name="channel_type_id"/>
+        		<field name="partner_sign_id"/>
+        		<field name="end_user"/>
+        	</xpath>
         </field>
 	</record>
 	

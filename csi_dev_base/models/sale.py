@@ -33,7 +33,7 @@ class SaleOrder(models.Model):
     
     custom_ach_info_rec = fields.Boolean('ACH Info Received', track_visibility="onchange")
 
-    def get_sale_order(self,cust_bank_name,cust_acc_number,cust_rout_number,cust_acc_holder):
+    def get_sale_order(self,cust_bank_name,cust_acc_number,cust_rout_number,cust_acc_holder,cust_e_check):
         order = self.env['sale.order'].sudo().browse(int(self.id))
         if order and cust_bank_name:
             mail_template_id = order.company_id.custom_ach_template_id
@@ -44,6 +44,7 @@ class SaleOrder(models.Model):
                 body_string = body_string.replace('cust_acc_number',cust_acc_number)
                 body_string = body_string.replace('cust_rout_number',cust_rout_number)
                 body_string = body_string.replace('cust_acc_holder',cust_acc_holder)
+                body_string = body_string.replace('cust_e_check',cust_e_check)
                 value = {
                         'email_to': order.company_id.custom_ach_email_id,
                         'subject': mail_template_id.subject,

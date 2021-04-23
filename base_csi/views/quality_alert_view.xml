@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Quality Alert form view -->
+    <record model="ir.ui.view" id="view_quality_form_mod">
+        <field name="name">x_gfp.quality.alert.form.mod</field>
+        <field name="model">quality.alert</field>
+        <field name="inherit_id" ref="quality_control.quality_alert_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='title']" position="before">
+                <field name="display_id" />
+            </xpath>
+            <xpath expr="//field[@name='title']" position="after">
+                <field name="ticket_id" />
+                <field name="sale_id" />
+                <field name="salesforce_order" />
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="car_type" />
+                <field name="car_completed" />
+                <field name="panel_faults" attrs="{'invisible': [('car_type','!=','Panel(s)')]}" />
+                <field name="known_problems_for_panels" attrs="{'invisible': [('car_type','!=','Panel(s)')]}" />
+                <field name="module_serial_number" attrs="{'invisible': [('car_type','!=','Panel(s)')]}" />
+                <field name="component_faults" attrs="{'invisible': [('car_type','!=','Component(s)')]}" />
+                <field name="controller_faults" attrs="{'invisible': [('car_type','!=','Controller(s)')]}" />
+                <field name="known_problems_for_controllers" attrs="{'invisible': [('car_type','!=','Controller(s)')]}" />
+                <field name="controller_id_number" attrs="{'invisible': [('car_type','!=','Controller(s)')]}" />
+            </xpath>
+            <xpath expr="//field[@name='description']" position="replace">
+                <group>
+                    <field name="description" nolabel="1" placeholder="Description of the issue..." />
+                </group>
+                <group>
+                    <group>
+                        <field name="nonconformity_affirmed" />
+                        <field name="salesforce_id" />
+                    </group>
+                    <group>
+                        <field name="nonconformity_not_affirmed" />
+                        <field name="salesforce_create_date" />
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//notebook/page" position="after">
+                <page string="Root Cause Analysis">
+                    <group>
+                        <field name="root_cause_analysis" nolabel="1" />
+                    </group>
+                </page>
+                <page string="Disposition">
+                    <group>
+                        <group>
+                            <field name="disposition_options" widget="many2many_tags" />
+                        </group>
+                        <group>
+                            <field name="disposition_instructions_if_applicable" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Quality Alert search view mod -->
+    <record model="ir.ui.view" id="quality_alert_view_search_mode">
+        <field name="name">x_gfp.quality.alert.view.search.mod</field>
+        <field name="model">quality.alert</field>
+        <field name="inherit_id" ref="quality.quality_alert_view_search" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="display_id" />
+            </field>
+        </field>
+    </record>
+    
+    <!-- action to open quality.alert form view with display_id context -->
+    <record id="act_display_2_quality_alert_form" model="ir.actions.act_window">
+        <field name="name">Create new Quality Alert with Display context</field>
+        <field name="res_model">quality.alert</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_display_id': active_id}</field>
+    </record>
+
+</odoo>

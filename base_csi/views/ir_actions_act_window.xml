@@ -2,7 +2,18 @@
 <odoo>
     <!-- Purchase Approvals -->
    <record model="ir.actions.act_window" id="action_helpdesk_picking_tree_ready" >
-        <field name="name">Helpdesk Picking</field>
+        <field name="name">Helpdesk Order Delivery</field>
+        <field name="res_model">stock.picking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="context">{
+                'search_default_ticket_id': 1,
+                'search_default_available': 1,
+            }</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+   </record>
+   <record model="ir.actions.act_window" id="action_helpdesk_receipt_tree_ready" >
+        <field name="name">Helpdesk Order Receipt</field>
         <field name="res_model">stock.picking</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,kanban,form,calendar</field>
@@ -13,7 +24,18 @@
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>
    </record>
    <record model="ir.actions.act_window" id="action_sale_order_picking_tree_ready" >
-        <field name="name">Sale Order Picking</field>
+        <field name="name">Sale Order Delivery</field>
+        <field name="res_model">stock.picking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="context">{
+                'search_default_ticket': 1,
+                'search_default_available': 1,
+            }</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+   </record>
+   <record model="ir.actions.act_window" id="action_purchase_order_picking_tree_ready" >
+        <field name="name">Purchase Receipt Picking</field>
         <field name="res_model">stock.picking</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,kanban,form,calendar</field>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="purchase_order_form_mod">
+        <field name="name">x_gfp.purchase.order.form.mod</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//button[@name='action_rfq_send']" position="attributes">
+                    <attribute name="states">approved</attribute>
+                    <attribute name="context">{'send_rfq':False}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='print_quotation']" position="attributes">
+                    <attribute name="states">approved</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_rfq_send'][2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="statusbar_visible">draft,approved,purchase</attribute>
+                </xpath>
+                <xpath expr="//page[@name='purchase_delivery_invoice']//field[@name='date_planned']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="attrs">{}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='name']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='product_qty']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='taxes_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('approved'))]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_confirm']" position="before">
+                    <button name="submit_for_approval" string="Submit for Approval" states="draft" type="object" groups="purchase.group_purchase_manager" />
+                    <button name="submit_for_approval" string="Submit for Approval" states="sent" type="object" class="oe_highlight" groups="purchase.group_purchase_manager" />
+                </xpath>
+                <xpath expr="//button[@name='button_confirm']" position="replace" />
+                <xpath expr="//button[@name='button_confirm']" position="replace">
+                    <button name="button_confirm" type="object" states="approved" string="Confirm Order" id="draft_confirm" invisible="1" />
+                    <button name="button_confirm" type="object" states="approved,approved_sent" string="Confirm Order" class="oe_highlight" id="bid_confirm" />
+                </xpath>
+                <xpath expr="//button[@name='button_approve']" position="replace">
+                    <button name="button_approve" type="object" states="to approve" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" invisible="1" />
+                    <button name="approve_order" type="object" states="to approve,1approved,2approved" string="Approve Order" class="oe_highlight" />
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="attributes">
+                    <attribute name="states">draft,approved,approved_sent,to approve,1approved,2approved,sent,purchase</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="date_approved" readonly="1" attrs="{'invisible':[('date_approved','=',False)]}" />
+                    <field name="date_confirmed" readonly="1" attrs="{'invisible':[('date_confirmed','=',False)]}" />
+                </xpath>
+                <xpath expr="//field[@name='date_order']/.." position="inside">
+                    <field name="department_id" options="{'no_open':True,'no_create':True}" attrs="{'readonly':[('state','not in',['draft','sent'])],'required':[('state','not in',['cancel'])]}" />
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Approvers" attrs="{'invisible':[('approver_ids','=',False)]}">
+                        <group>
+                            <field name="approver_ids" nolabel="1" widget="one2many_list" readonly="1">
+                                <tree>
+                                    <field name="purchase_id" invisible="1" />
+                                    <field name="approver_id" />
+                                    <field name="stage" />
+                                    <field name="approved" />
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="purchase_department_form">
+        <field name="name">x_gfp.purchase.department.form</field>
+        <field name="model">purchase.department</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <!-- SAVING FOR LATER ADDITTIONS -->
+                        </group>
+                        <group></group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="purchase_department_tree">
+        <field name="name">x_gfp.purchase.department.tree</field>
+        <field name="model">purchase.department</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_purchase_order_approval_form">
+        <field name="name">x_gfp.purchase.approval.wizard.form</field>
+        <field name="model">purchase.approval.wizard</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <strong>
+                    <i>
+                        <p>You are not authorized to confirm this purchase order due to order amount or department selected.</p>
+                        <p>Please select the approvers and the mail template to notify them to get the po validated.</p>
+                    </i>
+                </strong>
+                <group>
+                    <field name="purchase_id" invisible="1" />
+                    <field name="approver_one_id" invisible="not context.get('threshold1')" required="context.get('threshold1')" options="{'no_open':True,'no_create':True}" domain="[('id', 'in', context.get('authorized', []))]" />
+                    <field name="approver_two_id" invisible="not context.get('threshold2')" required="context.get('threshold2')" options="{'no_open':True,'no_create':True}" domain="[('id', 'in', context.get('authorized', []))]" />
+                    <field name="approver_three_id" invisible="not context.get('threshold3')" required="context.get('threshold3')" options="{'no_open': True, 'no_create': True}" domain="[('id', 'in', context.get('authorized', []))]" />
+                    <field name="template_id" required="1" domain="[('model_id.model', '=', 'purchase.order')]" options="{'no_open':True,'no_create':True}" />
+                </group>
+                <footer>
+                    <button string="Submit" type="object" name="submit_approval" class="oe_highlight" />
+                    or
+                    <button string="Cancel" special="cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_purchase_order_approval_behalf_form">
+        <field name="name">x_gfp.purchase.approval.behalf.wizard.form</field>
+        <field name="model">purchase.approval.behalf.wizard</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <strong>
+                    <i>
+                        <p>Select person that you will be approving for:</p>
+                    </i>
+                </strong>
+                <group>
+                    <field name="purchase_id" invisible="1" />
+                    <field name="approver_id" domain="[('id', 'in', context.get('personnel', []))]" options="{'no_open':True,'no_create':True}" />
+                </group>
+                <footer>
+                    <button string="Submit" type="object" name="approve_on_behalf" class="oe_highlight" />
+                    or
+                    <button string="Cancel" special="cancel" class="oe_link" />
+                </footer>
+            </form>
+        </field>
+    </record>    
+
+</odoo>

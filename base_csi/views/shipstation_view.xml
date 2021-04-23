@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Shipstation Views-->
+    <record model="ir.ui.view" id="view_shipstation_postback_tree">
+        <field name="name">x_gfp.shipstation.postback.tree</field>
+        <field name="model">shipstation.postback</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree string="Posts">
+                <field name="create_date" />
+                <field name="name" />
+                <field name="success" />
+                <button name="post_shipstation" type="object" string="POST" />
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_shipstation_postback_form">
+        <field name="name">x_gfp.shipstation.postback.form</field>
+        <field name="model">shipstation.postback</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="success" />
+                        </group>
+                        <group>
+                            <field name="tracking" />
+                            <field name="cost" />
+                            <field name="order_num" />
+                            <field name="order_id" />
+                            <field name="order_key" />
+                            <field name="service_code" />
+                            <field name="ship_to" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="returned_dictionary" />
+                    </group>
+                    <group>
+                        <field name="exception" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_shipstation_package_tree">
+        <field name="name">x_gfp.delivery.shipstation.package.tree</field>
+        <field name="model">delivery.shipstation.package</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree string="Posts">
+                <field name="name" />
+                <field name="code" />
+                <field name="carrier_code" />
+                <field name="price" />
+                <field name="delivery_length" />
+                <field name="delivery_width" />
+                <field name="delivery_height" />
+                <field name="package_weight" />
+                <field name="inner_delivery_length" />
+                <field name="inner_delivery_width" />
+                <field name="inner_delivery_height" />
+                <field name="max_package_weight" />
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_shipstation_package_form">
+        <field name="name">x_gfp.delivery.shipstation.package.form</field>
+        <field name="model">delivery.shipstation.package</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="carrier_code" />
+                            <field name="domestic" />
+                            <field name="international" />
+                            <field name="created_by_shipstation" />
+                            <field name="price" />
+                        </group>
+                        <group>
+                            <field name="delivery_length" />
+                            <field name="delivery_width" />
+                            <field name="delivery_height" />
+                            <field name="package_weight" />
+                            <field name="inner_delivery_length" />
+                            <field name="inner_delivery_width" />
+                            <field name="inner_delivery_height" />
+                            <field name="max_package_weight" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -50,7 +50,7 @@ class ResPartner(models.Model):
     new_sign_shop = fields.Boolean(
         compute="_compute_new_sign_shop", string="New Sign Shop",
     )
-    not_new_sign_shop = fields.Boolean(string="Not New Sign Shop", tracking=1)
+    not_new_sign_shop = fields.Boolean(string="Not New Sign Shop", tracking=0)
     hoopla_user = fields.Boolean(string="Hoopla User")
 
     @api.model

@@ -1,7 +1,6 @@
 <odoo>
 
   <!--################################################################-->
-
   <record  model='ir.ui.view' id='cli_SalesOrder_add_CirrusRef_mod'>
         <field name='name'>sale.order.form</field>
         <field name='model'>sale.order</field> 
@@ -15,7 +14,6 @@
     </record>    
  
 <!--################################################################-->
-
    <record  model='ir.ui.view' id='cli_SalesOrder_copy_salesteam_mod'>
          <field name='name'>sale.order.form</field>
          <field name='model'>sale.order</field>
@@ -29,66 +27,60 @@
      </record>
  
 <!--################################################################-->
-
-    <record  model='ir.ui.view' id='cli_SalesOrder_add_isbillable_mod'>
-          <field name='name'>sale.order.form</field>
-         <field name='model'>sale.order</field>
-          <field name='inherit_id' ref='sale.view_order_form' />
-          <field name='priority'>99</field>
-          <field name='arch' type='xml'>
-              <xpath expr="//field[@name = 'team_id']" position = 'after'>
-              <field name = "is_billable"/>
-              </xpath>
-          </field>
-     </record>
-<!--################################################################-->
-
-   <record  model='ir.ui.view' id='cli_SalesOrder_add_return_order_mod'>
-           <field name='name'>sale.order.form</field>
-         <field name='model'>sale.order</field>
-          <field name='inherit_id' ref='sale.view_order_form' />
-          <field name='priority'>99</field>
-          <field name='arch' type='xml'>
-              <xpath expr="//field[@name = 'is_billable']" position = 'after'>
-              <field name = "so_return_picking_id" attrs="{'invisible':[('is_billable','=', True)]}"/>
-            </xpath>
-           <xpath expr="//header" position="after">
-             <div align="center" style="background-color:#f0cb58;color:black;" attrs="{'invisible':[('is_billable','=', True)]}">
-                    <div>
-                        <strong>This order is not billable.</strong>
-                    </div>
-                </div>
-            </xpath>            
-          </field>
-     </record>
-
-
+	<record  model='ir.ui.view' id='cli_SalesOrder_add_isbillable_mod'>
+		<field name='name'>sale.order.form</field>
+		<field name='model'>sale.order</field>
+		<field name='inherit_id' ref='sale.view_order_form' />
+		<field name='priority'>99</field>
+		<field name='arch' type='xml'>
+			<xpath expr="//field[@name = 'team_id']" position = 'after'>
+				<field name = "is_billable"/>
+			</xpath>
+		</field>
+	</record>
 
 <!--################################################################-->
+	<record  model='ir.ui.view' id='cli_SalesOrder_add_return_order_mod'>
+		<field name='name'>sale.order.form</field>
+		<field name='model'>sale.order</field>
+		<field name='inherit_id' ref='sale.view_order_form' />
+		<field name='priority'>99</field>
+		<field name='arch' type='xml'>
+			<xpath expr="//field[@name='is_billable']" position='after'>
+				<field name = "so_return_picking_id"/>
+			</xpath>
+			<xpath expr="//header" position="after">
+				<div align="center" style="background-color:#f0cb58;color:black;" attrs="{'invisible':[('is_billable','=', True)]}">
+					<div>
+						<strong>This order is not billable.</strong>
+					</div>
+				</div>
+			</xpath>            
+		</field>
+     </record>
 
-  <record model='ir.ui.view' id='cli_view_display_tree_column_model_mod'>
+<!--################################################################-->
+	<record model='ir.ui.view' id='cli_view_display_tree_column_model_mod'>
         <field name='name'>display.display.tree</field>
         <field name='model'>display.display</field> 
         <field name='inherit_id' ref='base_csi.view_display_display_tree' />
         <field name='priority'>99</field>
         <field name='arch' type='xml'>
-            <xpath expr="//field[@name = 'account']" position = 'after'>  
-		    <field name = "model"/>
-		    
+			<xpath expr="//field[@name='account']" position = 'after'>  
+				<field name = "model"/>
             </xpath>   
         </field>
     </record>
 
 <!--################################################################-->
-
- <record model='ir.ui.view' id='cli_view_display_list_search_mod'>
-      <field name='name'>display.display.tree</field>
-      <field name='model'>display.display</field>
-      <field name='inherit_id' ref='base_csi.view_display_filter'/>
-      <field name='priority'>98</field>
-      <field name='arch' type='xml'>
-                <xpath expr="//field[@name='name']" position="replace">
-                        <field name="name" string="Lots of stuff" filter_domain="[
+	<record model='ir.ui.view' id='cli_view_display_list_search_mod'>
+		<field name='name'>display.display.tree</field>
+		<field name='model'>display.display</field>
+		<field name='inherit_id' ref='base_csi.view_display_filter'/>
+		<field name='priority'>98</field>
+		<field name='arch' type='xml'>
+			<xpath expr="//field[@name='name']" position="replace">
+				<field name="name" string="Lots of stuff" filter_domain="[
                                 '|','|','|','|','|','|',
                                 ('name', 'ilike', self),
                                 ('details', 'ilike', self),
@@ -96,28 +88,22 @@
                                 ('account', 'child_of', self),
                                 ('end_user_contact', 'child_of', self),
                                 ('sign_shop', 'child_of', self),
-                                ('sign_shop_contact', 'child_of', self)
-                                
-				]"/>
-        <field name="display_setup" string="Search Display setup"/>
-        <field name="display_as_a_service" string="Search DAAS"/>       
-			
-		</xpath>
-	
+                                ('sign_shop_contact', 'child_of', self)]"/>
+				<field name="display_setup" string="Search Display setup"/>
+				<field name="display_as_a_service" string="Search DAAS"/>       
+			</xpath>
         </field>
-
- </record>
+	</record>
 
 <!--######################## Quality view search ########################################-->
-
- <record model='ir.ui.view' id='cli_view_quality_list_search_mod'>
-      <field name='name'>quality.alert.view.search.inherit.quality.control</field>
-      <field name='model'>quality.alert</field>
-      <field name='inherit_id' ref='quality_control.quality_alert_view_search_inherit_quality_control'/>
-      <field name='priority'>98</field>
-      <field name='arch' type='xml'>
-                <xpath expr="//field[@name='title']" position="replace">
-                        <field name="name" string="Lots of stuff" filter_domain="[
+ 	<record model='ir.ui.view' id='cli_view_quality_list_search_mod'>
+		<field name='name'>quality.alert.view.search.inherit.quality.control</field>
+		<field name='model'>quality.alert</field>
+		<field name='inherit_id' ref='quality_control.quality_alert_view_search_inherit_quality_control'/>
+		<field name='priority'>98</field>
+		<field name='arch' type='xml'>
+			<xpath expr="//field[@name='title']" position="replace">
+				<field name="name" string="Lots of stuff" filter_domain="[
                                 '|','|','|','|','|','|',
                                 ('name', 'ilike', self),
                                 ('team_id', 'ilike', self),
@@ -125,19 +111,12 @@
                                 ('display_id',  'ilike', self),
                                 ('description',  'ilike', self),
                                 ('ticket_id',  'ilike', self),
-                                ('tag_ids',  'ilike', self)
-				]"/>
-		
-		</xpath>
-	
-        </field>
-
- </record>
-
-
+                                ('tag_ids',  'ilike', self)]"/>
+			</xpath>
+		</field>
+	</record>
 
 <!--################################################################-->
-
 <record  model='ir.ui.view' id='cli_SalesOrder_add_isBillable_hidden__mod'>
          <field name='name'>sale.order.tree</field>
          <field name='model'>sale.order</field> 

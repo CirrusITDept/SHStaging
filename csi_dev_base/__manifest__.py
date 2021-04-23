@@ -23,7 +23,7 @@
 {
     'name': 'CSI Dev Base',
     'summary': 'This module show the status of the helpdesk tickets for different stages in dashboard view.',
-    'version': '13.0.0.1.15',
+    'version': '13.0.0.1.20',
     'category': 'Helpdesk',
     'author': 'Himanshu Mittal',
     'maintainer': 'Himanshu Mittal',
@@ -38,13 +38,17 @@
                 ,'crm'
                 ,'quality'
                 ,'rating'
-                ,'account_reports'],
+                ,'account_reports'
+                ,'open_in_new_tab'
+                ,'many2many_tags_link'
+                ,'sale_stock'],
     'data': [
         'data/csi_mail_template_data.xml'
         ,'data/order_delivered_email_template.xml'
         ,'data/order_shipped_email_template.xml'
         ,'data/signed_quote_email_template.xml'
         ,'data/thank_you_for_your_purchase_template.xml'
+        ,'data/ir_cron.xml'
         ,'views/helpdesk_view.xml'
         ,'views/helpdesk_team.xml'
         ,'views/display_view.xml'

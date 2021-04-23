@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crm_stage_form_mod" model="ir.ui.view">
+        <field name="name">x_gfp.crm.stage.form.mod</field>
+        <field name="model">crm.stage</field>
+        <field name="inherit_id" ref="crm.crm_stage_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='fold']" position="after">
+                <field name="restrict_stage_change_into" required="1" />
+                <field name="restrict_stage_change" required="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="crm_case_form_view_oppor_mod">
+        <field name="name">x_gfp.crm.lead.oppor.inherited.crm.mod</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='referred']" position="after">
+                <field name="salesforce_id" />
+                <field name="salesforce_create_date" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Opportunities search view mod -->
+    <record id="view_crm_case_opportunities_filter_mod" model="ir.ui.view">
+        <field name="name">x_gfp.crm.lead.search.opportunity.mod</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="display_id" />
+            </field>
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="email_from" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="crm_lead_lost_view_form_gfp">
+        <field name="name">x_gfp.crm.lead.lost.form.mod</field>
+        <field name="model">crm.lead.lost</field>
+        <field name="inherit_id" ref="crm.crm_lead_lost_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_lost_reason_apply']" position="attributes">
+                <attribute name="attrs">{'invisible': [('lost_reason_id', '=', False)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+	<record model="ir.ui.view" id="crm_case_form_view_oppor">
+        <field name="name">x_gfp.crm.lead.form.opportunity.mod</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_order_count']/../.." position="after">
+                <button class="oe_stat_button" type="object" name="open_salesforce_quote" icon="fa-history" attrs="{'invisible': [('salesforce_quote_count', '=', 0)]}">
+                    <field string="Salesforce Quotations" name="salesforce_quote_count" widget="statinfo" />
+                </button>
+                <button class="oe_stat_button" type="object" name="open_salesforce_order" icon="fa-history" attrs="{'invisible': [('salesforce_order_count', '=', 0)]}">
+                    <field string="Salesforce Orders" name="salesforce_order_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="type" invisible="1" />
+                <field name="display_id" attrs="{'invisible': [('type','!=','opportunity')]}" />
+                <field name="partner_sign_id" invisible="1" />
+                <field name="partner_dist_id" invisible="1" />
+                <field name="end_user" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="after">
+                <field name="dest_state_id" domain="[('country_id','=',[%(base.us)d,%(base.ca)d])]" options="{'no_create':True,'no_open':True}" />
+            </xpath>
+            <xpath expr="//field[@name='partner_address_phone']/..//field[@name='phone']" position="after">
+                <field name="opp_channel_id" />
+                <field name="channel_type_id" />
+                <field name="partner_sign_id" readonly="1" force_save="1" />
+                <field name="end_user" />
+                <field name="partner_ent_acc_id" readonly="1" force_save="1" />
+                <field name="partner_dist_id" readonly="1" force_save="1" />
+            </xpath>
+            <xpath expr="//group[@name='Misc']" position="inside">
+                <field name="display_id" attrs="{'invisible': [('type', '!=', 'opportunity')]}" />
+                <field name="salesforce_id" attrs="{'invisible': [('type', '!=', 'opportunity')]}" />
+                <field name="salesforce_create_date" attrs="{'invisible': [('type', '!=', 'opportunity')]}" />
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="eu_phone_id" />
+                <field name="eu_demo_id" />
+                <field name="smb_lead_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="product_template_form_view_mod">
+        <field name="name">x_gfp.product.template.form.mod</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                <label for="height" string="Height x Width" />
+                <div class="o_row" name="height">
+                    <field name="height" />
+                    <span>ft</span>
+                    x
+                    <field name="width" />
+                    <span>ft</span>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='group_standard_price']/div[@name='pricing']" position="after">
+                <field name="commission_type"/>
+                <field name="pm_cost" attrs="{'invisible': [('commission_type', '!=', 'commission')]}" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="country_origin" />
+                <field name="tariff_code" />
+            </xpath>
+            <xpath expr="//group[@name='sale']" position="inside">
+                <group string="Cirrus Sales Info">
+                    <field name="is_module" />
+                    <field name="is_frame" />
+                    <field name="is_controller" />
+                    <field name="cellular" />
+                    <field name="is_booster" />
+                    <field name="is_service_module" />
+                    <field name="is_wifi" />
+                </group>
+                <group string="Cirrus Module Info" attrs="{'invisible':[('is_module','!=',True)]}">
+                    <field name="service_module_id" domain="[('is_service_module','=',True)]" />
+                    <field name="module_type" />
+                    <field name="module_color" />
+                    <field name="module_pitch" />
+                    <field name="module_pixel" />
+                    <field name="warranty_module_price" />
+                </group>
+                <group string="Per Panel" attrs="{'invisible':[('is_module','!=',True)]}">
+                    <field name="custom_120v" required="1"/>
+                    <field name="custom_208v" required="1"/>
+                    <field name="custom_240v" required="1"/>
+                    <field name="custom_wattage" required="1"/>
+                </group>
+                <group string="Cirrus Controller Info" attrs="{'invisible':[('is_controller','!=',True)]}">
+                    <field name="warranty_controller_price" />
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='group_lots_and_weight']/label" position="before">
+                <label string="Dimensions (Inches)" for="delivery_length" />
+                <div class="o_address_format">
+                    <field name="delivery_length" class="o_address_zip" />
+                    x
+                    <field name="delivery_width" class="o_address_zip" />
+                    x
+                    <field name="delivery_height" class="o_address_zip" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

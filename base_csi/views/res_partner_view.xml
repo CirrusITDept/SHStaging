@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_partner_form_mod">
+        <field name="name">x_gfp.res.partner.form.mod</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_payment_term_id']" position="attributes">
+                <attribute name="domain">[('id','=',0)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='property_supplier_payment_term_id']" position="attributes">
+                <attribute name="domain">[('id','=',0)]</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]//button[1]" position="before">
+                <button class="oe_stat_button" name="action_partner_display" type="object" icon="fa-diamond">
+                    <field string="Displays" name="display_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="open_salesforce_quote" icon="fa-history" attrs="{'invisible': [('salesforce_quote_count', '=', 0)]}">
+                    <field string="Salesforce Quotations" name="salesforce_quote_count" widget="statinfo" />
+                </button>
+                <button class="oe_stat_button" type="object" name="open_salesforce_order" icon="fa-history" attrs="{'invisible': [('salesforce_order_count', '=', 0)]}">
+                    <field string="Salesforce Orders" name="salesforce_order_count" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="fax" />
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="salesforce_id" />
+                <field name="salesforce_parent_id" />
+                <field name="salesforce_type" />
+                <field name="salesforce_create_date" />
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="most_recent_order_date" attrs="{'invisible': [('sale_order_count', '&lt;=', 0)]}" />
+            </xpath>
+            <xpath expr="//field[@name='property_delivery_carrier_id']" position="after">
+                <field name="residential" />
+                <label for="shipstation_warehouse_id" />
+                <div name="ship_warehouse">
+                    <div>
+                        <field name="shipstation_warehouse_id" readonly="1" class="oe_inline" />
+                    </div>
+                    <div>
+                        <button name="create_shipstation_warehouse_id" string="Create/Update Warehouse" type="object" class="oe_inline fa fa-arrow-right oe_link" />
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Shipping Accounts" attrs="{'invisible':[('parent_id','!=',False)]}">
+                    <group>
+                        <field name="shipping_account_ids" nolabel="1" widget="one2many_list">
+                            <tree editable="bottom">
+                                <field name="partner_id" invisible="1" />
+                                <field name="carrier_id" />
+                                <field name="name" />
+                                <field name="zip" />
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="enterprise_account" />
+                <field name="sign_shop" />
+                <field name="new_sign_shop" attrs="{'invisible':[('sign_shop','=',False)]}" readonly="1" />
+                <field name="not_new_sign_shop" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="view_partner_form_accounting_adv" model="ir.ui.view">
+        <field name="name">x_gfp.res.partner.form.accounting.adv</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority">200</field>
+        <field name="groups_id" eval="[(4,ref('account.group_account_manager'))]" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_payment_term_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='property_supplier_payment_term_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>
