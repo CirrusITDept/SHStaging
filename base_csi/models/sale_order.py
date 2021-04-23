@@ -922,8 +922,8 @@ class SaleOrder(models.Model):
                 )
                 
         if self.pixel_pitch:
+            avg_power = round(self.panel_count * self.module_id.custom_wattage + 100, 2)
             if self.panel_count > self.module_id.custom_120v:
-                avg_power = round(self.panel_count * self.module_id.custom_wattage + 100, 2)
                 electrical_information = "240V"
                 input_voltage = "208V-240V"
                 max_current = round(avg_power / 240, 2)
