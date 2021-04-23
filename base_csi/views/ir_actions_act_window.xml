@@ -140,7 +140,7 @@
         <field name="res_model">display.display</field>
         <field name="view_mode">form</field>
         <field name="view_mode">tree,kanban,form,pivot</field>
-        <field name="view_id" ref="view_display_display_tree" />
+        <field name="view_id" ref="base_csi.view_display_display_tree" />
         <field name="help">Enter display records and accompanying details.</field>
     </record>
     <!-- Display Setup tree view action -->
