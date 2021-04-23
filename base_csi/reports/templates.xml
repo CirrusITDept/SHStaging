@@ -1035,7 +1035,7 @@ your pocket right away! It's a win-win.</p>
                     <div class="four-page-footer-inner row">
                         <div class="col-9 text-left">
                             <h5>
-                                <b class="orange-text">Customer monthly subscription:</b> <t t-esc="doc.currency_id.symbol" /> <t t-esc="'{:,.2f}'.format(doc.monthly_subscription)" />
+                                <b class="orange-text">Customer monthly subscription:</b> <t t-esc="doc.currency_id.symbol" /> <t t-esc="'{:,.2f}'.format(doc.monthly_subscription + (doc.monthly_subscription / 60))" />
                             </h5>
                             <p class="font-13">
                                 No money needs to be distributed to Cirrus from your shop. Once the Cirrus subscription contract is signed by the end user and validated by us, we’ll ship the display to you.

@@ -901,6 +901,7 @@ class SaleOrder(models.Model):
     
     def calculate_power_values(self):
         first_line_top = first_line_bottom = avg_power = 0
+        electrical_information = input_voltage = max_current = power_setup = False
         
         if self.pixel_pitch == "9mm":
             if self.panel_count <= self.module_id.custom_120v:
@@ -1764,9 +1765,9 @@ class SaleOrder(models.Model):
                     and order.cirruscomplete_selection in additional_fees
                 ):
                     if order.partner_id.country_id.code == "CA":
-                        price = order.controller_id.list_price + 1900
+                        price = order.controller_id.list_price
                     else:
-                        price = order.controller_id.list_price + 950
+                        price = order.controller_id.list_price
             order.addtl_controller_price = price
 
 
