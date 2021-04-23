@@ -8,7 +8,7 @@ class DisplayDisplay(models.Model):
     _inherit = "mail.thread"
     _description = "Display"
 
-    account_manager_id = fields.Many2one('res.users', string="Account Manager", domain="['|', '|', ('name', 'ilike', 'ramsey'), ('name', 'ilike', 'moran'), ('name', '=', 'hilton')]", required=True)
+    account_manager_id = fields.Many2one('res.users', string="Account Manager", domain="['|', '|', ('name', 'ilike', 'ramsey'), ('name', 'ilike', 'moran'), ('name', '=', 'hilton')]")
     salesforce_id = fields.Char(string="Salesforce ID")
     salesforce_create_date = fields.Datetime(string="Salesforce Create Date")
     number_of_power_injectors = fields.Char(string="Number of Power Injectors")

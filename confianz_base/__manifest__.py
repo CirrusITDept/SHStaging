@@ -15,12 +15,12 @@ Extension on Sale module to calculate profit margin on Sale Order.
     'author': 'Confianz Global',
     'website': 'https://confianzit.com',
     'images': [],
-
     'data': [
                 "views/helpdeak_view.xml",
             ],
-
-    'depends': ['sale', 'helpdesk','base_csi'],
+    'depends': ['sale'
+                ,'helpdesk'
+                ,'base_csi'],
     'installable': True,
     'auto_install': False,
     'application': False,
