@@ -688,7 +688,7 @@
 
 <!--#################### Display All Ticket Buttom Mod ########################-->
 
-   <record  model='ir.ui.view' id='cli_display_ticket_button_mod'>
+<!--    <record  model='ir.ui.view' id='cli_display_ticket_button_mod'>
          <field name='name'>display.display.form</field>
          <field name='model'>display.display</field>
          <field name='inherit_id' ref='base_csi.view_display_records_form' />
@@ -700,22 +700,21 @@
                 </button>
             </xpath>
         </field>
-
-
-     </record>
+     </record> -->
 
 
 <!--#################### Display Autofill new ticket Mod ########################-->
 
-   <record  model='ir.ui.view' id='cli_display_auto_fill_mod'>
+	<record  model='ir.ui.view' id='cli_display_auto_fill_mod'>
          <field name='name'>display.display.form</field>
          <field name='model'>display.display</field>
          <field name='inherit_id' ref='base_csi.view_display_records_form' />
          <field name='priority'>99</field>
 
          <field name='arch' type='xml'>
-            <xpath expr="//button[@name = '706']" position = 'replace'>
-                <button class="oe_highlight" string="New Helpdesk Ticket" type="action" name="706" context="{'default_display_id': active_id, 'default_partner_id': end_user_contact, 'default_partner_sign_id' : sign_shop, 'default_user_id': uid}"/>            </xpath>
+            <button name="%(base_csi.act_display_2_helpdesk_ticket_form)d" position="replace">
+                <button class="oe_highlight" string="New Helpdesk Ticket" type="action" name="706" context="{'default_display_id': active_id, 'default_partner_id': end_user_contact, 'default_partner_sign_id' : sign_shop, 'default_user_id': uid}"/>            
+            </button>
          </field>
      </record>
 
