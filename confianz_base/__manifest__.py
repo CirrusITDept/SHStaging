@@ -4,7 +4,7 @@
 
 {
     'name': 'Confianz Base',
-    'version': '13.0',
+    'version': '13.0.1',
     'category': 'Sales',
     'summary': "Sales",
     'description': """
