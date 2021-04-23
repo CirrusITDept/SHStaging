@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- salesforce.order tree view -->
+    <record model="ir.ui.view" id="view_salesforce_order_tree">
+        <field name="name">salesforce.order.tree</field>
+        <field name="model">salesforce.order</field>
+        <field name="arch" type="xml">
+            <tree string="Salesforce Orders">
+                <field name="name" />
+                <field name="salesforce_create_date" />
+                <field name="order_start_date" />
+                <field name="ship_date" />
+                <field name="account_name" />
+                <field name="end_user_account" />
+                <field name="bill_to_name" />
+                <field name="ship_to_contact" />
+                <field name="contact_name" />
+                <field name="order_record_type" />
+                <field name="service_type" />
+                <field name="order_type" />
+                <field name="shipment_number" />
+                <field name="status" />
+                <field name="order_amount" />
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_salesforce_order_form" model="ir.ui.view">
+        <field name="name">salesforce.order.form</field>
+        <field name="model">salesforce.order</field>
+        <field name="arch" type="xml">
+            <form string="Sales Order" class="o_sale_order">
+                <header></header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"></div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1" />
+                            <field name="linked_opp_close_date" />
+                            <field name="account_name" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="ship_to_contact" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="end_user_account" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="contact_name" />
+                            <field name="contact_email" />
+                            <field name="additional_emails" />
+                            <field name="do_not_send_email_to_customer" />
+                            <field name="paid_amount" />
+                        </group>
+                        <group>
+                            <field name="status" />
+                            <field name="order_type" />
+                            <field name="salesforce_create_date" />
+                            <field name="order_start_date" />
+                            <field name="ship_by_date" />
+                            <field name="ship_date" />
+                            <field name="display" />
+                            <field name="controller_id" />
+                            <field name="opportunity_id" />
+                            <field name="salesforce_quote_id" />
+                            <field name="ticket_id" />
+                            <field name="order_owner" />
+                            <field name="shipment_number" />
+                            <field name="shipping_service_type" />
+                            <field name="shipping_speed" />
+                            <field name="tracking_number" />
+                            <field name="tracking_number2" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="" name="address_name">
+                                <b>Bill To:</b>
+                            </label>
+                            <div class="o_address_format">
+                                <field name="bill_to_name" placeholder="Street..." class="o_address_street" />
+                                <field name="billing_street" placeholder="Street 2..." class="o_address_street" />
+                                <field name="billing_city" placeholder="City" class="o_address_city" />
+                                <field name="billing_state" class="o_address_state" placeholder="State" />
+                                <field name="billing_postal_code" placeholder="ZIP" class="o_address_zip" />
+                                <field name="billing_country" placeholder="Country" class="o_address_country" />
+                            </div>
+                        </group>
+                        <group>
+                            <label for="" name="address_name2">
+                                <b>Ship To:</b>
+                            </label>
+                            <div class="o_address_format">
+                                <field name="ship_to_name" placeholder="Street..." class="o_address_street" />
+                                <field name="shipping_street" placeholder="Street 2..." class="o_address_street" />
+                                <field name="shipment_instructions" placeholder="Street 2..." class="o_address_street" />
+                                <field name="shipping_city" placeholder="City" class="o_address_city" />
+                                <field name="shipping_state" class="o_address_state" placeholder="State" />
+                                <field name="shipping_postal_code" placeholder="ZIP" class="o_address_zip" />
+                                <field name="shipping_country" placeholder="Country" class="o_address_country" />
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Lines" name="order_lines">
+                            <field name="order_line">
+                                <tree string="Sales Order Lines">
+                                    <field name="controller_id__c" />
+                                    <field name="order_item_number" />
+                                    <field name="order_product__c" />
+                                    <field name="name" />
+                                    <field name="po_reference__c" />
+                                    <field name="quantity" />
+                                    <field name="quantity_remaining__c" />
+                                    <field name="qty_owed_partial_orders__c" />
+                                    <field name="shipment_status__c" />
+                                    <field name="list_price" />
+                                    <field name="unit_price" />
+                                    <field name="item_cost__c" />
+                                    <field name="total_price" />
+                                    <field name="total_cost__c" />
+                                    <field name="tracking_number__c" />
+                                    <field name="zk_weight__c" />
+                                </tree>
+                            </field>
+                            <group name="note_group" col="6">
+                                <group colspan="4">
+                                    <field name="description" nolabel="1" placeholder="Terms and conditions..." />
+                                    <field name="notes" nolabel="1" placeholder="Terms and conditions..." />
+                                </group>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="shipping_cost" />
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="order_amount" />
+                                    </div>
+                                    <field name="order_amount" nolabel="1" class="oe_subtotal_footer_separator" />
+                                </group>
+                                <div class="oe_clear" />
+                            </group>
+                        </page>
+                        <page string="Addtl. Info">
+                            <group>
+                                <group>
+                                    <field name="full_sign_replacement" />
+                                    <field name="get_opportunity_name" />
+                                    <field name="salesforce_id" />
+                                    <field name="item_quantity" />
+                                    <field name="new_old_order" />
+                                    <field name="opportunity_close_date" />
+                                    <field name="opportunity" />
+                                    <field name="warrantied" />
+                                    <field name="panel_serial_number" />
+                                    <field name="recipient_company_name" />
+                                    <field name="recipient_name" />
+                                </group>
+                                <group>
+                                    <field name="order_record_type" />
+                                    <field name="return_aging" />
+                                    <field name="return_completed_date" />
+                                    <field name="return_department" />
+                                    <field name="return_label_tracking" />
+                                    <field name="return_test" />
+                                    <field name="return_due_date" />
+                                    <field name="replacement_shipped_date" />
+                                    <field name="service_type" />
+                                </group>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_salesforce_quote_form" model="ir.ui.view">
+        <field name="name">salesforce.quote.form</field>
+        <field name="model">salesforce.quote</field>
+        <field name="arch" type="xml">
+            <form string="Sales Order" class="o_sale_order" create="0" edit="0" delete="0">
+                <header></header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"></div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="currency_id" invisible="1" />
+                            <field name="account_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="account__c" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="contactid" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options="{'always_reload': True}" />
+                            <field name="balance_due__c" />
+                            <field name="discount" />
+                        </group>
+                        <group>
+                            <field name="status" />
+                            <field name="salesforce_create_date" />
+                            <field name="expirationdate" />
+                            <field name="opportunityid" />
+                            <field name="ownerid" />
+                            <field name="p_o_number__c" />
+                            <field name="purchase_order_number__c" />
+                            <field name="quotenumber" />
+                            <field name="recordtypeid" />
+                            <field name="reference__c" />
+                            <field name="sales_type__c" />
+                            <field name="sales_order_number__c" />
+                            <field name="terms__c" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="" name="address_name">
+                                <b>Bill To:</b>
+                            </label>
+                            <div class="o_address_format">
+                                <field name="billingname" placeholder="Street..." class="o_address_street" />
+                                <field name="billingstreet" placeholder="Street 2..." class="o_address_street" />
+                                <field name="billingcity" placeholder="City" class="o_address_city" />
+                                <field name="billingstate" class="o_address_state" placeholder="State" />
+                                <field name="billingpostalcode" placeholder="ZIP" class="o_address_zip" />
+                                <field name="billingcountry" placeholder="Country" class="o_address_country" />
+                            </div>
+                        </group>
+                        <group>
+                            <label for="" name="address_name2">
+                                <b>Ship To:</b>
+                            </label>
+                            <div class="o_address_format">
+                                <field name="shippingname" placeholder="Street..." class="o_address_street" />
+                                <field name="shippingstreet" placeholder="Street 2..." class="o_address_street" />
+                                <field name="shippinghandling" placeholder="Street 2..." class="o_address_street" />
+                                <field name="shippingcity" placeholder="City" class="o_address_city" />
+                                <field name="shippingstate" class="o_address_state" placeholder="State" />
+                                <field name="shippingpostalcode" placeholder="ZIP" class="o_address_zip" />
+                                <field name="shippingcountry" placeholder="Country" class="o_address_country" />
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Lines" name="order_lines">
+                            <field name="order_line">
+                                <tree string="Sales Order Lines">
+                                    <field name="linenumber" />
+                                    <field name="product__c" />
+                                    <field name="product_description__c" />
+                                    <field name="shipping_product_code__c" />
+                                    <field name="quantity" />
+                                    <field name="quantity_backordered__c" />
+                                    <field name="quantity_shipped__c" />
+                                    <field name="listprice" />
+                                    <field name="unitprice" />
+                                    <field name="line_item_cost__c" />
+                                    <field name="discount" />
+                                    <field name="subtotal" />
+                                    <field name="total_price_distributor__c" />
+                                    <field name="totalprice" />
+                                </tree>
+                            </field>
+                            <group name="note_group" col="6">
+                                <group colspan="4">
+                                    <field name="description" nolabel="1" placeholder="Terms and conditions..." />
+                                    <field name="notes__c" nolabel="1" placeholder="Terms and conditions..." />
+                                </group>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="subtotal" />
+                                    <field name="tax" />
+                                    <field name="finalshippingcost__c" />
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="grandtotal" />
+                                    </div>
+                                    <field name="grandtotal" nolabel="1" class="oe_subtotal_footer_separator" />
+                                </group>
+                                <div class="oe_clear" />
+                            </group>
+                        </page>
+                        <page string="Addtl. Info">
+                            <group>
+                                <group>
+                                    <field name="account_opportunity_new_account__c" />
+                                    <field name="estimated_shipping_and_handling__c" />
+                                    <field name="email" />
+                                    <field name="fax" />
+                                    <field name="invoice_number__c" />
+                                    <field name="is_sales_shipping__c" />
+                                    <field name="lineitemcount" />
+                                    <field name="lineitemshippingcost__c" />
+                                    <field name="margin_accounting__c" />
+                                    <field name="markup__c" />
+                                    <field name="max_discount__c" />
+                                    <field name="new_commission_plan__c" />
+                                    <field name="order_generated__c" />
+                                    <field name="totalprice" />
+                                    <field name="total_cost__c" />
+                                    <field name="total_price_comm__c" />
+                                    <field name="total_price_distributor__c" />
+                                    <field name="total_shipping_cost__c" />
+                                </group>
+                                <group>
+                                    <field name="cellular__c" />
+                                    <field name="commission_amount__c" />
+                                    <field name="commission_new_account__c" />
+                                    <field name="commission_rate__c" />
+                                    <field name="credit_card_fees__c" />
+                                    <field name="paid__c" />
+                                    <field name="paid_in_full__c" />
+                                    <field name="partial_payment_amount__c" />
+                                    <field name="payment_method__c" />
+                                    <field name="phone" />
+                                    <field name="pre_order__c" />
+                                    <field name="product_cost_accounting__c" />
+                                    <field name="profit_margin__c" />
+                                    <field name="total_weight_in_lbs__c" />
+                                    <field name="zone_code__c" />
+                                    <field name="zip_value2__c" />
+                                    <field name="zip_value3__c" />
+                                    <field name="zip_value__c" />
+                                </group>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- salesforce.quote tree view -->
+    <record model="ir.ui.view" id="view_salesforce_quote_tree">
+        <field name="name">salesforce.quote.tree</field>
+        <field name="model">salesforce.quote</field>
+        <field name="arch" type="xml">
+            <tree string="Salesforce Quotes" create="0" edit="0" delete="0">
+                <field name="name" />
+                <field name="quotenumber" />
+                <field name="invoice_number__c" />
+                <field name="reference__c" />
+                <field name="sales_order_number__c" />
+                <field name="salesforce_create_date" />
+                <field name="expirationdate" />
+                <field name="account_id" />
+                <field name="contactid" />
+                <field name="ownerid" />
+                <field name="recordtypeid" />
+                <field name="grandtotal" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Saleforce Importer Views-->
+    <record model="ir.ui.view" id="view_salesforce_import_file_tree">
+        <field name="name">x_gfp.salesforce.import.file.tree</field>
+        <field name="model">salesforce.import.file</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="upload" />
+                <field name="upload_date" />
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_salesforce_import_line_tree">
+        <field name="name">x_gfp.salesforce.import.line.tree</field>
+        <field name="model">salesforce.import.line</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0">
+                <field name="sequence" widget="handle" />
+                <field name="file_id" />
+                <field name="skip" />
+                <field name="upload" />
+                <field name="upload_date" />
+                <field name="update_date" />
+                <field name="last_attempt_date" />
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_salesforce_import_file_form">
+        <field name="name">x_gfp.salesforce.import.file.form</field>
+        <field name="model">salesforce.import.file</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_lines" type="object" class="oe_stat_button" icon="fa-list" attrs="{'invisible': [('line_count', '=', 0)]}">
+                            <field name="line_count" widget="statinfo" string="Rows" />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="file_id" />
+                            <field name="upload" readonly="1" />
+                            <field name="upload_date" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="record_skip" />
+                            <field name="sequence" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_salesforce_import_line_form">
+        <field name="name">x_gfp.salesforce.import.line.form</field>
+        <field name="model">salesforce.import.line</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="file_id" />
+                            <field name="skip" />
+                            <field name="upload" />
+                            <field name="upload_date" />
+                        </group>
+                        <group>
+                            <field name="sequence" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="name" nolabel="1" />
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -37,6 +37,14 @@
                         <input type="text" class="form-control o_website_form_input" name="cust_acc_holder"/>
                     </div>
                 </div>
+                <div class="form-group row form-field">
+                    <div class="col-lg-3 col-md-4 text-right">
+                        <label class="col-form-label" for="partner_name">Use E-Check information on file</label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="checkbox" id="cust_e_check" name="cust_e_check"/>
+                    </div>
+                </div>
             </div>
 		</xpath>
 	</template>

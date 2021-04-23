@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_repair_order_form_mode">
+        <field name="name">x_gfp.repair.order.form.mod</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='operations']" position="attributes">
+                    <attribute name="context">{'default_product_id': False, 'default_lot_id': False}</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

@@ -139,8 +139,7 @@
                                             Address
                                         </td>
                                         <td class="pd-table-left cell-table-border-left">
-                                            <!-- <div t-field="doc.partner_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" /> -->
-                                            <div><span t-esc="doc.partner_id.street[:33]"/>, <span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.code"/> <span t-field="doc.partner_id.zip"/></div>
+                                            <div><t t-if="doc.partner_id.street"><span t-esc="doc.partner_id.street[:33]"/>,</t> <span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.code"/> <span t-field="doc.partner_id.zip"/></div>
                                         </td>
                                         <td class="pd-table-left cell-table-border-left">
                                             Quote valid
@@ -248,21 +247,22 @@
                                                 <li>1 ScreenHub cloud software with lifetime training &amp; support</li>
                                                 <li>
                                                 	<t t-if="not doc.cirruscomplete_selection">
-                                                		WiFi TP Link Kit or Hardwire Internet Connectivity
+                                                		5 Year LTE Cellular and Hardwire Internet connectivity
                           							</t>
                           							<t t-if="doc.cirruscomplete_selection in ['cir_complete', 'cir_complete_month']">
-                              							5 Year Cellular LTE, WiFi TP Link Kit, or Hardwire Internet Connectivity
+                              							5 Year PREMIUM LTE Cellular and Hardwire Internet connectivity
                           							</t>
                           							<t t-if="doc.cirruscomplete_selection == 'cel_upfront'">
-                              							5 Year Cellular LTE, WiFi TP Link Kit or Hardwire Internet Connectivity
+                              							5 Year LTE Cellular and Hardwire Internet connectivity
                           							</t>
                                                 </li>
+                                                <li>1-year free premium connectivity and performance hardware monitoring</li>
                                                 <li><t t-esc="doc.service_module_count" /> Service Module</li>
-                                                <li><b>204,800 pixels</b> (vs 64,800 for 16mm display) / <b>Price per pixel = <t t-esc="doc.currency_id.symbol" /> <t t-esc="'{:,.2f}'.format(doc.pixel_price)" /></b></li>
+                                                <li><b><t t-esc="'{:,.0f}'.format(doc.face_pixels)"/> pixels</b> (vs <t t-esc="'{:,.0f}'.format(doc.face_pixels_16mm)"/> for 16mm display) / <b>Price per pixel = <t t-esc="doc.currency_id.symbol" /> <t t-esc="'{:,.2f}'.format(doc.pixel_price)" /></b></li>
                                             </ul>
                                         </td>
                                         <td style="border: none !important;">
-                                            <img src="/pdf_template/static/src/img/first.png" class="img img-fluid img-table"/>
+                                            <img src="/base_csi/static/src/img/first.png" class="img img-fluid img-table"/>
                                             <span class="table-img-text"><b>Single LED panel with aluminum frame</b></span>
                                         </td>
                                     </tr>
@@ -487,7 +487,7 @@
                     </div>
                 </div>
                 <!-- Additional Items -->
-                <div class="information mt-3">
+                <div class="information mt-2">
                     <div class="row">
                         <div class="col-3 orange-text">
                             <h5>Additional items</h5>
@@ -574,7 +574,7 @@
                     </div>
                 </div>
                 <!-- First Page Footer -->
-                <t t-if="( doc.pixel_pitch == '9mm' and doc.panel_count &lt;= 18 ) or ( doc.pixel_pitch == '6mm' and doc.panel_count &lt;= 16 ) or ( doc.pixel_pitch == '4mm' and doc.panel_count &lt;= 14 )">
+                <t t-if="doc.panel_count &lt;= doc.module_id.custom_120v">
                 	<div class="first-page-footer-div">
 	                    <div class="first-page-footer-inner row">
 	                        <div class="col-6 text-left">
@@ -660,7 +660,7 @@
                             <div class="separator"/>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-3">
                         <div class="col-2">
                             <img src="/base_csi/static/src/img/Asset8.png" class="img img-fluid img-position"/>
                         </div>
@@ -675,13 +675,14 @@
                             </p>
                             <p>
                                 The service cost for this display is:<br/>
-                                <span class="orange-text"><b><t t-esc="doc.currency_id.symbol"/><t t-if="doc.override_warranty_cost != 0.0">
-				                    <t t-esc="'{:,.2f}'.format(doc.override_warranty_cost)"/>
-				                  </t>
-				                  <t t-else="">
-				                    <t t-esc="'{:,.2f}'.format(doc.warranty_cost)"/>
-				                  </t> Monthly</b></span> end-user cost<br/>
-                                <span class="orange-text"><b><t t-esc="doc.currency_id.symbol"/><t t-esc="'{:,.2f}'.format(doc.warranty_cost_upfront)"/> Upfront</b></span> with display cost
+                                <span class="orange-text"><b>
+                                	<t t-if="doc.override_warranty_cost != 0.0">
+				                    	<t t-esc="doc.currency_id.symbol"/><t t-esc="'{:,.2f}'.format(doc.override_warranty_cost)"/>
+				                  	</t>
+				                  	<t t-else="">
+				                    	<t t-esc="doc.currency_id.symbol"/><t t-esc="'{:,.2f}'.format(doc.warranty_cost)"/>
+				                  	</t> Monthly</b></span> end-user cost<br/>
+				                  	<div class="second-page-space-div mt-10"/>
                             </p>
                         </div>
                     </div>
@@ -696,7 +697,7 @@
                             <div class="separator"/>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-3">
                         <div class="col-12 pdr-50">
                             <p>
                                 With our new hardware integration, Cirrus monitors every single module's health in real-time, 24/7. Suppose there appears to be an issue
@@ -705,7 +706,8 @@
                             </p>
                             <p>
                                 Through ScreenHub, the end-user will also have access to a dashboard that displays every single module's health, electrical information,
-                                and other data points. BladeM displays purchased in 2019 and beyond will have access to this functionality.*
+                                and other data points. BladeM displays purchased in 2019 and beyond will have access to this functionality.* Cirrus Complete also includes
+premium internet connectivity for 5 years.
                             </p>
                             <p>
                                 For the next 5 years under the Cirrus Complete subscription, the end-user will never have to worry about servicing any part of the hardware
@@ -726,7 +728,7 @@
                             <div class="separator"/>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-3">
                         <div class="col-12 pdr-50">
                             <p>
                                 If Cirrus Complete is chosen as a part of the display purchase and your sign shop has signed the Cirrus Complete Service Contract, Cirrus
@@ -861,7 +863,7 @@ found at www.cirrusled.com/documents. This offer is conditioned upon the Purchas
 		                      		</t>
 		                    	</t>
                             </p>
-                            <t t-if="( doc.pixel_pitch == '9mm' and doc.panel_count &lt;= 18 ) or ( doc.pixel_pitch == '6mm' and doc.panel_count &lt;= 16 ) or ( doc.pixel_pitch == '4mm' and doc.panel_count &lt;= 14 )">
+                            <t t-if="doc.panel_count &lt;= doc.module_id.custom_120v">
                             	<div class="third-page-space-div mt-10"/>
                             </t>
                             <p class="orange-text mt-10 font-11">
@@ -917,7 +919,7 @@ found at www.cirrusled.com/documents. This offer is conditioned upon the Purchas
                     </div>
                 </div>
                 <!-- Monthly Payment -->
-                <div class="information mt-3">
+                <div class="information">
                     <div class="row">
                         <div class="col-7 orange-text">
                             <h5>Monthly payment option for the end-user, and much more</h5>
@@ -946,7 +948,7 @@ customers’ ROI.
                 <div class="information mt-3">
                     <div class="row">
                         <div class="col-6 orange-text">
-                            <h5>What’s included in the 5 and 10 year subscriptions?</h5>
+                            <h5>What’s included in the 5 year subscriptions?</h5>
                         </div>
                         <div class="col-6">
                             <div class="separator"/>
@@ -960,17 +962,21 @@ customers’ ROI.
 						                <span>
 						                  <t t-esc="dict(doc._fields['sidedness'].selection).get(doc.sidedness)" />
 						                </span> display
-					                </b> with all of the items listed with the proposal # <t t-esc="doc.name" />
+					                </b> with all of the items listed with the proposal #<t t-esc="doc.name" />
                                 </li>
                                 <li>
                                     <b class="orange-text">Cirrus Complete</b>, a <t t-esc="doc.currency_id.symbol" /><t t-esc="'{:,.2f}'.format(doc.warranty_cost_upfront)"/> value over 5 years of service, connectivity, and 24/7 <br/>
                                     performance monitoring
                                 </li>
                                 <li>
+                                    <b class="orange-text">5 year Cellular Connectivity</b> a $400 dollar value
+                                </li>
+                                <li>
                                     <b class="orange-text">ScreenHub content management software</b> with unlimted free upgrades
                                 </li>
                                 <li>
-                                    <b class="orange-text">Free display upgrade</b> to our newest technology every 5 years if the EU remains in the subscription
+                                    <b class="orange-text">Free display upgrade</b> to our newest technology every 5 years if the EU remains in the subscription<br/>
+                                    <span class="font-11">(Does not incldue module replacement labor cost)</span>
                                 </li>
                             </ul>
                         </div>
@@ -986,22 +992,41 @@ customers’ ROI.
                             <div class="separator"/>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-2">
                         <div class="col-12 pdr-50">
-                            <p>Increase your LED revenue with this program that will make digital displays more approachable for every type of business. You’ll never have
-                                to service the display as along as the customer is in the subscription, which gives them hardware and labor warranty.</p>
+                            <p>Increase your LED revenue with this program that will make digital displays more approachable for every type of business. You’ll also be
+reimbursed for any service work via the Cirrus Complete framework (page 2 of this quote) when the customer is in the subscription, which
+gives them a hardware and labor warranty.</p>
                             <p>
-                                You’re in control. Simply provide your usual quote to the end-user with your install, fab, and markup costs (your markup costs can go in the
-down payment that the EU would absorb), then add an additional line item for the monthly Cirrus subscription cost, which we would execute
-with the end-user.
+                                You’re in control. Provide your usual quote to the end-user with your install, fab, and markup costs (your markup costs can go in the down
+payment that the EU would absorb), then add an additional line item for the monthly Cirrus subscription cost, which we would execute with
+the end-user.
                             </p>
-                            <div class="row mt-4" style="height: 207px;">
-                                <div class="col-5">
-                                </div>
-                                <div class="col-7">
-                                    <img src="/base_csi/static/src/img/four.png" class="img img-fluid img-position p-absolute img-absolute"/>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Get all of your cash upfront -->
+                <div class="information mt-2">
+                    <div class="row">
+                        <div class="col-4 orange-text">
+                            <h5>Get all of your cash upfront</h5>
+                        </div>
+                        <div class="col-2">
+                            <div class="separator"/>
+                        </div>
+                    </div>
+                    <div class="row mt-2" style="height: 157px;">
+                        <div class="col-8">
+                            <p style="width: 80%;">The major advantage with the subscription is that you're <b>paid in full upfront for
+the display, including your mark-up... so cash flow positive right off of the
+                                get-go</b>. The traditional 50% down, 50% after install with your end-user puts you
+cash flow negative likely for weeks. The subscription gives you all of the cash in
+your pocket right away! It's a win-win.</p>
+                            <img src="/pdf_template/static/src/img/four.png" class="img img-fluid img-position p-absolute img-absolute"/>
+
+                        </div>
+                        <div class="col-4" >
+<!--                            <img src="/pdf_template/static/src/img/four.png" class="img img-fluid img-position p-absolute"/>-->
                         </div>
                     </div>
                 </div>
@@ -1013,8 +1038,7 @@ with the end-user.
                                 <b class="orange-text">Customer monthly subscription:</b> <t t-esc="doc.currency_id.symbol" /> <t t-esc="'{:,.2f}'.format(doc.monthly_subscription)" />
                             </h5>
                             <p class="font-13">
-                                The only money distributed to Cirrus from your shop is the down payment and shipping
-                                amounts shown below. You can simply add that to your quote cost for the end-user.
+                                No money needs to be distributed to Cirrus from your shop. Once the Cirrus subscription contract is signed by the end user and validated by us, we’ll ship the display to you.
                             </p>
                         </div>
                         <div class="col-3"></div>
@@ -1023,20 +1047,20 @@ with the end-user.
                         <div class="col-8 text-left">
                             <div class="row">
                                 <div class="col-7">
-                                    <h5><b>Down payment: <t t-esc="doc.currency_id.symbol" /><t t-esc="'{:,.2f}'.format(doc.n_down_payment)" /></b></h5>
+									
                                 </div>
                                 <div class="col-5">
-                                    <h5><b>Shipping: <t t-esc="doc.currency_id.symbol" /><t t-esc="'{:,.2f}'.format(doc.delivery_price)" /></b></h5>
+                                    
                                 </div>
                             </div>
                         </div>
                         <div class="col-4 text-right">
-                            <h5><b><span class="orange-text">Total price:</span> <t t-esc="doc.currency_id.symbol" /><t t-esc="'{:,.2f}'.format(doc.n_subscription_total)" />USD</b></h5>
+                            
                         </div>
                     </div>
                 </div>
                 <!-- Required Information -->
-                <div class="information mt-3 font-18">
+                <div class="information mt-2 font-18">
                     <div class="row pdt-50">
                         <div class="col-3 orange-text">
                             <h5>Required information</h5>
@@ -1049,13 +1073,13 @@ with the end-user.
                         <div class="col-12 pdr-50">
                             <p><b class="font-16">Please fill out the required information below to complete payment, order activation, shipping, and warranty activation.</b></p>
                             <p class="orange-text mt-4">
-                                <b>Required power setup based on display size and voltage:</b>
+                                <b>Required power setup based on display size and voltage. Initial to acknowledge these power requirements:</b>
                             </p>
                             <t t-set="power_setups" t-value="doc.power_setup and doc.power_setup.split('\n')" />
                                <t t-foreach="power_setups" t-as="power_setup">
 								<t t-if="power_setup">
 	                          		<p>
-		                                <div class="checkbox-div"/><t t-esc="power_setup" />
+		                                <div class="checkbox-width-div"/><t t-esc="power_setup" />
 		                            </p>
 	                      		</t>
 	                      		<t t-if="power_setup and not power_setup_last">
@@ -1080,35 +1104,46 @@ with the end-user.
                                 <tbody>
                                     <tr>
                                         <td class="first-td pd-5">
-                                            <b>Location Name:</b>
+                                            <b>Display Location Name:</b>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="middle-td pd-5">
-                                            <b>First Name:</b>
+                                            <b>End-User First Name:</b>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="middle-td pd-5">
-                                            <b>Last Name:</b>
+                                            <b>End-User Last Name:</b>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="last-td pd-5">
-                                            <b>Email:</b>
+                                            <b>End-User Email:</b>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <p class="orange-text mt-3">
-                                <div class="checkbox-div"/><b class="orange-text">Current order shipment address, check box if correct</b>
+                                <div class="checkbox-width-div"/><b class="orange-text">I confirm that this is the correct order shipment address, or the corrected address is entered below:</b>
                             </p>
                             <div class="td-div mt-3">
                                 <b><span t-field="doc.partner_shipping_id.name"/></b><br/>
-                                <div t-field="doc.partner_shipping_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}" />
+                                <div><span t-esc="doc.partner_id.street"/></div>
+                                <t t-if="not doc.partner_id.street">
+                                	<div class="fifth-page-space-div mt-10"/>
+                                </t>
+                                <div><span t-field="doc.partner_id.city"/> <span t-field="doc.partner_id.state_id.code"/> <span t-field="doc.partner_id.zip"/></div>
+                                <t t-if="( not doc.partner_id.city ) and ( not doc.partner_id.state_id.code ) and ( not doc.partner_id.zip )">
+                                	<div class="fifth-page-space-div mt-10"/>
+                                </t>
+                                <div><span t-field="doc.partner_id.country_id"/> </div>
+                                <t t-if="not doc.partner_id.country_id">
+                                	<div class="fifth-page-space-div mt-10"/>
+                                </t>
                             </div>
                             <p class="orange-text mt-3">
-                                <div class="checkbox-div"/><b class="orange-text">Check this box if shipping address is different from the above and enter correct address below:</b>
+                                <b class="orange-text">Enter the correct shipping address if different from above:</b>
                             </p>
                             <table style="width: 100%;" cellpadding="0" cellspacing="0" class="table-custom-5 mt-4">
                                 <colgroup>
@@ -1165,7 +1200,7 @@ with the end-user.
                         </div>
                     </div>
                 </div>
-                <t t-if="( doc.pixel_pitch == '9mm' and doc.panel_count &lt;= 18 ) or ( doc.pixel_pitch == '6mm' and doc.panel_count &lt;= 16 ) or ( doc.pixel_pitch == '4mm' and doc.panel_count &lt;= 14 )">
+                <t t-if="doc.panel_count &lt;= doc.module_id.custom_120v">
                 	<div class="fifth-page-footer-div mt-10"/>
                 </t>                
                 <!-- Fifths Page Footer -->

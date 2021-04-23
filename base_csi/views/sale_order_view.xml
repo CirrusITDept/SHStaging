@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record model="ir.ui.view" id="view_sale_order_rate_wizard_form">
+        <field name="name">x_gfp.sale.order.rate.wizard.form</field>
+        <field name="model">sale.order.rate.wizard</field>
+        <field name="inherit_id" eval="False" />
+        <field name="priority">16</field>
+        <field name="groups_id" eval="[(6, 0, [])]" />
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="order_id" invisible="1" />
+                <group>
+                    <i>Please select a rate to associate to this order.</i>
+                </group>
+                <group>
+                    <field name="wizard_line_ids" nolabel="1" options="{'no_open':True,'no_create':True}" readonly="1">
+                        <tree>
+                            <button name="set_rate_on_order" string="Select" type="object" class="oe_highlight" />
+                            <field name="wizard_id" invisible="1" />
+                            <field name="valid" />
+                            <field name="carrier_code" />
+                            <field name="service_code" />
+                            <field name="service_name" />
+                            <field name="calc_method" />
+                            <field name="rate" />
+                            <field name="loaded_rate" />
+                            <field name="list_rate" />
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="sale_order_wizard_form">
+        <field name="name">x_gfp.sale.order.wizard.form</field>
+        <field name="model">sale.order.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="order_id" required="1" invisible="1" />
+                <field name="currency_id" invisible="1" />
+                <group string="Panels">
+                    <group>
+                        <field name="height_warning" invisible="1" />
+                        <field name="width_warning" invisible="1" />
+                        <field name="product_id" options="{'no_create':True,'no_open':True}" />
+                        <label for="height" string="Height x Width" />
+                        <div class="o_row" name="height">
+                            <div class="row" style="background-color:#CB4335;color:white;" align="center" attrs="{'invisible':[('height_warning','=',False)]}">
+                                <div class="col-xs-6">
+                                    <strong>Height Not Divisible</strong>
+                                </div>
+                            </div>
+                            <field name="height" />
+                            <span>ft</span>
+                            x
+                            <field name="width" />
+                            <span>ft</span>
+                            <div class="row" style="background-color:#CB4335;color:white;" align="center" attrs="{'invisible':[('width_warning','=',False)]}">
+                                <div class="col-xs-6 pull-right">
+                                    <strong>Width Not Divisible</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <field name="siding" widget="selection_badge" />
+                        <field name="controller_id" options="{'no_create':True,'no_open':True}" domain="[('controller','=',True)]" />
+                    </group>
+                    <group>
+                        <field name="product_price" readonly="1" />
+                        <field name="panel_count" readonly="1" />
+                        <field name="power_injector_id" invisible="1" />
+                        <field name="power_injector_price" readonly="1" />
+                        <field name="power_injector_count" readonly="1" />
+                        <field name="controller_price" readonly="1" />
+                    </group>
+                </group>
+
+                <group class="oe_subtotal_footer oe_right" colspan="6">
+                    <field name="panel_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                </group>
+
+                <group string="Services">
+                    <group>
+                        <label for="service_module_id" string="Service Module" />
+                        <div class="o_row">
+                            <field name="service_module_id" domain="[('type','=','service')]" options="{'no_create':True,'no_open':True}" />
+                            <field name="service_module_count" />
+                            <span>qty</span>
+                        </div>
+                        <label for="carrier_id" string="Shipping Method" />
+                        <div class="o_row">
+                            <field name="carrier_id" options="{'no_create':True,'no_open':True}" />
+                            <field name="carrier_cost" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                            <span></span>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="service_cost" readonly="1" />
+                    </group>
+                </group>
+
+                <group class="oe_subtotal_footer oe_right" colspan="2">
+                    <field name="service_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                </group>
+
+                <group string="Additional Items">
+                    <group>
+                        <field name="aluminum_frame" />
+                        <field name="wifi_unit" />
+                        <field name="optional_controller" />
+                        <field name="led_panel" />
+                        <field name="extension_cable" />
+                    </group>
+                    <group>
+                        <field name="aluminum_frame_id" invisible="1" />
+                        <field name="wifi_unit_id" invisible="1" />
+                        <field name="led_panel_id" invisible="1" />
+                        <field name="extension_cable_id" invisible="1" />
+                        <field name="aluminum_frame_price" />
+                        <field name="wifi_unit_price" />
+                        <field name="controller_price" />
+                        <field name="led_panel_price" />
+                        <field name="extension_cable_price" />
+                    </group>
+                </group>
+                <group class="oe_subtotal_footer oe_right" colspan="2">
+                    <field name="addtl_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                        <label for="grand_total" />
+                    </div>
+                    <field name="grand_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                </group>
+
+
+                <footer>
+                    <button name="create_order_lines" type="object" string="Submit" class="oe_hightlight" />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_order_form_with_carrier_mod">
+        <field name="name">x_gfp.sale.order..delivery.form.mod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="delivery.view_order_form_with_carrier" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_delivery_wizard']/.." position="replace">
+                <div class="oe_right">
+                    <button string="Add shipping" name="get_shipstation_rates" type="object" attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('order_line', '=', []), ('delivery_set', '=', True)]}" />
+                    <button string="Update shipping cost" name="get_shipstation_rates" context="{'carrier_recompute':True}" type="object" class="text-warning btn-secondary" attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', False), ('delivery_set', '=', False)]}" />
+                    <button string="Update shipping cost" name="get_shipstation_rates" context="{'carrier_recompute':True}" type="object" attrs="{'invisible': ['|', '|',('is_all_service', '=', True), ('recompute_delivery_price', '=', True), ('delivery_set', '=', False)]}" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_quotation_tree_mod">
+        <field name="name">x_gfp.sale.quotation.tree.mod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="invoice_status" position="after">
+                <field name="payment_received"/>
+            </field>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_order_form_mod">
+        <field name="name">x_gfp.sale.order.form.mod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                <field name="pm_cost" readonly="1" invisible="1" />
+            </xpath>
+            <xpath expr="//group[@name='note_group']" position="after">
+                <group name="note_margin_group" col="6">
+                    <group colspan="4">
+                    </group>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="profit_margin">
+                        <field name="x_so_profit_margin" widget="monetary" options="{'currency_field': 'currency_id'}" groups="sales_team.group_sale_salesman,account.group_account_invoice" />
+                        <field name="x_so_new_sign_shop" string="New Customer" readonly="1" groups="sales_team.group_sale_salesman,account.group_account_invoice" />
+                    </group>
+                    <div class="oe_clear" />
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='x_so_new_sign_shop']" position="after">
+                <field name="commission_amount" groups="base_csi.group_view_commission_amounts" />
+            </xpath>
+            <xpath expr="//button[4]" position="attributes">
+                <attribute name="attrs">{'invisible': [('state', 'in', ['done','cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="replace" />
+            <xpath expr="//button[@name='action_confirm']" position="replace">
+                <button name="action_confirm" groups="base_csi.group_confirm_sale_order" id="action_confirm" string="Fulfill" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in', ['sent'])]}" />
+                <button name="action_confirm" groups="base_csi.group_confirm_sale_order" string="Fulfill" type="object" attrs="{'invisible': [('state', 'not in', ['draft'])]}" />
+                <button name="recalculate_power_values" string="Recalculate Power Values" type="object" attrs="{'invisible': [('state', 'in', ['sale','done','cancel'])]}" />
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="before">
+                <button string="Quality Alert" name="button_quality_alert" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['draft','sent','sale'])]}" />
+                <button string="Add CC Fee" name="add_credit_card_fee" type="object" attrs="{'invisible': [('state','in',['cancel','done','sale'])]}" />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="open_sign_request" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('request_count', '=', 0)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="request_count" />
+                        </span>
+                        <span class="o_stat_text">Sign Requests</span>
+                    </div>
+                </button>
+                <button name="open_ticket" type="object" class="oe_stat_button" icon="fa-ticket" groups="helpdesk.group_helpdesk_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="ticket_count" />
+                        </span>
+                        <span class="o_stat_text">Tickets</span>
+                    </div>
+                </button>
+                <button name="open_quality_alert" type="object" class="oe_stat_button" icon="fa-bell" attrs="{'invisible': [('alert_count', '=', 0)]}" groups="quality.group_quality_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="alert_count" />
+                        </span>
+                        <span class="o_stat_text">Quality Alert</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="before">
+                <button name="print_cirrus_quotation" string="Print Cirrus Quote" type="object" states="draft" class="btn-primary o_sale_print" />
+                <button name="send_cirrus_quotation" string="Create Sign Request" type="object" states="draft" class="btn-primary o_sale_print" />
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="before">
+                <button name="send_cirrus_quotation" string="Create Sign Request" type="object" states="sent" class="o_sale_print" />
+                <button name="print_cirrus_quotation" string="Print Cirrus Quote" type="object" states="sent" class="o_sale_print" />
+                <button name="print_cirrus_quotation" string="Print Cirrus Order" type="object" states="sale" class="o_sale_print" />
+                <button name="create_display" string="CREATE DISPLAY" class="btn-primary" type="object" attrs="{'invisible': ['|', ('state','=','cancel'), ('display_id', '!=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='client_order_ref']" position="replace" />
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="display_id" />
+                <Field name="client_order_ref" />
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="partner_sign_id" />
+                <field name="partner_end_id" />
+                <field name="partner_dist_id" />
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="domain">[('id','=',0)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="client_account" domain="[('partner_id','=',partner_id)]" string="Delivery Account" />
+                <label for="delivery_package" />
+                <div>
+                    <div>
+                        <field name="delivery_package" string="Delivery Package" options="{'no_create': True}" />
+                    </div>
+                </div>
+                <field name="confirmation" />
+                <label string="Dimensions (Inches)" for="delivery_length" />
+                <div class="o_address_format">
+                    <field name="delivery_length" class="o_address_zip" />
+                    x
+                    <field name="delivery_width" class="o_address_zip" />
+                    x
+                    <field name="delivery_height" class="o_address_zip" />
+                </div>
+                <field name="delivery_carrier_code" invisible="1" />
+                <field name="carrier_id" domain="[('id', '=', 0)]" />
+            </xpath>
+            <xpath expr="//notebook/page" position="after">
+                <page string="Display">
+                    <group string="Display">
+                        <group>
+                            <label for="discount_type" />
+                            <div class="o_row" name="discount">
+                                <field name="discount_type" widget="selection_badge" />
+                                <field name="discount" />
+                                <span> %</span>
+                            </div>
+                            <field name="module_id" domain="[('is_module','=',True)]" options="{'no_create':True}" />
+                            <label for="height" string="Height x Width" />
+                            <div class="o_row" name="dimensions">
+                                <field name="height" />
+                                <span>ft</span>
+                                x
+                                <field name="width" />
+                                <span>ft</span>
+                            </div>
+                            <label for="sidedness" string="" />
+                            <div class="o_row" name="sidedness">
+                                <field name="sidedness" widget="selection_badge" />
+                            </div>
+                            <field name="controller_id" domain="[('is_controller','=',True)]" options="{'no_create':True}" />
+                            <field name="booster_id" domain="[('is_booster','=',True)]" options="{'no_create':True}" invisible="1" />
+                            <field name="booster_count" />
+                        </group>
+                        <group>
+                            <label for="total_weight" string="" />
+                            <div class="o_row" name="total_weight">
+                                <field name="total_weight" invisible="1" />
+                                <span style="display:block;height:25px;"></span>
+                            </div>
+                            <field name="module_price" />
+                            <field name="module_price_discount" />
+                            <field name="panel_count" />
+                            <label for="frame_id" string="" />
+                            <div class="o_row" name="total_weight">
+                                <field name="frame_id" domain="[('is_frame','=',True)]" options="{'no_create':True}" invisible="1" />
+                                <span style="display:block;height:40px;"></span>
+                            </div>
+                            <field name="controller_price" />
+                            <field name="booster_price" />
+                        </group>
+                    </group>
+                    <group string="Additional Items">
+                        <group>
+                            <label for="service_module_id" />
+                            <div class="o_row" name="service_module_id">
+                                <field name="service_module_id" domain="[('is_service_module','=',True)]" options="{'no_create':True}" />
+                                <field name="service_module_count" />
+                                <span> qty</span>
+                            </div>
+                            <field name="addtl_controller_count" />
+                            <field name="wifi_count" />
+                            <field name="wifi_id" domain="[('is_wifi','=',True)]" options="{'no_create':True}" invisible="1" />
+                            <field name="cirruscomplete_selection" />
+                        </group>
+                        <group>
+                            <field name="service_module_price" />
+                            <field name="addtl_controller_price" />
+                            <field name="wifi_price" />
+                            <field name="amount_total_minus_shipping" invisible="1" />
+                            <field name="down_payment" invisible="1" />
+                            <field name="warranty_cost" />
+                            <field name="override_warranty_cost" />
+                        </group>
+                    </group>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="display_total">
+                        <field name="display_subtotal" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                        <field name="display_subtotal_discount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                        <field name="delivery_price" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1" />
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="display_grand_total" />
+                        </div>
+                        <field name="display_grand_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                    </group>
+                    <button name="create_order_lines" type="object" string="Generate Lines" class="oe_hightlight btn btn-primary o_form_button_edit" attrs="{'invisible': [('state','in',['sale','done','cancel'])]}" />
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="before">
+                <field name="credit_card_fee" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|',('is_delivery','=',True),('credit_card_fee','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|','|',('is_delivery','=',True),('credit_card_fee','=',True),('state', 'in', ('sale','done', 'cancel'))], 'required': [('display_type', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|','|',('is_delivery','=',True),('credit_card_fee','=',True),('qty_invoiced', '&gt;', 0)]}</attribute>
+            </xpath>
+            <field name="sale_order_template_id" position="after">
+                <field name="projected_install_date" />
+            </field>
+            <xpath expr="//group[@name='sales_person']//field[@name='require_payment']" position="after">
+                <field name="is_single_display_sale" />
+            </xpath>
+            <xpath expr="//group[@name='sales_person']//field[@name='require_signature']" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_single_display_sale', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_advance_payment_inv_mod" model="ir.ui.view">
+        <field name="name">x_gfp.sale.advanced.payment.form</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv" />
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='amount']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount']/.." position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='advance_payment_method']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="before">
+                <field name="downpayment_type" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_form_accounting_advisor" model="ir.ui.view">
+        <field name="name">x_gfp.sale.order.form.accounting.adv</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="priority">200</field>
+        <field name="groups_id" eval="[(6,0,[ref('account.group_account_manager'),ref('base_csi.group_addtl_carrier')])]" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='projected_install_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='carrier_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='delivery_price']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('qty_invoiced', '&gt;', 0)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Sales Order search view mod -->
+    <record model="ir.ui.view" id="view_sales_order_filter_mod">
+        <field name="name">x_gfp.sale.order.list.select.mod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="display_id" />
+            </field>
+        </field>
+    </record>
+    
+    <!-- Action to display sale orders -->
+    <record id="act_display_2_sale_order" model="ir.actions.act_window">
+        <field name="name">Quotations and Sales</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="context">{'search_default_display_id': active_id}</field>
+    </record>
+    
+    <!-- action to open a sale.order form view with display_id context -->
+    <record id="act_display_2_sale_order_form" model="ir.actions.act_window">
+        <field name="name">Create new Sales Order with Display context</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_display_id': active_id}</field>
+    </record>
+            
+</odoo>

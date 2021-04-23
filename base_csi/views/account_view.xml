@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_invoice_form_accounting_advisor" model="ir.ui.view">
+        <field name="name">x_gfp.account.move.form.accounting.adv</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="priority">200</field>
+        <field name="groups_id" eval="[(6,0,[ref('base_csi.group_addtl_carrier')])]" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date_due']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_payment_term_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+                <attribute name="domain">[]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_form_mod" model="ir.ui.view">
+        <field name="name">x_gfp.account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date_due']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_payment_term_id']" position="attributes">
+                <attribute name="domain">[('id','=',0)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

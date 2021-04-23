@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form_sale_mod">
+        <field name="name">x_gfp.sale.res.config.settings.mod</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='group_product_variant']/../../../.." position="inside">
+                <h2>Quotation Display</h2>
+                <div class="row mt16 o_settings_container">
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="sale_module_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default module employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="sale_module_id" class="o_light_label" domain="[('is_module','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="frame_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default aluminum frame employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="frame_id" class="o_light_label" domain="[('is_frame','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="controller_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default controller employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="controller_id" class="o_light_label" domain="[('is_controller','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="booster_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default power booster employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="booster_id" class="o_light_label" domain="[('is_booster','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="wifi_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default wifi unit employed in the display quotation
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="wifi_id" class="o_light_label" domain="[('is_wifi','=',True)]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="sale_payment_term_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default payment term on sale orders
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="sale_payment_term_id" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="repair_location_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default repair location used in repair orders
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="repair_location_id" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="picking_approvers" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Number of required approvers on outbound pickings
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="picking_approvers" class="o_light_label" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"></div>
+                        <div class="o_setting_right_pane">
+                            <label for="credit_charge_product_id" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                    Default product employed for credit card fees
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="credit_charge_product_id" class="o_light_label" domain="[('type','=','service')]" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="credit_charge_fee" />
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                            <div class="text-muted">
+                                Credit card charge fee (%)
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                    <label for="credit_charge_fee" string="Fee (%)" class="col-xs-3 col-md-3 o_light_label" />
+                                    <field name="credit_charge_fee" class="oe_inline" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_so_technical_drawings" />
+                        </div>
+                        <div class="o_setting_right_pane" name="sale_enable_so_technical_drawings">
+                            <label for="enable_so_technical_drawings" />
+                            <div class="text-muted">
+                                Enable Sale order Technical Dreawings
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='multi_company']" position="after">
+                <div id="shipstation_integration">
+                    <h2>Shipstation</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="API Key" for="shipstation_key" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Please enter the API key for Shipstation
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="shipstation_key" string="Key" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="shipstation_key" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="API Secret" for="shipstation_secret" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Please enter the API secret for Shipstation
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="shipstation_secret" string="Secret" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="shipstation_secret" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Shipstation Webhooks" for="shipstation_hook_ids" />
+                                <div class="text-muted">
+                                Live Post-Back Service Webhooks
+                                </div>
+                            </div>
+                            <div class="content-group" style="margin-left:50px;">
+                                <div class="row" width="100%">
+                                    <field name="shipstation_hook_ids" nolabel="1" readonly="1" widget="one2many_list">
+                                        <tree>
+                                            <field name="company_id" invisible="1" />
+                                            <field name="web_hook_id" />
+                                            <field name="name" />
+                                            <field name="url" />
+                                            <field name="hook_type" />
+                                            <field name="active" />
+                                            <button name="delete_webhook" icon="fa-times-circle text-danger" type="object" />
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Endpoint" for="shipstation_root_endpoint" />
+                                <span class="fa fa-lg fa-building-o" groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Please enter root endpoint for Shipstation
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="shipstation_root_endpoint" string="URL" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="shipstation_root_endpoint" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Post-Back Service" for="target_postback_url" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Please enter the post-back endpoint for confirmation of order
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="target_postback_url" string="URL" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="target_postback_url" placeholder="e.g https://www.odoo.com/shipstation/shipped" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Update Shipstation Information" for="get_service" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Updating these elements will update existing records and create if not found in the Odoo database
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <button name="get_service" string="Create/Update Delivery Services" type="object" class="oe_link" />
+                                        <button name="get_packages" string="Create/Update Delivery Packages" type="object" class="oe_link" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_ss" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auto_ss" />
+                                <div class="text-muted">
+                                Automatically process shipping labels
+                                </div>
+                                <div class="content-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="hoopla_integration">
+                    <h2>Hoopla</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Client ID" for="hoopla_client_id" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Hoopla Client Id
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="hoopla_client_id" string="ID" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="hoopla_client_id" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Client Secret" for="hoopla_client_secret" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Hoopla Client Secret
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="hoopla_client_secret" string="Secret" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="hoopla_client_secret" class="oe_inline" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Client Secret" for="hoopla_team_id" />
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                This is the team used for the metric calculations sent to Hoopla
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="hoopla_team_id" string="Channel" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="hoopla_team_id" class="oe_inline" options="{'no_create':True,'no_open':True}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Endpoint" for="hoopla_access_token" />
+                                <span class="fa fa-lg fa-building-o" groups="base.group_multi_company" />
+                                <div class="text-muted">
+                                Hoopla Authorization Token
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="hoopla_access_token" string="Token" class="col-xs-3 col-md-3 o_light_label" />
+                                        <field name="hoopla_access_token" />
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <button name="get_hoopla_access_token" string="Get Token" type="object" class="oe_link" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="res_config_settings_view_form_crm_mod">
+        <field name="name">x_gfp.crm.res.config.settings.mod</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='crm_lead']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="lost_stage">
+                    <div class="o_setting_right_pane">
+                        <label for="lost_stage_id" />
+                        <field name="lost_stage_id" options="{'no_create': True, 'no_create_edit':True}" />
+                        <div class="text-muted">
+                            Select Lost stage to move opportunity in this stage when user mark opportunity as Lost
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+        
+</odoo>

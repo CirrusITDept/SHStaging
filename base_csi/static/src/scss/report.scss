@@ -96,11 +96,23 @@
 .third-page-footer-div {
     height: 8px;
 }
-.third-page-space-div {
+.second-page-space-div {
     height: 8px;
+}
+.checkbox-width-div {
+    width: 80px;
+    margin-right: 10px;
+    height: 15px;
+    display: inline-block;
+}
+.third-page-space-div {
+    height: 7px;
 }
 .fifth-page-footer-div {
     height: 33px;
+}
+.fifth-page-space-div {
+    height: 16px;
 }
 .first-page-footer-inner {
     width: 100%;
@@ -164,7 +176,7 @@
     border: 1px solid #f29022;
     border-radius: 20px 0 0 20px;
     color: #ffffff;
-    padding: 20px 0px 5px 20px;
+    padding: 10px 0px 5px 20px;
     border-right: none !important;
 }
 .table-img-text {
@@ -239,7 +251,9 @@
     padding: 0px 50px;
 }
 .img-absolute {
-    left: 7%;
+    left: 60%;
+    top: -70%;
+    width: 90%;
 }
 // Page 5 ###########################
 .first-td {
@@ -271,7 +285,7 @@
     margin-left: -25px;
     margin-right: -25px;
     font-size: 14px !important;
-    margin-top: 40px;
+    margin-top: 29px;
 }
 .fifths-page-footer-inner {
     width: 100%;

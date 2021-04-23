@@ -9,9 +9,7 @@ import requests
 import logging
 from odoo.exceptions import UserError
 
-
 _logger = logging.getLogger(__name__)
-
 
 class SaleAdvancePaymentInv(models.TransientModel):
     _inherit = "sale.advance.payment.inv"
@@ -503,7 +501,7 @@ class SaleOrder(models.Model):
         else:
             action = {"domain": {"carrier_id": []}}
             return action
-
+    
     def get_shipstation_rates(self):
         for record in self:
             wiz_id = record.env["sale.order.rate.wizard"].create(
@@ -807,16 +805,6 @@ class SaleOrder(models.Model):
                         "product_uom_qty": record.booster_count,
                     }
                 )
-            # if record.wifi_id:
-            #     line_list.append(
-            #         {
-            #             "order_id": orderid,
-            #             "product_id": record.wifi_id.id,
-            #             "product_uom_qty": 1,
-            #             "price_unit": 0,
-            #         }
-            #     )
-
             # Addtl Items
             line_list.append(
                 {
@@ -874,7 +862,94 @@ class SaleOrder(models.Model):
             record.n_down_payment = down_payment
             record.n_subscription_total = subscription_total
             record.n_amount_total_minus_shipping = amount_total_minus_shipping
-
+    
+    def line_and_booster_cal(self, panel_count, module_id):
+        booster_208 = booster_240 = 0
+        if module_id.custom_208v > 0:
+            booster_208 = int((panel_count - 1) / module_id.custom_208v)
+        if module_id.custom_240v > 0:
+            booster_240 = int((panel_count - 1) / module_id.custom_240v)
+        
+        line_240 = booster_240 + 1
+        line_208 = booster_208 + 1
+        return line_208, booster_208, line_240, booster_240
+    
+    def recalculate_power_values(self):
+        for record in self:
+            avg_power, electrical_information, input_voltage, max_current, power_setup = record.calculate_power_values()
+            
+            record.avg_power = avg_power
+            record.electrical_information = electrical_information
+            record.input_voltage = input_voltage
+            record.max_current = max_current
+            record.power_setup = power_setup
+    
+    def _recalculate_power_values_cron(self):
+        sale_orders_obj = self.env["sale.order"]
+        sale_orders = sale_orders_obj.search([("state", "in", ["draft", "sent"])])
+        for record in sale_orders:
+            avg_power, electrical_information, input_voltage, max_current, power_setup = record.calculate_power_values()
+            
+            #record.avg_power = avg_power
+            #record.electrical_information = electrical_information
+            #record.input_voltage = input_voltage
+            #record.max_current = max_current
+            #record.power_setup = power_setup
+            
+            self._cr.execute("""UPDATE sale_order set avg_power=%s, electrical_information=%s, input_voltage=%s, max_current=%s, power_setup=%s WHERE id = %s """,(
+            avg_power, electrical_information, input_voltage, max_current, power_setup, record.id))
+    
+    def calculate_power_values(self):
+        first_line_top = first_line_bottom = avg_power = 0
+        
+        if self.pixel_pitch == "9mm":
+            if self.panel_count <= self.module_id.custom_120v:
+                first_line_top = 1
+                first_line_bottom = 0
+        elif self.pixel_pitch == "6mm":
+            if self.panel_count <= self.module_id.custom_120v:
+                first_line = self.panel_count // 16
+                first_line_top = first_line + 1
+                first_line_bottom = (
+                    first_line_top - 1 if (first_line_top - 1) >= 0 else 0
+                )
+        elif self.pixel_pitch == "4mm":
+            if self.panel_count <= self.module_id.custom_120v:
+                first_line = self.panel_count // 14
+                first_line_top = first_line + 1
+                first_line_bottom = (
+                    int(first_line_top - 1) if (first_line_top - 1) >= 0 else 0
+                )
+                
+        if self.pixel_pitch:
+            if self.panel_count > self.module_id.custom_120v:
+                avg_power = round(self.panel_count * self.module_id.custom_wattage + 100, 2)
+                electrical_information = "240V"
+                input_voltage = "208V-240V"
+                max_current = round(avg_power / 240, 2)
+                
+                line_208, booster_208, line_240, booster_240 = self.line_and_booster_cal(self.panel_count, self.module_id)
+                power_setup = """
+                    208V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters\n
+                    240V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters""" % (
+                        line_208,
+                        booster_208,
+                        line_240,
+                        booster_240,
+                    )
+            else:
+                electrical_information = "120V"
+                input_voltage = "120V-240V"
+                max_current = round(avg_power / 120, 2)
+                
+                power_setup = """
+                    120V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters""" % (
+                    first_line_top,
+                    first_line_bottom,
+                )
+        
+        return avg_power, electrical_information, input_voltage, max_current, power_setup
+    
     @api.depends(
         "panel_count",
         "booster_count",
@@ -939,7 +1014,7 @@ class SaleOrder(models.Model):
                 monthly_subscription = ((1400 * panel_count) + 2350) / 60
             else:
                 monthly_subscription = 0
-            down_payment = record.amount_total_minus_shipping * 0.15
+            down_payment = 0
             subscription_total = down_payment + record.delivery_price
 
             module_pixel = record.module_id.module_pixel
@@ -966,129 +1041,17 @@ class SaleOrder(models.Model):
             if record.is_cellular:
                 addtl_controller_cellular = ", with cellular"
             record.addtl_controller_cellular = addtl_controller_cellular
+            
             electrical_information = max_current = input_voltage = power_setup = False
-            avg_power = 0
-            if record.pixel_pitch == "9mm":
-                avg_power = round(panel_count * 105 + 100, 2)
-                if panel_count > 18:
-                    electrical_information = "240V"
-                    input_voltage = "208V-240V"
-                    max_current = round(avg_power / 240, 2)
-                    first_line = panel_count // 30
-                    first_line_top = first_line + 1
-                    first_line_bottom = (
-                        int(first_line_top - 1) if (first_line_top - 1) >= 0 else 0
-                    )
-                    second_line = panel_count // 36
-                    second_line_top = second_line + 1
-                    second_line_bottom = (
-                        int(second_line_top - 1) if (second_line_top - 1) >= 0 else 0
-                    )
-                    power_setup = """
-208V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters\n
-240V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters""" % (
-                        first_line_top,
-                        first_line_bottom,
-                        second_line_top,
-                        second_line_bottom,
-                    )
-                else:
-                    electrical_information = "120V"
-                    input_voltage = "120V-240V"
-                    max_current = round(avg_power / 120, 2)
-                    first_line = panel_count // 18
-                    first_line_top = first_line + 1
-                    first_line_bottom = (
-                        int(first_line_top - 1) if (first_line_top - 1) >= 0 else 0
-                    )
-                    power_setup = """
-120V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters""" % (
-                        first_line_top,
-                        first_line_bottom,
-                    )
-            elif record.pixel_pitch == "6mm":
-                avg_power = round(panel_count * 115 + 100, 2)
-                if panel_count > 16:
-                    electrical_information = "240V"
-                    input_voltage = "208V-240V"
-                    max_current = round(avg_power / 240, 2)
-                    first_line = panel_count // 28
-                    first_line_top = first_line + 1
-                    first_line_bottom = (
-                        int(first_line_top - 1) if (first_line_top - 1) >= 0 else 0
-                    )
-                    second_line = panel_count // 32
-                    second_line_top = second_line + 1
-                    second_line_bottom = (
-                        int(second_line_top - 1) if (second_line_top - 1) >= 0 else 0
-                    )
-                    power_setup = """
-208V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters\n
-240V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters""" % (
-                        first_line_top,
-                        first_line_bottom,
-                        second_line_top,
-                        second_line_bottom,
-                    )
-                else:
-                    electrical_information = "120V"
-                    input_voltage = "120V-240V"
-                    max_current = round(avg_power / 120, 2)
-                    first_line = panel_count // 16
-                    first_line_top = first_line + 1
-                    first_line_bottom = (
-                        first_line_top - 1 if (first_line_top - 1) >= 0 else 0
-                    )
-                    power_setup = """
-120V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters""" % (
-                        first_line_top,
-                        first_line_bottom,
-                    )
-            elif record.pixel_pitch == "4mm":
-                avg_power = round(panel_count * 125 + 100, 2)
-                if panel_count > 14:
-                    electrical_information = "240V"
-                    input_voltage = "208V-240V"
-                    max_current = round(avg_power / 240, 2)
-                    first_line = panel_count // 26
-                    first_line_top = first_line + 1
-                    first_line_bottom = (
-                        int(first_line_top - 1) if (first_line_top - 1) >= 0 else 0
-                    )
-                    second_line = panel_count // 30
-                    second_line_top = second_line + 1
-                    second_line_bottom = (
-                        int(second_line_top) - 1 if (second_line_top - 1) >= 0 else 0
-                    )
-                    power_setup = """
-208V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters\n
-240V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters""" % (
-                        first_line_top,
-                        first_line_bottom,
-                        second_line_top,
-                        second_line_bottom,
-                    )
-                else:
-                    electrical_information = "120V"
-                    input_voltage = "120V-240V"
-                    max_current = round(avg_power / 120, 2)
-                    first_line = panel_count // 14
-                    first_line_top = first_line + 1
-                    first_line_bottom = (
-                        int(first_line_top - 1) if (first_line_top - 1) >= 0 else 0
-                    )
-                    power_setup = """
-120V: %s Lines of Power at 20 Amps - One line of power into the controller and %s into the boosters""" % (
-                        first_line_top,
-                        first_line_bottom,
-                    )
-
-            record.electrical_information = electrical_information
-            record.max_current = max_current
+                        
+            avg_power, electrical_information, input_voltage, max_current, power_setup = record.calculate_power_values()
+            
             record.avg_power = avg_power
+            record.electrical_information = electrical_information
             record.input_voltage = input_voltage
-            record.addtl_power_inputs = "%s Power Boosters" % (record.booster_count)
+            record.max_current = max_current
             record.power_setup = power_setup
+            record.addtl_power_inputs = "%s Power Boosters" % (record.booster_count)
 
             record.panel_subtotal = panel_subtotal
             record.display_subtotal = display_subtotal
@@ -1124,9 +1087,9 @@ class SaleOrder(models.Model):
                 )
             elif record.cirruscomplete_selection == "cel_upfront":
                 if record.partner_id.country_id.code == "CA":
-                    controller_price = record.controller_id.list_price + 1900
+                    controller_price = record.controller_id.list_price
                 else:
-                    controller_price = record.controller_id.list_price + 950
+                    controller_price = record.controller_id.list_price
             record.controller_price = controller_price
 
     @api.onchange("width")
@@ -1232,6 +1195,7 @@ class SaleOrder(models.Model):
                 diff = 0.037
             
             if diff > 0:
+                #120 V One line
                 record.env["sign.item"].sudo().create(
                     [
                         {
@@ -1271,7 +1235,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.286 - diff,
+                            "posY": 0.293 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1286,7 +1250,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.316 - diff,
+                            "posY": 0.323 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1301,14 +1265,14 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.345 - diff,
+                            "posY": 0.353 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
                             "contact_info_type": "last_name",
                         },
                         {
-                            "name": record.env.ref("sign.sign_item_type_email").name,
+                            "name": "End User Email",
                             "type_id": record.env.ref("sign.sign_item_type_email").id,
                             "required": True,
                             "responsible_id": record.env.ref(
@@ -1316,51 +1280,37 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.375 - diff,
+                            "posY": 0.383 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
                             "contact_info_type": "cont_email",
                         },
                         {
-                            "name": "120 V",
-                            "type_id": record.env.ref("sign.sign_item_type_checkbox").id,
-                            "required": False,
+                            "name": "Initial",
+                            "type_id": record.env.ref("sign.sign_item_type_initial").id,
+                            "required": True,
                             "responsible_id": record.env.ref(
                                 "sign.sign_item_role_customer"
                             ).id,
                             "page": 5,
                             "posX": 0.046,
-                            "posY": 0.145,
-                            "width": 0.020,
+                            "posY": 0.153,
+                            "width": 0.080,
                             "height": 0.020,
                             "template_id": template.id,
                         },
                         {
-                            "name": "Current Order",
-                            "type_id": record.env.ref("sign.sign_item_type_checkbox").id,
-                            "required": False,
+                            "name": "Initials",
+                            "type_id": record.env.ref("sign.sign_item_type_initial").id,
+                            "required": True,
                             "responsible_id": record.env.ref(
                                 "sign.sign_item_role_customer"
                             ).id,
                             "page": 5,
                             "posX": 0.046,
-                            "posY": 0.415 - diff,
-                            "width": 0.020,
-                            "height": 0.020,
-                            "template_id": template.id,
-                        },
-                        {
-                            "name": record.env.ref("sign.sign_item_type_checkbox").name,
-                            "type_id": record.env.ref("sign.sign_item_type_checkbox").id,
-                            "required": False,
-                            "responsible_id": record.env.ref(
-                                "sign.sign_item_role_customer"
-                            ).id,
-                            "page": 5,
-                            "posX": 0.046,
-                            "posY": 0.557 - diff,
-                            "width": 0.020,
+                            "posY": 0.422 - diff,
+                            "width": 0.080,
                             "height": 0.020,
                             "template_id": template.id,
                         },
@@ -1373,7 +1323,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.601 - diff,
+                            "posY": 0.608 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1387,7 +1337,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.630 - diff,
+                            "posY": 0.637 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1401,13 +1351,13 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.659 - diff,
+                            "posY": 0.666 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
                         },
                         {
-                            "name": record.env.ref("sign.sign_item_type_email").name,
+                            "name": "Email",
                             "type_id": record.env.ref("sign.sign_item_type_email").id,
                             "required": False,
                             "responsible_id": record.env.ref(
@@ -1415,7 +1365,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.689 - diff,
+                            "posY": 0.696 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1431,7 +1381,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.719 - diff,
+                            "posY": 0.726 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1445,7 +1395,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.750 - diff,
+                            "posY": 0.757 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1459,7 +1409,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.779 - diff,
+                            "posY": 0.786 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1473,7 +1423,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.808 - diff,
+                            "posY": 0.815 - diff,
                             "width": 0.429,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1487,7 +1437,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.838 - diff,
+                            "posY": 0.845 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1534,7 +1484,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.286 - diff,
+                            "posY": 0.291 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1549,7 +1499,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.316 - diff,
+                            "posY": 0.321 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1564,14 +1514,14 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.345 - diff,
+                            "posY": 0.350 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
                             "contact_info_type": "last_name",
                         },
                         {
-                            "name": record.env.ref("sign.sign_item_type_email").name,
+                            "name": "End User Email",
                             "type_id": record.env.ref("sign.sign_item_type_email").id,
                             "required": True,
                             "responsible_id": record.env.ref(
@@ -1579,65 +1529,37 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.375 - diff,
+                            "posY": 0.380 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
                             "contact_info_type": "cont_email",
                         },
                         {
-                            "name": "240 V",
-                            "type_id": record.env.ref("sign.sign_item_type_checkbox").id,
-                            "required": False,
+                            "name": "Initial",
+                            "type_id": record.env.ref("sign.sign_item_type_initial").id,
+                            "required": True,
                             "responsible_id": record.env.ref(
                                 "sign.sign_item_role_customer"
                             ).id,
                             "page": 5,
                             "posX": 0.046,
-                            "posY": 0.145,
-                            "width": 0.020,
+                            "posY": 0.153,
+                            "width": 0.080,
                             "height": 0.020,
                             "template_id": template.id,
                         },
                         {
-                            "name": "208 V",
-                            "type_id": record.env.ref("sign.sign_item_type_checkbox").id,
-                            "required": False,
+                            "name": "Initials",
+                            "type_id": record.env.ref("sign.sign_item_type_initial").id,
+                            "required": True,
                             "responsible_id": record.env.ref(
                                 "sign.sign_item_role_customer"
                             ).id,
                             "page": 5,
                             "posX": 0.046,
-                            "posY": 0.178,
-                            "width": 0.020,
-                            "height": 0.020,
-                            "template_id": template.id,
-                        },
-                        {
-                            "name": "Current Order",
-                            "type_id": record.env.ref("sign.sign_item_type_checkbox").id,
-                            "required": False,
-                            "responsible_id": record.env.ref(
-                                "sign.sign_item_role_customer"
-                            ).id,
-                            "page": 5,
-                            "posX": 0.046,
-                            "posY": 0.414 - diff,
-                            "width": 0.020,
-                            "height": 0.020,
-                            "template_id": template.id,
-                        },
-                        {
-                            "name": record.env.ref("sign.sign_item_type_checkbox").name,
-                            "type_id": record.env.ref("sign.sign_item_type_checkbox").id,
-                            "required": False,
-                            "responsible_id": record.env.ref(
-                                "sign.sign_item_role_customer"
-                            ).id,
-                            "page": 5,
-                            "posX": 0.046,
-                            "posY": 0.556 - diff,
-                            "width": 0.020,
+                            "posY": 0.418 - diff,
+                            "width": 0.080,
                             "height": 0.020,
                             "template_id": template.id,
                         },
@@ -1650,7 +1572,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.601 - diff,
+                            "posY": 0.603 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1664,7 +1586,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.630 - diff,
+                            "posY": 0.633 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1678,13 +1600,13 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.658 - diff,
+                            "posY": 0.662 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
                         },
                         {
-                            "name": record.env.ref("sign.sign_item_type_email").name,
+                            "name": "Email",
                             "type_id": record.env.ref("sign.sign_item_type_email").id,
                             "required": False,
                             "responsible_id": record.env.ref(
@@ -1692,7 +1614,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.688 - diff,
+                            "posY": 0.692 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1708,7 +1630,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.718 - diff,
+                            "posY": 0.722 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1722,7 +1644,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.750 - diff,
+                            "posY": 0.753 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1736,7 +1658,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.777 - diff,
+                            "posY": 0.781 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1750,7 +1672,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.806 - diff,
+                            "posY": 0.811 - diff,
                             "width": 0.429,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1764,7 +1686,7 @@ class SaleOrder(models.Model):
                             ).id,
                             "page": 5,
                             "posX": 0.440,
-                            "posY": 0.836 - diff,
+                            "posY": 0.841 - diff,
                             "width": 0.427,
                             "height": 0.020,
                             "template_id": template.id,
@@ -1891,13 +1813,12 @@ class SaleOrderRateWizardLine(models.TransientModel):
                 set_rate = record.list_rate
             else:
                 set_rate = record.loaded_rate
+
             record.wizard_id.order_id.write({"carrier_id": self.carrier_id.id})
             record.wizard_id.order_id.write({"delivery_price": set_rate})
             record.wizard_id.order_id.write({"delivery_rating_success": True})
-            return record.wizard_id.order_id.set_delivery_line(
-                self.carrier_id, set_rate
-            )
 
+            return record.wizard_id.order_id.set_delivery_line(self.carrier_id, set_rate)
 
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"

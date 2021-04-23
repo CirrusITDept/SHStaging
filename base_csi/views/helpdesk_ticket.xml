@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="helpdesk_ticket_view_form">
+        <field name="name">x_gfp.help.desk.ticket.mod</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_id']" position="attributes">
+                <attribute name="context">{'default_product_id': product_id, 'default_company_id': company_id}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="replace">
+                <button type="action" name="%(stock.act_stock_return_picking)d" groups="stock.group_stock_user" string="Return" attrs="{'invisible': [('sale_order_id', '=', False)]}" context="{'default_ticket_id': id, 'default_company_id': company_id}" />
+                <button name="%(base_csi.action_picking_helpdesk_form)d" type="action" groups="stock.group_stock_user" string="Return" attrs="{'invisible': ['|', ('sale_order_id','!=', False), ('use_product_returns', '=', False)]}" context="{'default_partner_id': partner_id, 'default_ticket_id': active_id, 'default_salesforce_order': salesforce_order, 'default_origin': name}" />
+            </xpath>
+            <xpath expr="//button[@name='assign_ticket_to_self']" position="after">
+                <button string="New Quotation" name="button_sale" type="object" class="oe_highlight" />
+                <button string="Quality Alert" name="button_quality_alert" type="object" class="oe_highlight" />
+            </xpath>
+            <xpath expr="//field[@name='sale_order_id']" position="before">
+                <field name="sale_id" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="helpdesk_team_name" invisible="1" />
+                <field name="projected_install_date" attrs="{'invisible': [('helpdesk_team_name', '!=', 'Preinstall')]}" />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="open_salesforce_order" icon="fa-history" attrs="{'invisible': [('salesforce_order_count', '=', 0)]}">
+                    <field string="Salesforce Orders" name="salesforce_order_count" widget="statinfo" />
+                </button>
+                <button name="open_sale" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('sale_count', '=', 0)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sale_count" />
+                        </span>
+                        <span class="o_stat_text">Orders</span>
+                    </div>
+                </button>
+                <button name="open_quality_alert" type="object" class="oe_stat_button" icon="fa-bell" attrs="{'invisible': [('alert_count', '=', 0)]}" context="{'default_product_tmpl_id': product_tmpl_id,'default_product_id': product_id, 'default_lot_id': lot_id, 'default_sale_id': sale_order_id, 'default_display_id':display_id, 'default_salesforce_order': salesforce_order}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="alert_count" />
+                        </span>
+                        <span class="o_stat_text">Quality Alert</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='description']" position="replace" />
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Description">
+                        <group>
+                            <field name="internal_description" placeholder="Internal description of the ticket..." />
+                            <field name="next_action" />
+                            <field name="product_tmpl_id" invisible="1" />
+                        </group>
+                    </page>
+                    <page string="Addtl. Info">
+                        <group>
+                            <field name="days_since_last_activity" />
+                            <field name="previous_days_since_last_activity" force_save="1" />
+                            <field name="description" string="Customer Facing Desc." placeholder="Customer facing description here..." />
+                            <field name="salesforce_id" />
+                            <field name="salesforce_case_number" />
+                            <field name="salesforce_create_date" />
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+            <xpath expr="//field[@name='sale_order_id']" position="after">
+                <field name="salesforce_order" />
+            </xpath>
+            <xpath expr="//field[@name='partner_name']" position="replace">
+                <field name="partner_name" />
+            </xpath>
+            <xpath expr="//field[@name='partner_email']" position="after">
+                <field name="partner_phone" />
+                <field name="partner_sign_id" />
+                <field name="partner_end_id" />
+                <field name="partner_dist_id" />
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="before">
+                <field name="display_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Helpdesk ticket search view mod  -->
+    <record id="helpdesk_tickets_view_search_mod" model="ir.ui.view">
+        <field name="name">x_gfp.helpdesk.ticket.search.mod</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='name']" position="replace">
+                    <field name="name" string="ID / Name / Customer / Display" filter_domain="['|', '|', '|', ('id', 'ilike', self), ('name', 'ilike', self), ('display_id', 'ilike', self), ('partner_id', 'child_of', self)]" />
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="display_id" />
+                </xpath>
+            </data>
+        </field>
+    </record>
+    
+    <!-- action to open helpdesk.ticket form view with display_id context -->
+    <record id="act_display_2_helpdesk_ticket_form" model="ir.actions.act_window">
+        <field name="name">Create new Helpdisk Ticket with Display context</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_display_id': active_id}</field>
+    </record>
+    
+</odoo>
