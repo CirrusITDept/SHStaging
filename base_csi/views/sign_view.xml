@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--  INHERITED VIEWS -->
+    <record model="ir.ui.view" id="sign_send_request_view_form_mod">
+        <field name="name">x_gfp.sign.send.request.form.mod</field>
+        <field name="model">sign.send.request</field>
+        <field name="inherit_id" ref="sign.sign_send_request_view_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='signer_id']" position="before">
+                    <field name="display_id" />
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

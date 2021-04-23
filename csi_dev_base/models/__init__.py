@@ -37,3 +37,4 @@ from . import mrp
 from . import res_company
 from . import helpdesk_ticket
 from . import account_report
+from . import crm_team

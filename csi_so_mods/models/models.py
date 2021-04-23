@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import re
 
@@ -62,114 +62,114 @@ class Display_Add_ControllerDetails(models.Model):
 class SalesOrder_Total_ticket_Count(models.Model):
     _inherit = 'display.display'
 
-    all_helpdesk_ticket_count = fields.Integer(
-        compute="_compute_record_count_total", 
-        string="Helpdesk Ticket Count Total"
-    )
+    all_helpdesk_ticket_count = fields.Integer(compute="_compute_record_count_total", string="Helpdesk Ticket Count Total")
 
     def _compute_record_count_total(self):
         for display in self:
-            display.all_helpdesk_ticket_count = self.env["helpdesk.ticket"].search_count(
-                [("display_id", "=", display.id)]
-            
-            )
-
+            display.all_helpdesk_ticket_count = self.env["helpdesk.ticket"].search_count([("display_id", "=", display.id)])
 ##Live one
-
 
 class SO_Push_Ret_To_Tran(models.Model):
     _inherit = ['sale.order']
 
     def transfer_return_incomming(self):
-       
-#        aid         = self.id
         bill        = self.is_billable
         dispname    = self.display_name
-#        RtnOrder    = self.so_return_picking_id
-        #this is billable. Return
-        if bill:
-            return
-        data_record = self.env["stock.picking"].search( [("sale_id", "=", dispname)]) 
+        data_record = self.env["stock.picking"].search( [("sale_id", "=", dispname)])
         for record in data_record:
             #already had a return order assigned, return
             if record.return_picking_id:
-                return            
+                #message_id = self.env['message.wizard'].create({'message': _("Return order already set")})
+                #return {
+                #    'name': _('Warning'),
+                #    'type': 'ir.actions.act_window',
+                #    'view_mode': 'form',
+                #    'res_model': 'message.wizard',
+                #    # pass the id
+                #    'res_id': message_id.id,
+                #    'target': 'new'
+                #}
+                message = {
+                   'type': 'ir.actions.client',
+                   'tag': 'display_notification',
+                   'params': {
+                       'title': _('Warning'),
+                       'message': "Return order already set",
+                       'sticky': False,
+                    }
+                }
+                return message
             #find outgoing transfer and update return order
             if record.picking_type_code == "outgoing":
                 record.return_picking_id = self.so_return_picking_id 
-                return               
-              
-
-
-
-
-
-
-#Move Tracking from WH/OUT to WH/IN transfer order when 
-#WH/OUT tracking is changed
-#class SalesOrder_Return_Tracking_Transefer_WHIN(models.Model):
-#    _inherit = 'stock.picking'
-#    @api.onchange('return_carrier_tracking_ref')
-#    def _onchange_return_tracking_ref(self):
-#        if self.return_carrier_tracking_ref:
-#            if self.return_picking_id:
-#                Update_Rec = self.return_picking_id
-#                if Update_Rec:
-#                    Update_Rec.write({'carrier_tracking_ref': self.return_carrier_tracking_ref})
-
+                #message_id = self.env['message.wizard'].create({'message': _("Record Updated successfully")})
+                #return {
+                #    'name': _('Successful'),
+                #    'type': 'ir.actions.act_window',
+                #    'view_mode': 'form',
+                #    'res_model': 'message.wizard',
+                #    # pass the id
+                #    'res_id': message_id.id,
+                #    'target': 'new'
+                #}
+                message = {
+                   'type': 'ir.actions.client',
+                   'tag': 'display_notification',
+                   'params': {
+                       'title': _('Successful'),
+                       'message': "Record Updated successfully",
+                       'sticky': False,
+                    }
+                }
+                return message
+            #message_id = self.env['message.wizard'].create({'message': _("No matching Record found")})
+            #return {
+            #    'name': _('Warning'),
+            #    'type': 'ir.actions.act_window',
+            #    'view_mode': 'form',
+            #    'res_model': 'message.wizard',
+            #    # pass the id
+            #    'res_id': message_id.id,
+            #    'target': 'new'
+            #}
+        
+        if not data_record:
+            message = {
+               'type': 'ir.actions.client',
+               'tag': 'display_notification',
+               'params': {
+                   'title': _('Warning'),
+                   'message': "No matching Record found",
+                   'sticky': False,
+                }
+            }
+            return message
 
 #----------------------------SO Ready for review - Fulfill----------------------------------------------------#
 class SalesOrder_Is_Ready_For_Review(models.Model):
     _inherit = 'sale.order'
-    ready_for_review = fields.Boolean(
-    string="Ready for review",
-    store=True,
-    readonly=False,
-    default=False,
-    )
-
+    
+    ready_for_review = fields.Boolean(string="Ready for review", store=True, readonly=False, default=False)
 
 #---------------------------- Custom item picking alert from SO----------------------------------------------------#
 class Sale_Order_Custom_Item_Alert(models.Model):
     _inherit = 'sale.order'
 
-    custom_item_enable = fields.Boolean(
-    string="Custom Item or Repair",
-    help="Enabled: There is a custom item or repair attached to this SO",
-    store=True,
-    readonly=False,
-    default=False,
-  
-    )
-
+    custom_item_enable = fields.Boolean(string="Custom Item or Repair", help="Enabled: There is a custom item or repair attached to this SO", store=True, readonly=False, default=False)
 
 class SalesOrder_Picking_Custom_Item_Alert(models.Model):
     _inherit = 'stock.picking'
 
-    rel_pick_custom_item_alert = fields.Boolean(
-    related="sale_id.custom_item_enable",    
-    string="Display Custom Item Alert",
-    default=False,
-
-    )
-
-
-
+    rel_pick_custom_item_alert = fields.Boolean(related="sale_id.custom_item_enable", string="Display Custom Item Alert", default=False)
 
 #----------------------------Display_Display_Alert_Enable----------------------------------------------------#
 
 class Display_Display_Alert_Types_Table(models.Model):
     _name = "display.alert_types"
     _description = "Alert types for Display records"
-    name = fields.Char(
-        string="Alert Type",
-        index=True
-         )
-    alert_note = fields.Html(
-        string="Alert Notes",
-        store=True,        
-         )
-
+    
+    name = fields.Char(string="Alert Type", index=True)
+    alert_note = fields.Html(string="Alert Notes", store=True)
 
 class Display_Display_Add_Enable_Alert_Box(models.Model):
     _inherit = 'display.display'

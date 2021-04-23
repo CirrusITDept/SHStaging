@@ -122,8 +122,8 @@ class CrmLead(models.Model):
         ],
         string="Channel",
     )
-    eu_phone_id = fields.Boolean("EU Phone Call/Software")
-    eu_demo_id = fields.Boolean("EU Demo Truck Visit")
+    eu_phone_id = fields.Boolean("EU Phone Call/Software", track_visibility="onchange") 
+    eu_demo_id = fields.Boolean("EU Demo Truck Visit", track_visibility="onchange")
     smb_lead_id = fields.Boolean("SMB Lead")
     channel_type_id = fields.Selection(
         [("sign_shop", "Sign Shop"), ("sbm", "SMB"), ("enterprise", "Enterprise")],

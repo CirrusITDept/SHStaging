@@ -169,8 +169,12 @@ class HelpdeskTicket(models.Model):
 
     def button_sale(self):
         self.ensure_one()
-        action = self.env.ref("sale.action_quotations_with_onboarding").read()[0]
+        action = self.env.ref("sale.action_quotations_with_onboarding").read()[0] 
         action["views"] = [(False, "form")]
+        team_id_rec = self.env['crm.team'].search([('name', '=', 'Helpdesk')], limit=1)
+        team_id = False
+        if team_id_rec:
+            team_id = team_id_rec.id
         action["context"] = {
             "default_ticket_id": self.id,
             "default_partner_id": self.partner_id.id,
@@ -178,9 +182,10 @@ class HelpdeskTicket(models.Model):
             "default_partner_end_id": self.partner_end_id.id,
             "default_partner_dist_id": self.partner_dist_id.id,
             "default_display_id": self.display_id.id,
+            "default_1team_id": team_id,
         }
         return action
-
+    
     def open_sale(self):
         self.ensure_one()
         action = self.env.ref("sale.action_quotations_with_onboarding").read()[0]

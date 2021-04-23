@@ -24,7 +24,7 @@
     "category": "Hidden",
     "author": "GFP Solutions LLC",
     "summary": "Custom",
-    "version": "13.3.17",
+    "version": "13.3.19",
     "description": """
 THIS MODULE IS PROVIDED AS IS - INSTALLATION AT USERS' OWN RISK -
 AUTHOR OF MODULE DOES NOT CLAIM ANY
@@ -48,8 +48,28 @@ RESPONSIBILITY FOR ANY BEHAVIOR ONCE INSTALLED.
     "data": [
         "data/data.xml"
         ,"security/ir.model.access.csv"
-        ,"views/ir_ui_views.xml"
+        ,"views/purchase_view.xml"
         ,"views/ir_actions_act_window.xml"
+        ,"views/stock_view.xml"
+        ,"views/repair_view.xml"
+        ,"views/sign_view.xml"
+        ,"views/display_view.xml"
+        ,"views/delivery_view.xml"
+        ,"views/ir_ui_views.xml"
+        ,"views/res_company_view.xml"
+        ,"views/res_users_view.xml"
+        ,"views/res_config_view.xml"
+        ,"views/helpdesk_ticket.xml"
+        ,"views/res_partner_view.xml"
+        ,"views/sale_order_view.xml"
+        ,"views/salesforce_view.xml"
+        ,"views/crm_view.xml"
+        ,"views/shipstation_view.xml"
+        ,"views/product_view.xml"
+        ,"views/account_view.xml"
+        ,"views/quality_alert_view.xml"
+        ,"views/mrp_view.xml"
+        ,"views/quick_produce_view.xml"
         ,"views/ir_ui_menu.xml"
         ,"views/base_csi_templates.xml"
         ,"reports/paper_format.xml"

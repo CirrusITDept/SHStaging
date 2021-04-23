@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_users_form_mod">
+        <field name="name">x_gfp.res.users.form.mod</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+                <group>
+                    <field name="salesforce_id" />
+                    <field name="hoopla_user" />
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="User Approval Thresholds">
+                    <group>
+                        <field name="threshold_ids" nolabel="1" widget="one2many_list">
+                            <tree editable="bottom">
+                                <field name="user_id" invisible="1" />
+                                <field name="max_amount" />
+                                <field name="account_id" />
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
